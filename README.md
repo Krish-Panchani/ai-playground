@@ -1,70 +1,66 @@
-# Getting Started with Create React App
+# AI Playground - Where Creativity meets Learning
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+AI Playground is a web application built with React that allows users to engage in fun and interactive drawing activities. Users receive drawing prompts from an AI, draw the prompted object, and get their drawings evaluated for accuracy. The app provides various tools to assist users in creating their artwork.
 
-## Available Scripts
+## Features
 
-In the project directory, you can run:
+1. **Generate Drawing Queue**: Users can click on the "Generate Queue" button to receive a drawing prompt from the AI.
+2. **Drawing Tools**: The drawing board comes with adjustable brush size, a color picker, an eraser, and undo/redo tools.
+3. **Submit Drawing**: Users can submit their drawing for AI evaluation.
+4. **AI Evaluation**: The AI analyzes the drawing and assigns a score between 1 to 10 based on accuracy.
 
-### `npm start`
+## Installation Guide
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+To set up and run the AI Playground web app locally, follow these steps:
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+1. **Clone the Repository**:
+    ```sh
+    git clone https://github.com/krish-panchani/ai-playground.git
+    cd ai-playground
+    ```
 
-### `npm test`
+2. **Install Dependencies**:
+    Ensure you have Node.js and npm installed. Then run:
+    ```sh
+    npm install
+    ```
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+3. **Start the Development Server**:
+    ```sh
+    npm start
+    ```
 
-### `npm run build`
+    The app will be available at `http://localhost:3000`.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## Build Guide
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+To create a production-ready build of the AI Playground app, follow these steps:
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+1. **Build the Application**:
+    ```sh
+    npm run build
+    ```
 
-### `npm run eject`
+    This will create an optimized build in the `build` directory.
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+2. **Serve the Build**:
+    You can serve the build with any static site server or deploy it to your preferred hosting service. For example, using `serve`:
+    ```sh
+    npm install -g serve
+    serve -s build
+    ```
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+    The app will be available at `http://localhost:5000`.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+## Contributing
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+Contributions are welcome! Please open an issue or submit a pull request with your changes.
 
-## Learn More
+## License
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## Contact
 
-### Code Splitting
+For any inquiries or issues, please contact [krish@thunderdevelops.in](mailto:krish@thunderdevelops.in).
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
