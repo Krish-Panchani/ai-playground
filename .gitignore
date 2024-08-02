@@ -2,7 +2,7 @@
 
 .env
 test_components
-
+/cloud-functions/test-function
 # dependencies
 /node_modules
 /.pnp
