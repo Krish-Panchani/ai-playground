@@ -4,12 +4,12 @@ import HowPlay from '../components/howPlay';
 import Header from '../components/Header';
 import Score from '../components/Score';
 import AIResponse from '../components/AIResponse';
-import { handleDrawingComplete, handleUpload, handleSendPrompt, handleGenerateQuestion } from '../helpers/genQuesHelpers';
+import { handleGenerateQuestion } from '../helpers/genQues';
+import { handleDrawingComplete, handleUpload, handleSendPrompt } from '../helpers/handleUploadDrawing';
 import Question from '../components/Question';
 
 function Playground() {
     const [file, setFile] = useState(null);
-    const [uniqueFileName, setUniqueFileName] = useState('');
     const [prompt, setPrompt] = useState('');
     const [responseText, setResponseText] = useState('');
     const [question, setQuestion] = useState('');
@@ -55,7 +55,7 @@ function Playground() {
                             setIsCanvasEmpty={setIsCanvasEmpty}
                         />
                         <button
-                            onClick={() => handleUpload(file, setLoadingUpload, setUniqueFileName, handleSendPrompt, prompt, setResponseText, setLoadingResponse, setScore)}
+                            onClick={() => handleUpload(file, setLoadingUpload, handleSendPrompt, prompt, setResponseText, setLoadingResponse, setScore)}
                             className={`w-full px-6 py-3 text-white rounded-lg font-semibold transition-colors duration-300 ${isCanvasEmpty || responseText ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700'}`}
                             disabled={isCanvasEmpty || responseText}
                         >
