@@ -95,51 +95,53 @@ const DrawingCanvas = forwardRef(({ onDrawingComplete, setIsCanvasEmpty }, ref) 
 
   useEffect(() => {
     const canvas = canvasRef.current;
-    canvas.style.cursor = `url('data:image/svg+xml;base64,${btoa(`<svg xmlns="http://www.w3.org/2000/svg" width="${brushSize}" height="${brushSize}" viewBox="0 0 ${brushSize} ${brushSize}"><circle cx="${brushSize/2}" cy="${brushSize/2}" r="${brushSize/2}" fill="${color}" /></svg>`)}') ${brushSize / 2} ${brushSize / 2}, auto`;
+    canvas.style.cursor = `url('data:image/svg+xml;base64,${btoa(`<svg xmlns="http://www.w3.org/2000/svg" width="${brushSize}" height="${brushSize}" viewBox="0 0 ${brushSize} ${brushSize}"><circle cx="${brushSize / 2}" cy="${brushSize / 2}" r="${brushSize / 2}" fill="${color}" /></svg>`)}') ${brushSize / 2} ${brushSize / 2}, auto`;
   }, [brushSize, color]);
 
   return (
     <div className='flex flex-col justify-evenly'>
       <div className='flex flex-col md:flex-row justify-between gap-10'>
         <div className='flex flex-col'>
-          <canvas
-            ref={canvasRef}
-            onMouseDown={handleMouseDown}
-            onMouseMove={handleMouseMove}
-            onMouseUp={handleMouseUp}
-            onMouseLeave={handleMouseUp}
-            style={{ border: '1px solid black' }}
-            className='my-2 w-full h-auto'
-          />
-          <div className='flex justify-end'>
-            <div className='flex items-center'>
-              <button onClick={undo} className="bg-gray-800 px-2 py-2 text-white rounded-xl mx-2">
-                <FaUndo />
-              </button>
-              <span>Undo</span>
-            </div>
-            <div className='flex items-center'>
-              <button onClick={redo} className="bg-gray-800 px-2 py-2 text-white rounded-xl mx-2">
-                <FaRedo />
-              </button>
-              <span>Redo</span>
-            </div>
+          <div className='rounded-2xl px-2 py-2 border-2 border-blue-500'>
+            <canvas
+              ref={canvasRef}
+              onMouseDown={handleMouseDown}
+              onMouseMove={handleMouseMove}
+              onMouseUp={handleMouseUp}
+              onMouseLeave={handleMouseUp}
+              style={{ border: '1px solid black' }}
+              className='w-full h-auto rounded-2xl '
+            />
           </div>
+
         </div>
-        <div className='flex flex-col items-center my-2 gap-4'>
+        <div className='flex flex-col items-center my-2 gap-4 border-2 border-cyan-400 rounded-xl'>
           <div className='flex flex-row md:flex-col items-center my-2 gap-4'>
             <div className='flex flex-col items-center gap-2'>
-              <label className='font-medium text-sm sm:text-lg md:text-base'>Color Picker</label>
+              <label className='font-medium text-sm sm:text-lg md:text-base text-white'>Color Picker</label>
+
               <input
                 type="color"
                 value={color}
                 onChange={(e) => setColor(e.target.value)}
-                className='mx-2'
+                className='w-10 h-10 bg-black'
               />
+
             </div>
             <div className='flex flex-col items-center gap-2'>
-              <label className='font-medium text-sm sm:text-lg md:text-base'>Brush Size</label>
-              <div className='flex'>
+              <label className='font-medium text-sm sm:text-lg md:text-base text-white'>Brush Size</label>
+              <div className='flex flex-col items-center gap-4'>
+                <div className='flex justify-center items-center w-[55px] h-[55px] border-2 border-white bg-white rounded-full'>
+                  <div
+                    style={{
+                      width: brushSize + 'px',
+                      height: brushSize + 'px',
+                      backgroundColor: color,
+                      borderRadius: '50%',
+                      border: '1px solid black',
+                    }}
+                  ></div>
+                </div>
                 <div className='flex items-center'>
                   <input
                     type="range"
@@ -147,35 +149,38 @@ const DrawingCanvas = forwardRef(({ onDrawingComplete, setIsCanvasEmpty }, ref) 
                     max="50"
                     value={brushSize}
                     onChange={(e) => setBrushSize(e.target.value)}
-                    className='mx-2'
+                    className='mx-2 accent-white'
                   />
                 </div>
-                <div
-                  style={{
-                    width: brushSize + 'px',
-                    height: brushSize + 'px',
-                    backgroundColor: color,
-                    borderRadius: '50%',
-                    border: '1px solid black',
-                  }}
-                ></div>
+
               </div>
             </div>
           </div>
-          <div className='flex flex-row md:flex-col gap-4 border border-gray-800 items-center px-2 py-2 rounded-xl'>
-            <label className='font-medium text-lg md:text-base'>Modes</label>
-            <button onClick={() => setMode('draw')} className={`flex items-center gap-2 px-4 py-4 rounded-xl mx-2 ${mode === 'draw' ? 'bg-gray-800 text-white' : 'bg-gray-200'}`}>
-              <FaPenAlt />
-              <span className='hidden sm:block'>Pen</span>
-            </button>
-            <button onClick={() => setMode('erase')} className={`flex items-center gap-2 px-4 py-4 rounded-xl mx-2 ${mode === 'erase' ? 'bg-gray-800 text-white' : 'bg-gray-200'}`}>
-              <FaEraser />
-              <span className='hidden sm:block'>Eraser</span>
-            </button>
-            <button onClick={clearCanvas} className="flex items-center bg-red-500 gap-2 px-4 py-4 text-white rounded-xl mx-2">
-              <FaTrashAlt />
-              <span className='hidden sm:block'>Clear</span>
-            </button>
+          <div className='flex flex-row sm:flex-col gap-4 border border-gray-800 items-center px-2 py-2 rounded-xl'>
+            <label className='font-medium text-lg md:text-base text-white'>Modes</label>
+            <div className='flex'>
+              <button onClick={() => setMode('draw')} className={`flex items-center gap-2 px-2 py-2 rounded-full mx-2 ${mode === 'draw' ? 'bg-cyan-400 text-white' : 'bg-gray-200'}`}>
+                <FaPenAlt />
+              </button>
+              <button onClick={() => setMode('erase')} className={`flex items-center gap-2 px-2 py-2 rounded-full mx-2 ${mode === 'erase' ? 'bg-gray-800 text-white' : 'bg-gray-200'}`}>
+                <FaEraser />
+              </button>
+              <button onClick={clearCanvas} className="flex items-center bg-red-500 gap-2 px-2 py-2 text-white rounded-full mx-2">
+                <FaTrashAlt />
+              </button>
+            </div>
+            <div className='flex justify-stretch'>
+              <div className='flex items-center'>
+                <button onClick={undo} className="bg-gray-800 px-2 py-2 text-white rounded-xl mx-2">
+                  <FaUndo />
+                </button>
+              </div>
+              <div className='flex items-center'>
+                <button onClick={redo} className="bg-gray-800 px-2 py-2 text-white rounded-xl mx-2">
+                  <FaRedo />
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </div>
