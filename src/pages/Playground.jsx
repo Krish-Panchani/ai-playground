@@ -2,8 +2,8 @@ import React, { useState, useRef } from 'react';
 import DrawingCanvas from '../components/DrawingCanvas';
 import HowPlay from '../components/howPlay';
 import Header from '../components/Header';
-import Score from '../components/Score';
 import AIResponse from '../components/AIResponse';
+import GenerateQuestionButton from '../components/GenerateQuestionButton';
 import { handleGenerateQuestion } from '../helpers/genQues';
 import { handleDrawingComplete, handleUpload, handleSendPrompt } from '../helpers/handleUploadDrawing';
 import Question from '../components/Question';
@@ -25,20 +25,26 @@ function Playground() {
     };
 
     return (
-        <div className='flex flex-col min-h-screen bg-gray-100 p-4'>
+        <div className='flex flex-col min-h-screen bg-black p-4'>
             <Header
-                handleGenerateQuestion={() => handleGenerateQuestion(setLoadingQuestion, setQuestion, setPrompt, canvasRef, setResponseText)}
-                loadingQuestion={loadingQuestion}
+                score={score}
                 className='mb-4'
             />
             {!question &&
-            <div>
-                <h2 className='text-center text-xl sm:text-2xl my-4'>Welcome to <span className='font-bold'>AI Playground</span> - Where Creativity Meets Learning</h2>
-            </div>
+                <div>
+                    <h2 className='text-center text-xl sm:text-2xl my-4'>Welcome to <span className='font-bold'>AI Playground</span> - Where Creativity Meets Learning</h2>
+                </div>
             }
-            <div className='flex flex-col-reverse md:flex-row items-center justify-evenly gap-4 my-6'>
-                <Question question={question} className='text-lg font-semibold text-gray-800' />
-                <Score score={score}/>
+            <div className='flex flex-col-reverse md:flex-row items-center justify-stretch mx-auto gap-4 my-6'>
+            <GenerateQuestionButton
+                    handleGenerateQuestion={() => handleGenerateQuestion(setLoadingQuestion, setQuestion, setPrompt, canvasRef, setResponseText)}
+                    loadingQuestion={loadingQuestion}
+                />
+                {question
+                    ?
+                    <Question question={question} loadingQuestion={loadingQuestion} className='text-lg font-semibold text-gray-800' />
+                    :
+                    <Question question={"Click Generate Button to Generate Question"} className='text-lg font-semibold text-gray-800' />}
             </div>
             <div className='flex flex-col items-center mb-6 space-y-4'>
                 <AIResponse
@@ -56,7 +62,7 @@ function Playground() {
                         />
                         <button
                             onClick={() => handleUpload(file, setLoadingUpload, handleSendPrompt, prompt, setResponseText, setLoadingResponse, setScore)}
-                            className={`w-full px-6 py-3 text-white rounded-lg font-semibold transition-colors duration-300 ${isCanvasEmpty || responseText ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700'}`}
+                            className={`w-full px-6 py-3 text-white rounded-lg font-semibold transition-colors duration-300 ${isCanvasEmpty || responseText ? 'bg-gray-400 cursor-not-allowed' : 'bg-gradient-to-r from-indigo-400 to-cyan-400'}`}
                             disabled={isCanvasEmpty || responseText}
                         >
                             {loadingUpload ? 'Uploading...' : 'Submit'}
