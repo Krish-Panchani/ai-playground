@@ -13,14 +13,24 @@ const DrawingCanvas = forwardRef(({ onDrawingComplete, setIsCanvasEmpty }, ref) 
   const [mode, setMode] = useState('draw');
 
   useEffect(() => {
-    const canvas = canvasRef.current;
-    const ctx = canvas.getContext('2d');
-    ctxRef.current = ctx;
-    canvas.width = 800;
-    canvas.height = 400;
-    ctx.fillStyle = 'white';
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-    setIsCanvasEmpty(true);
+    const setCanvasSize = () => {
+      const canvas = canvasRef.current;
+      const isMobile = window.innerWidth < 768; // Example breakpoint for mobile
+
+      canvas.width = isMobile ? canvas.clientWidth : 800;
+      canvas.height = isMobile ? canvas.clientHeight : 400;
+
+      const ctx = canvas.getContext('2d');
+      ctxRef.current = ctx;
+      ctx.fillStyle = 'white';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      setIsCanvasEmpty(true);
+    };
+
+    setCanvasSize(); // Initial size set
+    window.addEventListener('resize', setCanvasSize);
+
+    return () => window.removeEventListener('resize', setCanvasSize);
   }, [setIsCanvasEmpty]);
 
   useImperativeHandle(ref, () => ({
@@ -215,7 +225,7 @@ const DrawingCanvas = forwardRef(({ onDrawingComplete, setIsCanvasEmpty }, ref) 
               </div>
             </div>
           </div>
-          <div className='flex flex-row sm:flex-col gap-4 border border-gray-800 items-center px-2 py-2 rounded-xl'>
+          <div className='flex flex-col gap-4 border border-gray-800 items-center px-2 py-2 rounded-xl'>
             <label className='font-medium text-lg md:text-base text-white'>Modes</label>
             <div className='flex'>
               <button onClick={() => setMode('draw')} className={`flex items-center gap-2 px-2 py-2 rounded-full mx-2 ${mode === 'draw' ? 'bg-cyan-400 text-white' : 'bg-gray-200'}`}>
@@ -225,7 +235,7 @@ const DrawingCanvas = forwardRef(({ onDrawingComplete, setIsCanvasEmpty }, ref) 
                 <FaEraser />
               </button>
               <button onClick={() => setMode('fill')} className={`flex items-center gap-2 px-2 py-2 rounded-full mx-2 ${mode === 'fill' ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}>
-              <IoMdColorFill />
+                <IoMdColorFill />
 
               </button>
               <button onClick={clearCanvas} className="flex items-center bg-red-500 gap-2 px-2 py-2 text-white rounded-full mx-2">
