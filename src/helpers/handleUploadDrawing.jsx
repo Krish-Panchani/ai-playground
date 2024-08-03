@@ -1,6 +1,7 @@
 import { ref, uploadBytesResumable } from 'firebase/storage';
-import { firebaseApp, storage } from '../firebase';
+import { firebaseApp, storage, firestore } from '../firebase';
 import { getVertexAI, getGenerativeModel } from "firebase/vertexai-preview";
+import { doc, setDoc, getDoc } from 'firebase/firestore';
 
 export const handleDrawingComplete = (dataUrl, setFile) => {
     const byteString = atob(dataUrl.split(',')[1]);
@@ -14,7 +15,7 @@ export const handleDrawingComplete = (dataUrl, setFile) => {
     setFile(new File([blob], 'drawing.png', { type: mimeString }));
 };
 
-export const handleUpload = async (file, setLoadingUpload, handleSendPrompt, prompt, setResponseText, setLoadingResponse, setScore) => {
+export const handleUpload = async (file, setLoadingUpload, handleSendPrompt, prompt, setResponseText, setLoadingResponse, setScore, user) => {
     if (!file) {
         alert('Please complete a drawing to upload');
         return;
@@ -41,7 +42,7 @@ export const handleUpload = async (file, setLoadingUpload, handleSendPrompt, pro
             },
             async () => {
                 alert('Drawing uploaded to AI - Successfully');
-                await handleSendPrompt(uniqueFileName, prompt, setResponseText, setLoadingResponse, setScore);
+                await handleSendPrompt(uniqueFileName, prompt, setResponseText, setLoadingResponse, setScore, user);
                 setLoadingUpload(false);
             }
         );
@@ -52,43 +53,32 @@ export const handleUpload = async (file, setLoadingUpload, handleSendPrompt, pro
     }
 };
 
-export const handleSendPrompt = async (uniqueFileName, prompt, setResponseText, setLoadingResponse, setScore) => {
+export const handleSendPrompt = async (uniqueFileName, prompt, setResponseText, setLoadingResponse, setScore, user) => {
     setLoadingResponse(true);
 
     try {
+        // Your existing code for generating response
         const vertexAI = getVertexAI(firebaseApp);
-        const bucket_name = process.env.REACT_APP_FIREBASE_STORAGE_BUCKET; 
+        const bucket_name = process.env.REACT_APP_FIREBASE_STORAGE_BUCKET;
         const model = getGenerativeModel(vertexAI, { model: "gemini-1.5-flash" });
         const combinedPrompt = `"Statement: ${prompt}".\n\n
-    Compare the statement with Image and check if statement object is present in the image or not if present then return isCorrect:true else return isCorrect:false in JSON format. also give reason why it is correct or not. and give point between 1 to 10 according to how drawing match with statement, give 1 point if isCorrect is false.\n\n
-    json format: {isCorrect: boolean, reason: string, points: number}`;
+        Compare the statement with Image and check if statement object is present in the image or not if present then return isCorrect:true else return isCorrect:false in JSON format. also give reason why it is correct or not and give point between 1 to 10 according to how drawing match with statement, give 1 point if isCorrect is false.\n\n
+        json format: {isCorrect: boolean, reason: string, points: number}`;
 
         const imageUri = `gs://${bucket_name}/${uniqueFileName}`;
         const mimeType = 'image/png';
 
-        // For images, the SDK supports both Google Cloud Storage URI and base64 strings
         const imagePart = {
             fileData: {
                 fileUri: imageUri,
                 mimeType: mimeType,
             },
         };
-        // Generate a response
+
         const result = await model.generateContent([combinedPrompt, imagePart]);
-
-        // Extract the text from the response
         const fullTextResponse = await result.response.text();
-
-        // Log the raw response text for debugging
-        console.log(fullTextResponse);
-
-        // Remove code block markers and trim any extra whitespace
         const cleanedText = fullTextResponse.replace(/```json|```/g, '').trim();
 
-        // Log the cleaned text for debugging
-        console.log(cleanedText);
-
-        // Try parsing the JSON response
         let responseData;
         try {
             responseData = JSON.parse(cleanedText);
@@ -97,13 +87,32 @@ export const handleSendPrompt = async (uniqueFileName, prompt, setResponseText, 
             throw new Error('Invalid JSON response');
         }
 
-        // Log the parsed data for debugging
-        console.log(responseData);
-
-        // Use the data
         setResponseText(cleanedText);
         setLoadingResponse(false);
-        setScore(prevScore => prevScore + (responseData.points || 0));
+
+        if (user) {
+            // Fetch current user score
+            const userDocRef = doc(firestore, 'users', user.uid);
+            const userDoc = await getDoc(userDocRef);
+
+            let currentScore = 0;
+            if (userDoc.exists()) {
+                currentScore = userDoc.data().score || 0;
+            }
+
+            // Calculate new score
+            const newScore = currentScore + (responseData.points || 0);
+            console.log('New score:', newScore);
+            // Update Firestore with new score
+            await setDoc(userDocRef, { score: newScore }, { merge: true });
+
+            // Update local state
+            setScore(newScore);
+        } else {
+            // For guests, just update local state
+            setScore(prevScore => prevScore + (responseData.points || 0));
+        }
+
     } catch (error) {
         console.error('Error getting response from cloud function:', error);
         alert('Error getting response from cloud function: ' + error.message);
