@@ -55,26 +55,16 @@ function Playground() {
                         email: user.email,
                         score: 0
                     });
+                    setScore(0); // Set initial score for new users
                 }
-            }
-            else {
+            } else {
                 console.log('User not signed in: Playground');
-                setScore(0); // Set score to 0 for guest user   
+                setScore(0); // Set score to 0 for guest user
             }
         };
-
+    
         fetchUserScore();
     }, [user]);
-
-    // useEffect(() => {
-    //     if (user) {
-    //         const updateUserScore = async () => {
-    //             const userDocRef = doc(firestore, 'users', user.uid);
-    //             await setDoc(userDocRef, { score: score }, { merge: true });
-    //         };
-    //         updateUserScore();
-    //     }
-    // }, [score, user]);
 
     const handleAIResponse = (responseText) => {
         setResponseText(responseText);
@@ -132,7 +122,7 @@ function Playground() {
                             setIsCanvasEmpty={setIsCanvasEmpty}
                         />
                         <button
-                            onClick={() => handleUpload(file, setLoadingUpload, handleSendPrompt, prompt, setResponseText, setLoadingResponse, setScore)}
+                            onClick={() => handleUpload(file, setLoadingUpload, handleSendPrompt, prompt, setResponseText, setLoadingResponse, setScore, user)}
                             className={`w-full px-6 py-3 text-white rounded-lg font-semibold transition-colors duration-300 ${isCanvasEmpty || responseText ? 'bg-gray-400 cursor-not-allowed' : 'bg-gradient-to-r from-indigo-400 to-cyan-400'}`}
                             disabled={isCanvasEmpty || responseText}
                         >
