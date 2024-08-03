@@ -1,5 +1,6 @@
 import React, { useRef, useEffect, useState, forwardRef, useImperativeHandle } from 'react';
 import { FaUndo, FaRedo, FaEraser, FaPenAlt, FaTrashAlt } from 'react-icons/fa'; // Import icons
+import { IoMdColorFill } from "react-icons/io";
 
 const DrawingCanvas = forwardRef(({ onDrawingComplete, setIsCanvasEmpty }, ref) => {
   const canvasRef = useRef(null);
@@ -27,13 +28,18 @@ const DrawingCanvas = forwardRef(({ onDrawingComplete, setIsCanvasEmpty }, ref) 
   }));
 
   const handleMouseDown = (e) => {
-    const ctx = ctxRef.current;
-    ctx.strokeStyle = mode === 'erase' ? 'white' : color;
-    ctx.lineWidth = brushSize;
-    ctx.beginPath();
-    ctx.moveTo(e.nativeEvent.offsetX, e.nativeEvent.offsetY);
-    setIsDrawing(true);
-    setIsCanvasEmpty(false);
+    if (mode === 'fill') {
+      const { offsetX, offsetY } = e.nativeEvent;
+      fillArea(offsetX, offsetY);
+    } else {
+      const ctx = ctxRef.current;
+      ctx.strokeStyle = mode === 'erase' ? 'white' : color;
+      ctx.lineWidth = brushSize;
+      ctx.beginPath();
+      ctx.moveTo(e.nativeEvent.offsetX, e.nativeEvent.offsetY);
+      setIsDrawing(true);
+      setIsCanvasEmpty(false);
+    }
   };
 
   const handleMouseMove = (e) => {
@@ -98,6 +104,63 @@ const DrawingCanvas = forwardRef(({ onDrawingComplete, setIsCanvasEmpty }, ref) 
     canvas.style.cursor = `url('data:image/svg+xml;base64,${btoa(`<svg xmlns="http://www.w3.org/2000/svg" width="${brushSize}" height="${brushSize}" viewBox="0 0 ${brushSize} ${brushSize}"><circle cx="${brushSize / 2}" cy="${brushSize / 2}" r="${brushSize / 2}" fill="${color}" /></svg>`)}') ${brushSize / 2} ${brushSize / 2}, auto`;
   }, [brushSize, color]);
 
+  const fillArea = (startX, startY) => {
+    const canvas = canvasRef.current;
+    const ctx = ctxRef.current;
+    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    const data = imageData.data;
+    const startColor = getColorAtPixel(data, startX, startY);
+    const fillColor = hexToRgb(color);
+
+    if (colorsMatch(startColor, fillColor)) return;
+
+    const stack = [[startX, startY]];
+    while (stack.length > 0) {
+      const [x, y] = stack.pop();
+      const currentColor = getColorAtPixel(data, x, y);
+
+      if (colorsMatch(currentColor, startColor)) {
+        setColorAtPixel(data, x, y, fillColor);
+        stack.push([x + 1, y]);
+        stack.push([x - 1, y]);
+        stack.push([x, y + 1]);
+        stack.push([x, y - 1]);
+      }
+    }
+
+    ctx.putImageData(imageData, 0, 0);
+    const newHistory = history.slice(0, currentStep + 1);
+    newHistory.push(canvas.toDataURL());
+    setHistory(newHistory);
+    setCurrentStep(newHistory.length - 1);
+    onDrawingComplete(canvas.toDataURL());
+  };
+
+  const getColorAtPixel = (data, x, y) => {
+    const index = (y * canvasRef.current.width + x) * 4;
+    return [data[index], data[index + 1], data[index + 2], data[index + 3]];
+  };
+
+  const setColorAtPixel = (data, x, y, color) => {
+    const index = (y * canvasRef.current.width + x) * 4;
+    data[index] = color[0];
+    data[index + 1] = color[1];
+    data[index + 2] = color[2];
+    data[index + 3] = 255; // alpha channel
+  };
+
+  const colorsMatch = (color1, color2) => {
+    return color1[0] === color2[0] && color1[1] === color2[1] && color1[2] === color2[2] && color1[3] === color2[3];
+  };
+
+  const hexToRgb = (hex) => {
+    const bigint = parseInt(hex.slice(1), 16);
+    const r = (bigint >> 16) & 255;
+    const g = (bigint >> 8) & 255;
+    const b = bigint & 255;
+    return [r, g, b];
+  };
+
   return (
     <div className='flex flex-col justify-evenly'>
       <div className='flex flex-col md:flex-row justify-between gap-10'>
@@ -113,20 +176,17 @@ const DrawingCanvas = forwardRef(({ onDrawingComplete, setIsCanvasEmpty }, ref) 
               className='w-full h-auto rounded-2xl '
             />
           </div>
-
         </div>
         <div className='flex flex-col items-center my-2 gap-4 border-2 border-cyan-400 rounded-xl'>
           <div className='flex flex-row md:flex-col items-center my-2 gap-4'>
             <div className='flex flex-col items-center gap-2'>
               <label className='font-medium text-sm sm:text-lg md:text-base text-white'>Color Picker</label>
-
               <input
                 type="color"
                 value={color}
                 onChange={(e) => setColor(e.target.value)}
                 className='w-10 h-10 bg-black'
               />
-
             </div>
             <div className='flex flex-col items-center gap-2'>
               <label className='font-medium text-sm sm:text-lg md:text-base text-white'>Brush Size</label>
@@ -152,7 +212,6 @@ const DrawingCanvas = forwardRef(({ onDrawingComplete, setIsCanvasEmpty }, ref) 
                     className='mx-2 accent-white'
                   />
                 </div>
-
               </div>
             </div>
           </div>
@@ -164,6 +223,10 @@ const DrawingCanvas = forwardRef(({ onDrawingComplete, setIsCanvasEmpty }, ref) 
               </button>
               <button onClick={() => setMode('erase')} className={`flex items-center gap-2 px-2 py-2 rounded-full mx-2 ${mode === 'erase' ? 'bg-gray-800 text-white' : 'bg-gray-200'}`}>
                 <FaEraser />
+              </button>
+              <button onClick={() => setMode('fill')} className={`flex items-center gap-2 px-2 py-2 rounded-full mx-2 ${mode === 'fill' ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}>
+              <IoMdColorFill />
+
               </button>
               <button onClick={clearCanvas} className="flex items-center bg-red-500 gap-2 px-2 py-2 text-white rounded-full mx-2">
                 <FaTrashAlt />
