@@ -3,16 +3,33 @@ import { getVertexAI, getGenerativeModel } from "firebase/vertexai-preview";
 const vertexAI = getVertexAI(firebaseApp);
 const model = getGenerativeModel(vertexAI, { model: "gemini-1.5-flash" });
 
-export const handleGenerateQuestion = async (setLoadingQuestion, setQuestion, setPrompt, canvasRef, setResponseText) => {
+export const handleGenerateQuestion = async (setLoadingQuestion, setQuestion, setPrompt, ageGroup, skillLevel, canvasRef, setResponseText) => {
     setLoadingQuestion(true);
 
     try {
-        // const response = await fetch(process.env.REACT_APP_GENERATE_QUESTION_URL);
-        // if (!response.ok) {
-        //     const errorData = await response.json();
-        //     throw new Error(errorData.error || 'Error generating question');
-        // }
-        const prompt = `Please generate a unique drawing question for a user to draw something on a webpage canvas. The question should ask the user to draw something from various categories such as letters, numbers, shapes, objects, animals, birds, fruits, vegetables, vehicles, etc. Each question should be different and unique every time. Here are some examples of what you might ask: "Draw a house.", "Draw a cat.", "Draw a number 2.", "Draw a sun.", "Draw a bicycle." Make sure the question is always new and varied. generate only 1 question.`;
+        const prompt = `
+       Generate a unique drawing prompt suitable for a webpage canvas, based on the user's age group (${ageGroup}) and skill level (${skillLevel}). The prompt should ask the user to draw something appropriate for their age and skill level.
+
+Here are examples for different artist levels:
+
+- **Junior Artist (Age: 12 and below):**
+  - Beginner (Ages 8-10): "Draw the number 7 in a fun and colorful style."
+  - Intermediate (Ages 11-12): "Draw the letter 'A' decorated with patterns or designs."
+
+- **Teen Artist (Ages 13-19):**
+  - Beginner: "Draw a cool, stylized skateboard with some graffiti art."
+  - Intermediate: "Draw a fantasy creature like a dragon or unicorn."
+  - Advanced: "Draw a detailed skateboard park with ramps and rails."
+
+- **Adult Artist (Age 20 and above):**
+  - Beginner: "Draw a geometric pattern using different shapes and colors."
+  - Intermediate: "Draw a scene from your favorite cityscape with architectural details."
+  - Advanced: "Draw a detailed portrait of a person or a character from a story."
+
+Ensure the prompt is unique each time and suitable for the given artist level and skill level.
+Generated Question should be in one Line.
+
+        `;
 
 
         // To generate text output, call generateContent with the text input
