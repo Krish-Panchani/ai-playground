@@ -5,7 +5,7 @@ import { getAuth, GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
 import { doc, setDoc, getDoc } from 'firebase/firestore';
 import { firestore } from '../firebase'; // Make sure to import firestore
 
-const Login = () => {
+const Login = ({ setQuestion, setResponseText }) => {
   const auth = getAuth();
 
   const signInWithGoogle = async () => {
@@ -26,14 +26,13 @@ const Login = () => {
           email: user.email,
           score: 0
         });
+        setQuestion(''); // Clear the question after sign in
+        setResponseText(''); // Clear the responseText after sign in
         console.log("User document created in Firestore:");
       } else {
-        // Existing user, update score in state
-        console.log("User document exists in Firestore");
-        const docData = docSnap.data();
-        console.log("User document data:", docData);
-        const currentScore = docData.score;
-        console.log("Current score:", currentScore);
+        setQuestion(''); // Clear the question after sign in
+        setResponseText(''); // Clear the responseText after
+        console.log("User document already exists in Firestore");
       }
     } catch (error) {
       console.error("Error during sign in:", error);
