@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import DrawingCanvas from '../components/DrawingCanvas';
 import HowPlay from '../components/howPlay';
 import Header from '../components/Header';
@@ -7,6 +7,10 @@ import GenerateQuestionButton from '../components/GenerateQuestionButton';
 import { handleGenerateQuestion } from '../helpers/genQues';
 import { handleDrawingComplete, handleUpload, handleSendPrompt } from '../helpers/handleUploadDrawing';
 import Question from '../components/Question';
+import { auth, firestore } from '../firebase';
+import { doc, setDoc, getDoc } from 'firebase/firestore';
+import Login from '../components/Login';
+import useAuth from '../auth/useAuth';
 
 function Playground() {
     const [file, setFile] = useState(null);
@@ -16,9 +20,61 @@ function Playground() {
     const [loadingUpload, setLoadingUpload] = useState(false);
     const [loadingResponse, setLoadingResponse] = useState(false);
     const [loadingQuestion, setLoadingQuestion] = useState(false);
-    const [score, setScore] = useState(0);
+    const [score, setScore] = useState();
     const [isCanvasEmpty, setIsCanvasEmpty] = useState(true);
     const canvasRef = useRef(null);
+
+    const user = useAuth(); // This should work fine here
+
+    const signOut = () => {
+        auth.signOut()
+            .then(() => {
+                console.log('User signed out successfully');
+            })
+            .catch((error) => {
+                console.error('Error signing out: ', error);
+            });
+    };
+
+    useEffect(() => {
+        const fetchUserScore = async () => {
+            if (user) {
+                console.log('Fetching user score from Firestore: Playground');
+                const userDocRef = doc(firestore, 'users', user.uid);
+                const docSnap = await getDoc(userDocRef);
+                if (docSnap.exists()) {
+                    const data = docSnap.data();
+                    console.log('User document data:', data);
+                    setScore(data.score); // Set score from Firestore
+                    console.log('User score - Playground:', data.score);
+                } else {
+                    console.log('Creating new user document in Firestore: Playground');
+                    // New user, create document with initial score of 0
+                    await setDoc(userDocRef, {
+                        displayName: user.displayName,
+                        email: user.email,
+                        score: 0
+                    });
+                }
+            }
+            else {
+                console.log('User not signed in: Playground');
+                setScore(0); // Set score to 0 for guest user   
+            }
+        };
+
+        fetchUserScore();
+    }, [user]);
+
+    // useEffect(() => {
+    //     if (user) {
+    //         const updateUserScore = async () => {
+    //             const userDocRef = doc(firestore, 'users', user.uid);
+    //             await setDoc(userDocRef, { score: score }, { merge: true });
+    //         };
+    //         updateUserScore();
+    //     }
+    // }, [score, user]);
 
     const handleAIResponse = (responseText) => {
         setResponseText(responseText);
@@ -30,21 +86,36 @@ function Playground() {
                 score={score}
                 className='mb-4'
             />
+            <div className='text-white flex justify-between px-8 my-6'>
+                {user ? (
+                    <>
+                        <h2 className='text-lg sm:text-xl font-semibold'>Hello Artist, <span className='font-bold'>{user.displayName}</span></h2>
+                        <button onClick={signOut}>Sign Out</button>
+                    </>
+                ) : (
+                    <>
+                        <h2 className='text-md sm:text-xl font-semibold'>Hello Artist, <span className='font-bold'>Guest</span></h2>
+                        <Login />
+                    </>
+                )}
+            </div>
             {!question &&
                 <div>
-                    <h2 className='text-center text-xl sm:text-2xl my-4'>Welcome to <span className='font-bold'>AI Playground</span> - Where Creativity Meets Learning</h2>
+                    <h2 className='text-center text-xl sm:text-2xl my-4 text-white'>Welcome to <span className='font-bold'>AI Playground</span> - Where Creativity Meets Learning</h2>
                 </div>
             }
-            <div className='flex flex-col-reverse md:flex-row items-center justify-stretch mx-auto gap-4 my-6'>
-            <GenerateQuestionButton
+            <div className='flex flex-col md:flex-row items-center justify-stretch mx-auto gap-4 my-6'>
+                <GenerateQuestionButton
                     handleGenerateQuestion={() => handleGenerateQuestion(setLoadingQuestion, setQuestion, setPrompt, canvasRef, setResponseText)}
                     loadingQuestion={loadingQuestion}
+                    question={question}
                 />
                 {question
                     ?
-                    <Question question={question} loadingQuestion={loadingQuestion} className='text-lg font-semibold text-gray-800' />
+                    <Question question={question} className='text-lg font-semibold text-gray-800' />
                     :
-                    <Question question={"Click Generate Button to Generate Question"} className='text-lg font-semibold text-gray-800' />}
+                    <div className='text-lg font-semibold text-gray-600'>Click Generate Question Button to get Question.</div>}
+                {loadingQuestion && <div className="h-1 w-60 mb-4 bg-gradient-to-r from-cyan-400 to-green-500 mx-auto rounded-full animate-gradient-animate z-50"></div>}
             </div>
             <div className='flex flex-col items-center mb-6 space-y-4'>
                 <AIResponse
@@ -70,12 +141,13 @@ function Playground() {
                     </div>
                 )}
             </div>
-            <div className='flex justify-center'>
-                <HowPlay className='text-center text-sm text-gray-700' />
-            </div>
+            {!question && (
+                <div className='flex justify-center'>
+                    <HowPlay className='text-center text-sm text-gray-700' />
+                </div>
+            )}
         </div>
     );
 }
-
 
 export default Playground;
