@@ -2,7 +2,7 @@ import React from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 
-const Question = ({ question, loadingQuestion }) => (
+const Question = ({ question }) => (
     <div>
         {question && (
             <div className='flex flex-col md:flex-row px-8 items-center py-2 rounded-xl'>
@@ -11,7 +11,7 @@ const Question = ({ question, loadingQuestion }) => (
 
             </div>
         )}
-        {loadingQuestion && <div className="h-1 w-60 mb-4 bg-gradient-to-r from-cyan-400 to-green-500 mx-auto rounded-full animate-gradient-animate z-50"></div>}
+        
     </div>
 );
 
