@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-const GenerateQuestionButton = ({ handleGenerateQuestion, loadingQuestion }) => {
+const GenerateQuestionButton = ({ handleGenerateQuestion, loadingQuestion, question }) => {
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const [remainingTime, setRemainingTime] = useState(0);
 
@@ -33,10 +33,11 @@ const GenerateQuestionButton = ({ handleGenerateQuestion, loadingQuestion }) => 
   return (
     <button 
       onClick={handleButtonClick} 
-      className={isButtonDisabled ? 'text-xl font-semibold px-4 py-2 text-white rounded-lg cursor-not-allowed' : 'bg-black px-4 py-2 text-white font-semibold rounded-full border-2  whitespace-nowrap'}
+      className={isButtonDisabled ? 'text-xl font-semibold px-4 py-2 text-white rounded-lg cursor-not-allowed' : 'bg-gradient-to-r from-indigo-600 to-cyan-600 px-4 py-2 text-white font-semibold rounded-full  whitespace-nowrap'}
       disabled={loadingQuestion || isButtonDisabled}
     >
-      {loadingQuestion ? 'Loading...' : (isButtonDisabled ? `Retry in ${formatTime(remainingTime)}` : 'Generate Que')}
+      {loadingQuestion ? 'Loading...' : (isButtonDisabled ? `Retry in ${formatTime(remainingTime)}` : (question ? 'Skip' : 'Generate Que'))}
+      
     </button>
   );
 };
