@@ -41,7 +41,7 @@ const Login = ({ setQuestion, setResponseText }) => {
 
   return (
     <div>
-      <button onClick={signInWithGoogle} className='text-black font-semibold px-4 py-2 rounded-full bg-white'>Sign in with Google</button>
+      <button onClick={signInWithGoogle} className='text-black  font-semibold px-4 py-2 rounded-full bg-white'>Sign in with Google</button>
     </div>
   );
 };
