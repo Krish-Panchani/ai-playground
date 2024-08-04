@@ -1,6 +1,6 @@
 import React from 'react';
 
-const AIResponse = ({ loadingResponse, responseText }) => {
+const AIResponse = ({ loadingResponse, responseText, isCanvasEmpty }) => {
   const renderResponse = () => {
     try {
       const response = JSON.parse(responseText);
@@ -30,9 +30,9 @@ const AIResponse = ({ loadingResponse, responseText }) => {
   return (
     <div className='flex justify-center items-center text-white'>
       {loadingResponse && <p>Loading AI response...</p>}
-      {responseText && (
+      {responseText && !isCanvasEmpty &&(
         <div className='mt-4 p-4 rounded-lg'>
-          <h3 className='text-xl font-semibold'>AI Response:</h3>
+          <h3 className='text-xl font-bold bg-gradient-to-r from-blue-500 to-cyan-400 bg-clip-text text-transparent'>Gemini - Response</h3>
           {renderResponse()}
         </div>
       )}
