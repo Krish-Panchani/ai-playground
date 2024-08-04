@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-const GenerateQuestionButton = ({ handleGenerateQuestion, loadingQuestion, question }) => {
+const GenerateQuestionButton = ({ handleGenerateQuestion, loadingQuestion, question, responseText }) => {
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const [remainingTime, setRemainingTime] = useState(0);
 
@@ -19,10 +19,17 @@ const GenerateQuestionButton = ({ handleGenerateQuestion, loadingQuestion, quest
     } else if (remainingTime === 0) {
       setIsButtonDisabled(false);
     }
-
-    // Cleanup interval on component unmount or when timer is done
+  
+    // Clear interval if responseText is set
+    if (responseText) {
+      clearInterval(timer);
+      setIsButtonDisabled(false);
+    }
+    
     return () => clearInterval(timer);
-  }, [remainingTime, isButtonDisabled]);
+  
+    // Cleanup interval on component unmount or when timer is done
+  }, [remainingTime, isButtonDisabled, responseText]);
 
   const formatTime = (seconds) => {
     const minutes = Math.floor(seconds / 60);
