@@ -36,7 +36,7 @@ const GenerateQuestionButton = ({ handleGenerateQuestion, loadingQuestion, quest
       className={isButtonDisabled ? 'text-xl font-semibold px-4 py-2 text-white rounded-lg cursor-not-allowed' : 'bg-gradient-to-r from-indigo-600 to-cyan-600 px-4 py-2 text-white font-semibold rounded-full  whitespace-nowrap'}
       disabled={loadingQuestion || isButtonDisabled}
     >
-      {loadingQuestion ? 'Loading...' : (isButtonDisabled ? `Retry in ${formatTime(remainingTime)}` : (question ? 'Skip' : 'Generate Que'))}
+      {loadingQuestion ? 'Loading...' : (isButtonDisabled ? `Retry in ${formatTime(remainingTime)}` : (question ? 'Next' : 'Generate Que'))}
       
     </button>
   );
