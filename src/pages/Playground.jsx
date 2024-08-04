@@ -83,7 +83,7 @@ function Playground() {
             <div className='text-white flex items-center justify-between px-8 my-6'>
                 {user ? (
                     <div className='flex items-center'>
-                        <h2 className='text-lg sm:text-xl font-semibold mr-4'>
+                        <h2 className='text-lg sm:text-xl mr-4'>
                             Hello Artist, <span className='font-bold'>{user.displayName}</span>
                         </h2>
                         <select
@@ -112,7 +112,7 @@ function Playground() {
                     </div>
                 ) : (
                     <>
-                        <h2 className='text-md sm:text-xl font-semibold'>
+                        <h2 className='text-md sm:text-xl'>
                             Hello Artist, <span className='font-bold'>Guest</span>
                         </h2>
                         <div>
@@ -148,7 +148,7 @@ function Playground() {
             {!question &&
                 <div>
                     <h2 className='text-center text-xl sm:text-2xl my-4 text-white'>
-                        Welcome to <span className='font-bold'>AI Playground</span> - Where Creativity Meets Learning
+                        Welcome to <span className='font-bold bg-gradient-to-r from-red-500 to-orange-500 bg-clip-text text-transparent'>AI Playground</span> - Where Creativity Meets Learning
                     </h2>
                 </div>
             }
