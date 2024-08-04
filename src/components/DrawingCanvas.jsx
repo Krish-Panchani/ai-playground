@@ -1,6 +1,7 @@
 import React, { useRef, useEffect, useState, forwardRef, useImperativeHandle } from 'react';
 import { FaUndo, FaRedo, FaEraser, FaPenAlt, FaTrashAlt } from 'react-icons/fa'; // Import icons
 import { IoMdColorFill } from "react-icons/io";
+import Tooltip from '@mui/material/Tooltip';
 
 const DrawingCanvas = forwardRef(({ onDrawingComplete, setIsCanvasEmpty }, ref) => {
   const canvasRef = useRef(null);
@@ -173,50 +174,54 @@ const DrawingCanvas = forwardRef(({ onDrawingComplete, setIsCanvasEmpty }, ref) 
 
   return (
     <>
-      <div className="bg-background rounded-lg border p-4 flex flex-col gap-4">
-        <div className='flex-1 rounded-2xl px-2 py-2 border-2 border-blue-500'>
-          <canvas
-            ref={canvasRef}
-            onMouseDown={handleMouseDown}
-            onMouseMove={handleMouseMove}
-            onMouseUp={handleMouseUp}
-            onMouseLeave={handleMouseUp}
-            style={{ border: '1px solid black' }}
-            className='w-full h-auto rounded-2xl '
-          />
-        </div>
-        <div className='flex items-center justify-evenly'>
-          <div className="flex gap-2">
-            <button onClick={() => setMode('draw')} className={`flex items-center gap-2 px-2 py-2 rounded-full mx-2 ${mode === 'draw' ? 'bg-cyan-400 text-white' : 'bg-gray-200'}`}>
+
+      <div className='flex-1 rounded-2xl px-2 py-2 border-2 border-blue-500'>
+        <canvas
+          ref={canvasRef}
+          onMouseDown={handleMouseDown}
+          onMouseMove={handleMouseMove}
+          onMouseUp={handleMouseUp}
+          onMouseLeave={handleMouseUp}
+          style={{ border: '1px solid black' }}
+          className='w-full h-auto rounded-2xl '
+        />
+      </div>
+      <div className='flex items-center justify-evenly'>
+        <div className="flex gap-2">
+          <Tooltip title="Pencil" arrow>
+            <button onClick={() => setMode('draw')} className={`flex items-center gap-2 px-2 py-2 rounded-full mx-2 ${mode === 'draw' ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}>
               <FaPenAlt />
             </button>
-            <button onClick={() => setMode('erase')} className={`flex items-center gap-2 px-2 py-2 rounded-full mx-2 ${mode === 'erase' ? 'bg-gray-800 text-white' : 'bg-gray-200'}`}>
+          </Tooltip>
+
+          <Tooltip title="Eraser" arrow>
+            <button onClick={() => setMode('erase')} className={`flex items-center gap-2 px-2 py-2 rounded-full mx-2 ${mode === 'erase' ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}>
               <FaEraser />
             </button>
+          </Tooltip>
+
+          <Tooltip title="Fill" arrow>
             <button onClick={() => setMode('fill')} className={`flex items-center gap-2 px-2 py-2 rounded-full mx-2 ${mode === 'fill' ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}>
               <IoMdColorFill />
-
             </button>
+          </Tooltip>
+          <Tooltip title="CleaR All" arrow>
             <button onClick={clearCanvas} className="flex items-center bg-red-500 gap-2 px-2 py-2 text-white rounded-full mx-2">
               <FaTrashAlt />
             </button>
-          </div>
-          <div className='flex gap-2 items-center'>
-          <button onClick={undo} className="bg-gray-800 px-2 py-2 text-white rounded-xl mx-2">
-                    <FaUndo />
-                  </button>
-                  <button onClick={redo} className="bg-gray-800 px-2 py-2 text-white rounded-xl mx-2">
-                    <FaRedo />
-                  </button>
-          </div>
-          <div className='flex gap-2 items-center'>
+          </Tooltip>
+        </div>
+
+        <div className='flex gap-2 items-center'>
+          <Tooltip title="Color Picker" arrow>
             <input
               type="color"
               value={color}
               onChange={(e) => setColor(e.target.value)}
               className='w-10 h-10 bg-black'
             />
-
+          </Tooltip>
+          <Tooltip title="Pencil Size" arrow>
             <input
               type="range"
               min="1"
@@ -225,18 +230,30 @@ const DrawingCanvas = forwardRef(({ onDrawingComplete, setIsCanvasEmpty }, ref) 
               onChange={(e) => setBrushSize(e.target.value)}
               className='mx-2 accent-white'
             />
-            <div className='flex justify-center items-center w-[55px] h-[55px] border-2 border-white bg-white rounded-full'>
-              <div
-                style={{
-                  width: brushSize + 'px',
-                  height: brushSize + 'px',
-                  backgroundColor: color,
-                  borderRadius: '50%',
-                  border: '1px solid black',
-                }}
-              ></div>
-            </div>
+          </Tooltip>
+          <div className='flex justify-center items-center w-[55px] h-[55px] border-2 border-white bg-white rounded-full'>
+            <div
+              style={{
+                width: brushSize + 'px',
+                height: brushSize + 'px',
+                backgroundColor: color,
+                borderRadius: '50%',
+                border: '1px solid black',
+              }}
+            ></div>
           </div>
+        </div>
+        <div className='flex gap-2 items-center'>
+          <Tooltip title="Undo" arrow>
+            <button onClick={undo} className="bg-gray-800 px-2 py-2 text-white rounded-xl mx-2">
+              <FaUndo />
+            </button>
+          </Tooltip>
+          <Tooltip title="Redo" arrow>
+            <button onClick={redo} className="bg-gray-800 px-2 py-2 text-white rounded-xl mx-2">
+              <FaRedo />
+            </button>
+          </Tooltip>
         </div>
       </div>
 
