@@ -7,7 +7,7 @@ const Header = ({ score }) => {
     <>
       <header className="bg-background border-b border-red-600 rounded-full px-4 py-4 md:px-6 flex items-center justify-between">
     <a  href="/home">
-      <div className='flex items-center gap-2 bg-gradient-to-r from-red-500 to-orange-500 bg-clip-text text-transparent'>
+      <div className='flex items-center gap-2 bg-gradient-to-r from-red-500 to-orange-500 bg-clip-text text-transparent  animate-gradient-animate'>
       <svg
         xmlns="http://www.w3.org/2000/svg"
         width="24"
@@ -26,7 +26,7 @@ const Header = ({ score }) => {
         <line x1="18" x2="18.01" y1="11" y2="11"></line>
         <rect width="20" height="12" x="2" y="6" rx="2"></rect>
       </svg>
-      <span className="text-xl font-bold ">AI Playground</span>
+      <span className="text-2xl font-bold">AI Playground</span>
       </div>
     </a>
     <div className="flex items-center gap-4">
