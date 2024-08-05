@@ -62,9 +62,7 @@ export const handleSendPrompt = async (uniqueFileName, prompt, setResponseText, 
         const bucket_name = process.env.REACT_APP_FIREBASE_STORAGE_BUCKET;
         const model = getGenerativeModel(vertexAI, { model: "gemini-1.5-flash" });
         const combinedPrompt = `Guess what user drawn in given Drawing. ${prompt}.
-        Response format: JSON. {
-        guess: "The guessed object in the drawing",
-        }
+        your Response should in JSON format { guess: string }. \n\n
         For example: {
         guess: "It's a cat"
         }`;
@@ -82,7 +80,7 @@ export const handleSendPrompt = async (uniqueFileName, prompt, setResponseText, 
         const result = await model.generateContent([combinedPrompt, imagePart]);
         const fullTextResponse = await result.response.text();
         const cleanedText = fullTextResponse.replace(/```json|```/g, '').trim();
-
+        console.log('Response:', cleanedText);
         let responseData;
         try {
             responseData = JSON.parse(cleanedText);
