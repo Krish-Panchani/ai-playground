@@ -26,6 +26,7 @@ function CreativeQuest() {
   const [loadingQuestion, setLoadingQuestion] = useState(false);
   const [score, setScore] = useState();
   const [isCanvasEmpty, setIsCanvasEmpty] = useState(true);
+  const isPage = "CreativeQuest";
 
   const ageGroups = [
     "Junior Artist (Age: 12 and below)",
@@ -125,6 +126,7 @@ function CreativeQuest() {
           }
           loadingQuestion={loadingQuestion}
           question={question}
+          responseText={responseText}
         />
                       {question && (
                 <Question
@@ -172,7 +174,10 @@ function CreativeQuest() {
                   setResponseText,
                   setLoadingResponse,
                   setScore,
-                  user
+                  user,
+                  ageGroup,
+                  skillLevel,
+                  isPage
                 )
               }
               className={`flex-1 px-6 py-3 text-white rounded-full font-semibold transition-colors duration-300 ${
