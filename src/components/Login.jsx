@@ -4,6 +4,7 @@ import React from 'react';
 import { getAuth, GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
 import { doc, setDoc, getDoc } from 'firebase/firestore';
 import { firestore } from '../firebase'; // Make sure to import firestore
+import { FcGoogle } from "react-icons/fc";
 
 const Login = ({ setQuestion, setResponseText }) => {
   const auth = getAuth();
@@ -41,7 +42,11 @@ const Login = ({ setQuestion, setResponseText }) => {
 
   return (
     <div>
-      <button onClick={signInWithGoogle} className='text-black  font-semibold px-4 py-2 rounded-full bg-white'>Sign in with Google</button>
+      <button onClick={signInWithGoogle} className='flex items-center gap-2 text-white font-semibold px-4 py-2 rounded-full  border-2 border-cyan-600'>
+        <FcGoogle className='text-2xl' />
+      <span className='font-semibold'>
+        Sign in with Google</span>
+        </button>
     </div>
   );
 };
