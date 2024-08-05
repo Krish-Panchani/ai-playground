@@ -101,9 +101,9 @@ function ArtfulGuesswork() {
                     <h2 className="text-center text-xl sm:text-2xl my-4 text-white">
                         Welcome to{" "}
                         <span className="font-bold bg-gradient-to-r from-red-500 to-orange-500 bg-clip-text text-transparent">
-                            ArtfulStories
+                            Artful Guesswork
                         </span>{" "}
-                        - Where every stroke conjures a magical tale.
+                        - See if AI can identify your creation
                     </h2>
                 </div>
             )}
