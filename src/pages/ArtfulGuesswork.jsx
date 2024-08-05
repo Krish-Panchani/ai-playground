@@ -115,6 +115,7 @@ function ArtfulGuesswork() {
                     responseText={responseText}
                     onResponseGenerated={handleAIResponse}
                     className="w-full max-w-xl bg-white shadow-md rounded-lg p-4"
+                    isPage={isPage}
                 />
 
                 <div className="flex justify-between gap-4">
