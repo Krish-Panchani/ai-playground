@@ -149,6 +149,7 @@ function CreativeQuest() {
           isCanvasEmpty={isCanvasEmpty}
           responseText={responseText}
           onResponseGenerated={handleAIResponse}
+          isPage={isPage}
           className="w-full max-w-xl bg-white shadow-md rounded-lg p-4"
         />
         {question && (
