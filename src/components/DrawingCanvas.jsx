@@ -186,9 +186,9 @@ const DrawingCanvas = forwardRef(({ onDrawingComplete, setIsCanvasEmpty }, ref) 
           className='w-full h-auto rounded-2xl '
         />
       </div>
-      <div className='flex items-center justify-evenly'>
+      <div className='flex flex-col sm:flex-row items-center justify-evenly gap-2'>
         <div className="flex gap-2">
-          <Tooltip title="Pencil" arrow>
+          <Tooltip title="Pen" arrow>
             <button onClick={() => setMode('draw')} className={`flex items-center gap-2 px-2 py-2 rounded-full mx-2 ${mode === 'draw' ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}>
               <FaPenAlt />
             </button>
@@ -205,7 +205,7 @@ const DrawingCanvas = forwardRef(({ onDrawingComplete, setIsCanvasEmpty }, ref) 
               <IoMdColorFill />
             </button>
           </Tooltip>
-          <Tooltip title="CleaR All" arrow>
+          <Tooltip title="Clear All" arrow>
             <button onClick={clearCanvas} className="flex items-center bg-red-500 gap-2 px-2 py-2 text-white rounded-full mx-2">
               <FaTrashAlt />
             </button>
@@ -221,7 +221,7 @@ const DrawingCanvas = forwardRef(({ onDrawingComplete, setIsCanvasEmpty }, ref) 
               className='w-10 h-10 bg-black'
             />
           </Tooltip>
-          <Tooltip title="Pencil Size" arrow>
+          <Tooltip title="Pen Size" arrow>
             <input
               type="range"
               min="1"
