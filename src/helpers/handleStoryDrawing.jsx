@@ -81,6 +81,7 @@ export const handleSendPrompt = async (uniqueFileName, prompt, setResponseText, 
         const fullTextResponse = await result.response.text();
         const cleanedText = fullTextResponse.replace(/```json|```/g, '').trim();
 
+        console.log('Response:', cleanedText);
         setResponseText(cleanedText);
         setLoadingResponse(false);
 
