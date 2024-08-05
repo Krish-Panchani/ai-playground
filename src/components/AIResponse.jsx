@@ -2,39 +2,39 @@ import React from 'react';
 
 const AIResponse = ({ loadingResponse, responseText, isCanvasEmpty, isPage }) => {
 
-  const renderGuessResponse = () => {
-    try{
+  const renderGuessResponse = (responseText) => {
+    try {
+      console.log(responseText);
       const response = JSON.parse(responseText);
       const { guess } = response;
       return (
         <div className='mt-4 border border-green-300 p-4 rounded-lg text-white'>
-          <p><span className='text-green-600 font-bold'>{guess}</span></p>
+          <p>🤔 <span className='text-white font-bold'>{guess}</span></p>
         </div>
       );
-    }
-    catch (error) {
-      console.error('Error parsing response:', error);
-      return <p>Invalid response format</p>;
-    }
-  };
-  const renderStoryResponse = () => {
-    try{
-      const response = JSON.parse(responseText);
-      const { title, story } = response;
-      return (
-        <div className='mt-4 border border-green-300 p-4 rounded-lg text-white'>
-          <h2>{title}</h2>
-          <p><span className='text-green-600 font-bold'>{story}</span></p>
-        </div>
-      );
-    }
-    catch (error) {
+    } catch (error) {
       console.error('Error parsing response:', error);
       return <p>Invalid response format</p>;
     }
   };
 
-  const renderQueResponse = () => {
+  const renderStoryResponse = (responseText) => {
+    try {
+      const response = JSON.parse(responseText);
+      const { title, story } = response;
+      return (
+        <div className='mt-4 border border-green-300 p-4 rounded-lg text-white'>
+          <h2>{title}</h2>
+          <p><span className='text-white font-bold'>{story}</span></p>
+        </div>
+      );
+    } catch (error) {
+      console.error('Error parsing response:', error);
+      return <p>Invalid response format</p>;
+    }
+  };
+
+  const renderQueResponse = (responseText) => {
     try {
       const response = JSON.parse(responseText);
       const { isCorrect, reason, points } = response;
@@ -67,10 +67,9 @@ const AIResponse = ({ loadingResponse, responseText, isCanvasEmpty, isPage }) =>
         <div className='mt-4 p-4 rounded-lg'>
           <h3 className='text-xl font-bold bg-gradient-to-r from-blue-500 to-cyan-400 bg-clip-text text-transparent'>Gemini - Response</h3>
           
-          {isPage === 'CreativeQuest' && renderQueResponse()}
-          {isPage === 'ArtfulStories' && renderStoryResponse()}
-          {isPage === 'ArtfulGuesswork' && renderGuessResponse}
-
+          {isPage === 'CreativeQuest' && renderQueResponse(responseText)}
+          {isPage === 'ArtfulStories' && renderStoryResponse(responseText)}
+          {isPage === 'ArtfulGuesswork' && renderGuessResponse(responseText)}
         </div>
       )}
     </div>
