@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useCallback } from "react";
 import DrawingCanvas from "../components/DrawingCanvas";
 import HowPlay from "../components/howPlay";
 import Header from "../components/Header";
@@ -76,9 +76,9 @@ function ArtfulStories() {
         fetchUserScore();
     }, [user]);
 
-    const handleAIResponse = (responseText) => {
+    const handleAIResponse = useCallback((responseText) => {
         setResponseText(responseText);
-    };
+    }, []);
 
     return (
         <div className="flex flex-col min-h-screen bg-black p-4">
