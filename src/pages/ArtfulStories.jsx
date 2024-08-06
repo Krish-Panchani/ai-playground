@@ -94,35 +94,38 @@ function ArtfulStories() {
                 skillLevels={skillLevels}
                 setResponseText={setResponseText}
             />
-=
-                <div>
-                    <h2 className="text-center text-xl sm:text-2xl my-4 text-white">
-                        Welcome to{" "}
-                        <span className="font-bold bg-gradient-to-r from-red-500 to-orange-500 bg-clip-text text-transparent">
-                            ArtfulStories
-                        </span>{" "}
-                        - Where every stroke conjures a magical tale.
-                    </h2>
-                </div>
+            =
+            <div>
+                <h2 className="text-center text-xl sm:text-2xl my-4 text-white">
+                    Welcome to{" "}
+                    <span className="font-bold bg-gradient-to-r from-red-500 to-orange-500 bg-clip-text text-transparent">
+                        ArtfulStories
+                    </span>{" "}
+                    - Where every stroke conjures a magical tale.
+                </h2>
+            </div>
 
             <div className="flex flex-col items-center mb-6 space-y-4">
-                <AIResponse
-                    loadingResponse={loadingResponse}
-                    isCanvasEmpty={isCanvasEmpty}
-                    responseText={responseText}
-                    onResponseGenerated={handleAIResponse}
-                    isPage={isPage}
-                    className="w-full max-w-xl bg-white shadow-md rounded-lg p-4"
-                />
+                {loadingResponse && <p>Loading AI response...</p>}
+                {responseText && !isCanvasEmpty && (
+                    <AIResponse
+                        loadingResponse={loadingResponse}
+                        isCanvasEmpty={isCanvasEmpty}
+                        responseText={responseText}
+                        onResponseGenerated={handleAIResponse}
+                        isPage={isPage}
+                        className="w-full max-w-xl bg-white shadow-md rounded-lg p-4"
+                    />
+                )}
                 {responseText && (
                     <div className="flex flex-col items-center gap-4">
                         <h3 className="text-center text-lg text-white">
                             Draw and Create New Story
                             🎉
-                            </h3>
-                            </div>
-                            )
-                            }
+                        </h3>
+                    </div>
+                )
+                }
 
                 <div className="flex justify-between gap-4">
                     <div className="flex">
