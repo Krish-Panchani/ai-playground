@@ -128,12 +128,12 @@ function CreativeQuest() {
           question={question}
           responseText={responseText}
         />
-                      {question && (
-                <Question
-                  question={question}
-                  className="text-lg font-semibold text-gray-800"
-                />
-              )}
+        {question && (
+          <Question
+            question={question}
+            className="text-lg font-semibold text-gray-800"
+          />
+        )}
         {!loadingQuestion && !question && (
           <div className="text-lg font-semibold text-gray-600">
             Click Generate Question Button to get Question.
@@ -144,14 +144,17 @@ function CreativeQuest() {
         )}
       </div>
       <div className="flex flex-col items-center mb-6 space-y-4">
-        <AIResponse
-          loadingResponse={loadingResponse}
-          isCanvasEmpty={isCanvasEmpty}
-          responseText={responseText}
-          onResponseGenerated={handleAIResponse}
-          isPage={isPage}
-          className="w-full max-w-xl bg-white shadow-md rounded-lg p-4"
-        />
+        {loadingResponse && <p>Loading AI response...</p>}
+        {responseText && !isCanvasEmpty && (
+          <AIResponse
+            loadingResponse={loadingResponse}
+            isCanvasEmpty={isCanvasEmpty}
+            responseText={responseText}
+            onResponseGenerated={handleAIResponse}
+            isPage={isPage}
+            className="w-full max-w-xl bg-white shadow-md rounded-lg p-4"
+          />
+        )}
         {question && (
           <div className="flex flex-col items-center w-full space-y-4">
             <div className="bg-background rounded-lg border border-orange-500 p-4 flex flex-col gap-4">
@@ -164,32 +167,31 @@ function CreativeQuest() {
                 }
                 setIsCanvasEmpty={setIsCanvasEmpty}
               />
-            
-            <button
-              onClick={() =>
-                handleUpload(
-                  file,
-                  setLoadingUpload,
-                  handleSendPrompt,
-                  prompt,
-                  setResponseText,
-                  setLoadingResponse,
-                  setScore,
-                  user,
-                  ageGroup,
-                  skillLevel,
-                  isPage
-                )
-              }
-              className={`flex-1 px-6 py-3 text-white rounded-full font-semibold transition-colors duration-300 ${
-                isCanvasEmpty || responseText
-                  ? "bg-gray-400 cursor-not-allowed"
-                  : "bg-gradient-to-r from-indigo-600 to-cyan-600"
-              }`}
-              disabled={isCanvasEmpty || responseText}
-            >
-              {loadingUpload ? "Uploading..." : "Submit"}
-            </button>
+
+              <button
+                onClick={() =>
+                  handleUpload(
+                    file,
+                    setLoadingUpload,
+                    handleSendPrompt,
+                    prompt,
+                    setResponseText,
+                    setLoadingResponse,
+                    setScore,
+                    user,
+                    ageGroup,
+                    skillLevel,
+                    isPage
+                  )
+                }
+                className={`flex-1 px-6 py-3 text-white rounded-full font-semibold transition-colors duration-300 ${isCanvasEmpty || responseText
+                    ? "bg-gray-400 cursor-not-allowed"
+                    : "bg-gradient-to-r from-indigo-600 to-cyan-600"
+                  }`}
+                disabled={isCanvasEmpty || responseText}
+              >
+                {loadingUpload ? "Uploading..." : "Submit"}
+              </button>
             </div>
           </div>
         )}
