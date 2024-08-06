@@ -5,6 +5,7 @@ import Header from "../components/Header";
 import AIResponse from "../components/AIResponse";
 import GenerateQuestionButton from "../components/GenerateQuestionButton";
 import UserInfo from "../components/UserInfo";
+import Footer from "../components/Footer";
 import { handleGenerateQuestion } from "../helpers/genQues";
 import {
   handleDrawingComplete,
@@ -14,7 +15,7 @@ import {
 import Question from "../components/ui/Question";
 import { auth, firestore } from "../firebase";
 import { doc, setDoc, getDoc } from "firebase/firestore";
-import useAuth from "../auth/useAuth";
+import useAuth from "../hooks/useAuth";
 
 function CreativeQuest() {
   const [file, setFile] = useState(null);
@@ -135,7 +136,7 @@ function CreativeQuest() {
           />
         )}
         {!loadingQuestion && !question && (
-          <div className="text-lg font-semibold text-gray-600">
+          <div className="text-sm sm:text-lg font-semibold text-gray-600">
             Click Generate Question Button to get Question.
           </div>
         )}
@@ -143,6 +144,11 @@ function CreativeQuest() {
           <div className="h-1 w-60 mb-4 bg-gradient-to-r from-cyan-400 to-green-500 mx-auto rounded-full animate-gradient-animate z-50"></div>
         )}
       </div>
+      {!question && (
+        <div className="flex justify-center mt-6">
+          <HowPlay isPage={isPage} className="text-center text-sm text-gray-700" />
+        </div>
+      )}
       <div className="flex flex-col items-center mb-6 space-y-4">
         {loadingResponse && <p>Loading AI response...</p>}
         {responseText && !isCanvasEmpty && (
@@ -206,6 +212,7 @@ function CreativeQuest() {
           <HowPlay className="text-center text-sm text-gray-700" />
         </div>
       )}
+      <Footer />
     </div>
   );
 }
