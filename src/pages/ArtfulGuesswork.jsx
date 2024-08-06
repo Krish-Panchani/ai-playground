@@ -117,9 +117,9 @@ function ArtfulGuesswork() {
           </div>
         )}
         <p className="text-white">{isFeedback}</p>
-        <div className="flex justify-between gap-4">
-          <div className="flex">
-            <HowPlay isPage={isPage} className="text-center text-sm text-gray-700" />
+        <div className="flex  flex-col-reverse lg:flex-row justify-between gap-4">
+          <div className="flex justify-center">
+            <HowPlay isPage={isPage} className="text-center text-sm text-gray-700 " />
           </div>
           <div className="bg-background rounded-lg border border-orange-500 p-4 flex flex-col gap-4">
             <DrawingCanvas

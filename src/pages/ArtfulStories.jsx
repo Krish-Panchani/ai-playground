@@ -91,8 +91,8 @@ function ArtfulStories() {
                     </div>
                 )}
 
-                <div className="flex justify-between gap-4">
-                    <div className="flex">
+                <div className="flex  flex-col-reverse lg:flex-row justify-between gap-4">
+                    <div className="flex justify-center">
                         <HowPlay isPage={isPage} className="text-center text-sm text-gray-700" />
                     </div>
 

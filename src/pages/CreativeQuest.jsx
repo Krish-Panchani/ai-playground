@@ -157,46 +157,46 @@ function CreativeQuest() {
         )}
         {question && (
           <div className="flex flex-col items-center w-full space-y-4">
-          <div className="flex justify-between gap-4">
-          <div className="flex">
-            <HowPlay isPage={isPage} className="text-center text-sm text-gray-700" />
-          </div>
-            <div className="bg-background rounded-lg border border-orange-500 p-4 flex flex-col gap-4">
+            <div className="flex  flex-col-reverse lg:flex-row justify-between gap-4">
+              <div className="flex justify-center">
+                <HowPlay isPage={isPage} className="text-center text-sm text-gray-700" />
+              </div>
+              <div className="bg-background rounded-lg border border-orange-500 p-4 flex flex-col gap-4">
 
 
-              <DrawingCanvas
-                ref={canvasRef}
-                onDrawingComplete={(dataUrl) =>
-                  handleDrawingComplete(dataUrl, setFile)
-                }
-                setIsCanvasEmpty={setIsCanvasEmpty}
-              />
+                <DrawingCanvas
+                  ref={canvasRef}
+                  onDrawingComplete={(dataUrl) =>
+                    handleDrawingComplete(dataUrl, setFile)
+                  }
+                  setIsCanvasEmpty={setIsCanvasEmpty}
+                />
 
-              <button
-                onClick={() =>
-                  handleUpload(
-                    file,
-                    setLoadingUpload,
-                    handleSendPrompt,
-                    prompt,
-                    setResponseText,
-                    setLoadingResponse,
-                    setScore,
-                    user,
-                    ageGroup,
-                    skillLevel,
-                    isPage
-                  )
-                }
-                className={`flex-1 px-6 py-3 text-white rounded-full font-semibold transition-colors duration-300 ${isCanvasEmpty || responseText
-                  ? "bg-gray-400 cursor-not-allowed"
-                  : "bg-gradient-to-r from-indigo-600 to-cyan-600"
-                  }`}
-                disabled={isCanvasEmpty || responseText}
-              >
-                {loadingUpload ? "Uploading..." : "Submit"}
-              </button>
-            </div>
+                <button
+                  onClick={() =>
+                    handleUpload(
+                      file,
+                      setLoadingUpload,
+                      handleSendPrompt,
+                      prompt,
+                      setResponseText,
+                      setLoadingResponse,
+                      setScore,
+                      user,
+                      ageGroup,
+                      skillLevel,
+                      isPage
+                    )
+                  }
+                  className={`flex-1 px-6 py-3 text-white rounded-full font-semibold transition-colors duration-300 ${isCanvasEmpty || responseText
+                    ? "bg-gray-400 cursor-not-allowed"
+                    : "bg-gradient-to-r from-indigo-600 to-cyan-600"
+                    }`}
+                  disabled={isCanvasEmpty || responseText}
+                >
+                  {loadingUpload ? "Uploading..." : "Submit"}
+                </button>
+              </div>
             </div>
           </div>
         )}
