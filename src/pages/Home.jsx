@@ -93,13 +93,13 @@ function Home() {
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
                         transition={{ type: 'spring', stiffness: 300 }}
-                        class="relative group grid h-[15rem] w-full max-w-[20rem] flex-col items-end justify-center overflow-hidden rounded-xl bg-clip-border text-center text-gray-700 border-2 border-orange-500">
+                        className="relative group grid h-[15rem] w-full max-w-[20rem] flex-col items-end justify-center overflow-hidden rounded-xl bg-clip-border text-center text-gray-700 border-2 border-orange-500">
                         <div
-                            class="absolute inset-0 m-0 h-full w-full overflow-hidden rounded-none bg-transparent bg-[url('https://res.cloudinary.com/divve6wtz/image/upload/v1722853988/CreativeQuest-removebg-preview_qrlbc3.png')] bg-cover bg-clip-border bg-center text-gray-700 shadow-none">
-                            <div class="absolute inset-0 w-full h-full bg-gradient-to-t from-black/100 via-black/50 to-bg-black "></div>
+                            className="absolute inset-0 m-0 h-full w-full overflow-hidden rounded-none bg-transparent bg-[url('https://res.cloudinary.com/divve6wtz/image/upload/v1722853988/CreativeQuest-removebg-preview_qrlbc3.png')] bg-cover bg-clip-border bg-center text-gray-700 shadow-none">
+                            <div className="absolute inset-0 w-full h-full bg-gradient-to-t from-black/100 via-black/50 to-bg-black "></div>
                         </div>
-                        <div class="relative p-6 px-6 pt-14 md:px-12 ">
-                            <h2 class="mb-6 block font-sans text-xl font-medium leading-[1.5] tracking-normal text-white antialiased">
+                        <div className="relative p-6 px-6 pt-14 md:px-12 ">
+                            <h2 className="mb-6 block font-sans text-xl font-medium leading-[1.5] tracking-normal text-white antialiased">
                                 <span className='text-2xl font-bold drop-shadow-xl bg-gradient-to-r from-red-500 to-orange-500 bg-clip-text text-transparent  animate-gradient-animate group-hover:text-white transition ease-linear duration-300'>Creative Quest</span>
                             </h2>
                             <p className='hidden group-hover:block bg-gradient-to-r from-red-500 to-orange-500 bg-clip-text text-transparent  animate-gradient-animate font-semibold'>Where Every Prompt Sparks a Masterpiece</p>
@@ -111,13 +111,13 @@ function Home() {
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
                         transition={{ type: 'spring', stiffness: 300 }}
-                        class="relative group grid h-[15rem] w-full max-w-[20rem] flex-col items-end justify-center overflow-hidden rounded-xl bg-clip-border text-center text-gray-700 border-2 border-orange-500">
+                        className="relative group grid h-[15rem] w-full max-w-[20rem] flex-col items-end justify-center overflow-hidden rounded-xl bg-clip-border text-center text-gray-700 border-2 border-orange-500">
                         <div
-                            class="absolute inset-0 m-0 h-full w-full overflow-hidden rounded-none bg-transparent bg-[url('https://res.cloudinary.com/divve6wtz/image/upload/v1722854709/ArtfulGuesswork-removebg-preview_tc7a2u.png')] bg-cover bg-clip-border bg-center text-gray-700 shadow-none">
-                            <div class="absolute inset-0 w-full h-full bg-gradient-to-t from-black/100 via-black/50 to-bg-black "></div>
+                            className="absolute inset-0 m-0 h-full w-full overflow-hidden rounded-none bg-transparent bg-[url('https://res.cloudinary.com/divve6wtz/image/upload/v1722854709/ArtfulGuesswork-removebg-preview_tc7a2u.png')] bg-cover bg-clip-border bg-center text-gray-700 shadow-none">
+                            <div className="absolute inset-0 w-full h-full bg-gradient-to-t from-black/100 via-black/50 to-bg-black "></div>
                         </div>
-                        <div class="relative p-6 px-6 pt-14 md:px-12 ">
-                            <h2 class="mb-6 block font-sans text-xl font-medium leading-[1.5] tracking-normal text-white antialiased">
+                        <div className="relative p-6 px-6 pt-14 md:px-12 ">
+                            <h2 className="mb-6 block font-sans text-xl font-medium leading-[1.5] tracking-normal text-white antialiased">
                                 <span className='text-2xl font-bold drop-shadow-xl bg-gradient-to-r from-red-500 to-orange-500 bg-clip-text text-transparent  animate-gradient-animate group-hover:text-white transition ease-linear duration-300'>Artful Guesswork</span>
                             </h2>
                             <p className='hidden group-hover:block bg-gradient-to-r from-red-500 to-orange-500 bg-clip-text text-transparent  animate-gradient-animate font-semibold'>See if AI can identify your creation</p>
@@ -129,13 +129,13 @@ function Home() {
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
                         transition={{ type: 'spring', stiffness: 300 }}
-                        class="relative group grid h-[15rem] w-full max-w-[20rem] flex-col items-end justify-center overflow-hidden rounded-xl bg-clip-border text-center text-gray-700 border-2 border-orange-500">
+                        className="relative group grid h-[15rem] w-full max-w-[20rem] flex-col items-end justify-center overflow-hidden rounded-xl bg-clip-border text-center text-gray-700 border-2 border-orange-500">
                         <div
-                            class="absolute inset-0 m-0 h-full w-full overflow-hidden rounded-none bg-transparent bg-[url('https://res.cloudinary.com/divve6wtz/image/upload/v1722854711/ArtfulStories-removebg-preview_leuzgt.png')] bg-cover bg-clip-border bg-center text-gray-700 shadow-none">
-                            <div class="absolute inset-0 w-full h-full bg-gradient-to-t from-black/100 via-black/50 to-bg-black "></div>
+                            className="absolute inset-0 m-0 h-full w-full overflow-hidden rounded-none bg-transparent bg-[url('https://res.cloudinary.com/divve6wtz/image/upload/v1722854711/ArtfulStories-removebg-preview_leuzgt.png')] bg-cover bg-clip-border bg-center text-gray-700 shadow-none">
+                            <div className="absolute inset-0 w-full h-full bg-gradient-to-t from-black/100 via-black/50 to-bg-black "></div>
                         </div>
-                        <div class="relative p-6 px-6 pt-14 md:px-12 ">
-                            <h2 class="mb-6 block font-sans text-xl font-medium leading-[1.5] tracking-normal text-white antialiased">
+                        <div className="relative p-6 px-6 pt-14 md:px-12 ">
+                            <h2 className="mb-6 block font-sans text-xl font-medium leading-[1.5] tracking-normal text-white antialiased">
                                 <span className='text-2xl font-bold drop-shadow-xl bg-gradient-to-r from-red-500 to-orange-500 bg-clip-text text-transparent  animate-gradient-animate group-hover:text-white transition ease-linear duration-300'>Artful Stories</span>
                             </h2>
                             <p className='hidden group-hover:block bg-gradient-to-r from-red-500 to-orange-500 bg-clip-text text-transparent  animate-gradient-animate font-semibold'>Where every stroke conjures a magical tale</p>
