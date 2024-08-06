@@ -1,14 +1,10 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useCallback } from "react";
 import DrawingCanvas from "../components/DrawingCanvas";
 import HowPlay from "../components/howPlay";
 import Header from "../components/Header";
 import AIResponse from "../components/AIResponse";
 import UserInfo from "../components/UserInfo";
-import {
-  handleDrawingComplete,
-  handleUpload,
-  handleSendPrompt,
-} from "../helpers/handleGuessDrawing";
+import { handleDrawingComplete, handleUpload, handleSendPrompt } from "../helpers/handleGuessDrawing";
 import { auth, firestore } from "../firebase";
 import { doc, setDoc, getDoc } from "firebase/firestore";
 import useAuth from "../auth/useAuth";
@@ -21,35 +17,28 @@ function ArtfulGuesswork() {
   const [question, setQuestion] = useState("");
   const [loadingUpload, setLoadingUpload] = useState(false);
   const [loadingResponse, setLoadingResponse] = useState(false);
-  const [score, setScore] = useState();
+  const [score, setScore] = useState(0);
   const [isCanvasEmpty, setIsCanvasEmpty] = useState(true);
   const [isFeedback, setIsFeedback] = useState("");
   const [uniqueFileName, setUniqueFileName] = useState("");
   const isPage = "ArtfulGuesswork";
 
-  const ageGroups = [
-    "Junior Artist (Age: 12 and below)",
-    "Teen Artist (Age: between 13-19)",
-    "Adult Artist (Age: 20 and above)",
-  ];
+  const ageGroups = ["Junior Artist (Age: 12 and below)", "Teen Artist (Age: between 13-19)", "Adult Artist (Age: 20 and above)"];
   const skillLevels = ["Beginner", "Intermediate", "Advanced", "Expert"];
 
   const [ageGroup, setAgeGroup] = useState(ageGroups[0]);
   const [skillLevel, setSkillLevel] = useState(skillLevels[0]);
   const canvasRef = useRef(null);
 
-  const user = useAuth(); // This should work fine here
+  const user = useAuth();
 
-  const signOut = () => {
-    auth
-      .signOut()
-      .then(() => {
-        console.log("User signed out successfully");
-      })
-      .catch((error) => {
-        console.error("Error signing out: ", error);
-      });
-  };
+  const signOut = useCallback(() => {
+    auth.signOut().then(() => {
+      console.log("User signed out successfully");
+    }).catch((error) => {
+      console.error("Error signing out: ", error);
+    });
+  }, []);
 
   useEffect(() => {
     const fetchUserScore = async () => {
@@ -59,30 +48,29 @@ function ArtfulGuesswork() {
         const docSnap = await getDoc(userDocRef);
         if (docSnap.exists()) {
           const data = docSnap.data();
-          setScore(data.score); // Set score from Firestore
+          setScore(data.score);
           console.log("User score - Playground:", data.score);
         } else {
           console.log("Creating new user document in Firestore: Playground");
-          // New user, create document with initial score of 0
           await setDoc(userDocRef, {
             displayName: user.displayName,
             email: user.email,
             score: 0,
           });
-          setScore(0); // Set initial score for new users
+          setScore(0);
         }
       } else {
         console.log("User not signed in: Playground");
-        setScore(0); // Set score to 0 for guest user
+        setScore(0);
       }
     };
 
     fetchUserScore();
   }, [user]);
 
-  const handleAIResponse = (responseText) => {
+  const handleAIResponse = useCallback((responseText) => {
     setResponseText(responseText);
-  };
+  }, []);
 
   return (
     <div className="flex flex-col min-h-screen bg-black p-4">
@@ -110,42 +98,38 @@ function ArtfulGuesswork() {
           </h2>
         </div>
       )}
-
       <div className="flex flex-col items-center mb-6 space-y-4">
         {loadingResponse && <p>Loading AI response...</p>}
         {responseText && (
           <div className="flex items-center gap-2">
-          <AIResponse
-            responseText={responseText}
-            isPage={isPage}
-            onResponseGenerated={handleAIResponse}
-            className="w-full max-w-xl bg-white shadow-md rounded-lg p-4"
-          />
-          <Feedback 
-          setResponseText={setResponseText} 
-          canvasRef={canvasRef}
-          setIsFeedback={setIsFeedback}
-          file={file}
-          />
+            <AIResponse
+              responseText={responseText}
+              isPage={isPage}
+              onResponseGenerated={handleAIResponse}
+              className="w-full max-w-xl bg-white shadow-md rounded-lg p-4"
+            />
+            <Feedback
+              setResponseText={setResponseText}
+              canvasRef={canvasRef}
+              setIsFeedback={setIsFeedback}
+              uniqueFileName={uniqueFileName}
+            />
           </div>
         )}
         <p className="text-white">{isFeedback}</p>
-
         <div className="flex justify-between gap-4">
           <div className="flex">
             <HowPlay isPage={isPage} className="text-center text-sm text-gray-700" />
           </div>
-
           <div className="bg-background rounded-lg border border-orange-500 p-4 flex flex-col gap-4">
             <DrawingCanvas
               ref={canvasRef}
-              onDrawingComplete={(dataUrl) =>
-                handleDrawingComplete(dataUrl, setFile)
-              }
+              onDrawingComplete={(dataUrl) => handleDrawingComplete(dataUrl, setFile)}
               setIsCanvasEmpty={setIsCanvasEmpty}
             />
-
-            <input type="text" name="AdditionalPrompt"
+            <input
+              type="text"
+              name="AdditionalPrompt"
               placeholder="Any Additional Prompt or Instruction?"
               className="bg-black rounded-full px-6 py-3 text-white border-2 font-semibold transition-colors duration-300"
               onChange={(e) => setPrompt(e.target.value)}
@@ -154,6 +138,7 @@ function ArtfulGuesswork() {
               onClick={() =>
                 handleUpload(
                   file,
+                  setUniqueFileName,
                   setLoadingUpload,
                   handleSendPrompt,
                   prompt,
@@ -166,10 +151,7 @@ function ArtfulGuesswork() {
                   isPage
                 )
               }
-              className={`flex-1 px-6 py-3 text-white rounded-full font-semibold transition-colors duration-300 ${isCanvasEmpty || responseText
-                ? "bg-gray-400 cursor-not-allowed"
-                : "bg-gradient-to-r from-indigo-600 to-cyan-600"
-                }`}
+              className={`flex-1 px-6 py-3 text-white rounded-full font-semibold transition-colors duration-300 ${isCanvasEmpty || responseText ? "bg-gray-400 cursor-not-allowed" : "bg-gradient-to-r from-indigo-600 to-cyan-600"}`}
               disabled={isCanvasEmpty || responseText}
             >
               {loadingUpload ? "Uploading..." : "Submit"}
@@ -177,11 +159,7 @@ function ArtfulGuesswork() {
           </div>
         </div>
       </div>
-      <div className="flex justify-center">
-
-      </div>
     </div>
-
   );
 }
 
