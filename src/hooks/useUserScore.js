@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { doc, setDoc, getDoc } from "firebase/firestore";
 import { firestore } from "../firebase";
-import useAuth from '../auth/useAuth'; // Ensure the path is correct
+import useAuth from './useAuth'; // Ensure the path is correct
 
 const useUserScore = () => {
     const [score, setScore] = useState(0); // Initialize with 0
