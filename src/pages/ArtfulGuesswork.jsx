@@ -7,7 +7,7 @@ import UserInfo from "../components/UserInfo";
 import { handleDrawingComplete, handleUpload, handleSendPrompt } from "../helpers/handleGuessDrawing";
 import { auth, firestore } from "../firebase";
 import { doc, setDoc, getDoc } from "firebase/firestore";
-import useAuth from "../auth/useAuth";
+import useAuth from "../hooks/useAuth";
 import Feedback from "../components/Feedback";
 
 function ArtfulGuesswork() {
