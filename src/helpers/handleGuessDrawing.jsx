@@ -117,24 +117,26 @@ export const handleSendPrompt = async (uniqueFileName, prompt, setResponseText, 
             setScore(newScore);
 
             // Store response and user email in "ArtfullGuesswork" collection
-            const responseObj = {
+            
+        } else {
+            // For guests, just update local state
+            setScore(prevScore => prevScore + (points || 0));
+        }
+        const responseObj = {
                 email: user ? user.email : "guest",
                 guess: responseData.guess,
-                file: uniqueFileName
+                file: uniqueFileName,
+                isCorrect: false,
             };
 
             try {
-                const responseCollectionRef = collection(firestore, "ArtfullGuesswork");
+                const responseCollectionRef = collection(firestore, "ArtfulGuesswork");
                 await addDoc(responseCollectionRef, responseObj);
                 console.log("Response stored successfully");
             } catch (error) {
                 console.error("Error storing response:", error);
                 alert("Error storing response: " + error.message);
             }
-        } else {
-            // For guests, just update local state
-            setScore(prevScore => prevScore + (points || 0));
-        }
 
 
 
