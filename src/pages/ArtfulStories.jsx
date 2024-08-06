@@ -12,6 +12,8 @@ import {
 import { auth } from "../firebase";
 import useAuth from "../hooks/useAuth";
 import useUserScore from "../hooks/useUserScore";
+import useAge from "../hooks/useAge";
+import useSkill from "../hooks/useSkill";
 
 function ArtfulStories() {
     const [file, setFile] = useState(null);
@@ -20,12 +22,12 @@ function ArtfulStories() {
     const [loadingUpload, setLoadingUpload] = useState(false);
     const [loadingResponse, setLoadingResponse] = useState(false);
     const [isCanvasEmpty, setIsCanvasEmpty] = useState(true);
-    const [score, setScore] = useUserScore(); // Ensure this is an array with [score, setScore]
     const canvasRef = useRef(null);
     const user = useAuth();
-
-    const [ageGroup, setAgeGroup] = useState("Junior Artist (Age: 12 and below)");
-    const [skillLevel, setSkillLevel] = useState("Beginner");
+    
+    const [score, setScore] = useUserScore();
+    const { ageGroup, setAgeGroup, ageGroups } = useAge();
+    const { skillLevel, setSkillLevel, skillLevels } = useSkill();
 
     const signOut = () => {
         auth.signOut().then(() => {
@@ -39,12 +41,6 @@ function ArtfulStories() {
         setResponseText(responseText);
     }, []);
 
-    const ageGroups = [
-        "Junior Artist (Age: 12 and below)",
-        "Teen Artist (Age: between 13-19)",
-        "Adult Artist (Age: 20 and above)",
-    ];
-    const skillLevels = ["Beginner", "Intermediate", "Advanced", "Expert"];
     const isPage = "ArtfulStories";
 
     return (
