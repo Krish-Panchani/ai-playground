@@ -108,8 +108,8 @@ function ArtfulGuesswork() {
               onResponseGenerated={handleAIResponse}
               className="w-full max-w-xl bg-white shadow-md rounded-lg p-4"
             />
-            <Feedback
-              setResponseText={setResponseText}
+            <Feedback 
+              setResponseText={setResponseText} 
               canvasRef={canvasRef}
               setIsFeedback={setIsFeedback}
               uniqueFileName={uniqueFileName}
