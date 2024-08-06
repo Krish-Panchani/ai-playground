@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect, useCallback } from "react";
 import DrawingCanvas from "../components/DrawingCanvas";
-import HowPlay from "../components/howPlay";
+import HowPlay from "../components/ui/howPlay";
 import Header from "../components/Header";
 import AIResponse from "../components/AIResponse";
 import GenerateQuestionButton from "../components/GenerateQuestionButton";
@@ -11,7 +11,7 @@ import {
   handleUpload,
   handleSendPrompt,
 } from "../helpers/handleUploadDrawing";
-import Question from "../components/Question";
+import Question from "../components/ui/Question";
 import { auth, firestore } from "../firebase";
 import { doc, setDoc, getDoc } from "firebase/firestore";
 import useAuth from "../auth/useAuth";

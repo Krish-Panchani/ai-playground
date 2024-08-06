@@ -1,7 +1,7 @@
 import React, { useRef, useEffect, useState, forwardRef, useImperativeHandle } from 'react';
 import { FaUndo, FaRedo, FaEraser, FaPenAlt, FaTrashAlt } from 'react-icons/fa'; // Import icons
 import { IoMdColorFill } from "react-icons/io";
-import Tooltip from '@mui/material/Tooltip';
+import Tooltip from './ui/Tooltips';
 
 const DrawingCanvas = forwardRef(({ onDrawingComplete, setIsCanvasEmpty }, ref) => {
   const canvasRef = useRef(null);
@@ -188,24 +188,24 @@ const DrawingCanvas = forwardRef(({ onDrawingComplete, setIsCanvasEmpty }, ref) 
       </div>
       <div className='flex flex-col sm:flex-row items-center justify-evenly gap-2'>
         <div className="flex gap-2">
-          <Tooltip title="Pen" arrow>
+          <Tooltip message="Pen" >
             <button onClick={() => setMode('draw')} className={`flex items-center gap-2 px-2 py-2 rounded-full mx-2 ${mode === 'draw' ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}>
               <FaPenAlt />
             </button>
           </Tooltip>
 
-          <Tooltip title="Eraser" arrow>
+          <Tooltip message="Eraser" >
             <button onClick={() => setMode('erase')} className={`flex items-center gap-2 px-2 py-2 rounded-full mx-2 ${mode === 'erase' ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}>
               <FaEraser />
             </button>
           </Tooltip>
 
-          <Tooltip title="Fill" arrow>
+          <Tooltip message="Fill" >
             <button onClick={() => setMode('fill')} className={`flex items-center gap-2 px-2 py-2 rounded-full mx-2 ${mode === 'fill' ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}>
               <IoMdColorFill />
             </button>
           </Tooltip>
-          <Tooltip title="Clear All" arrow>
+          <Tooltip message="Clear All" >
             <button onClick={clearCanvas} className="flex items-center bg-red-500 gap-2 px-2 py-2 text-white rounded-full mx-2">
               <FaTrashAlt />
             </button>
@@ -213,7 +213,7 @@ const DrawingCanvas = forwardRef(({ onDrawingComplete, setIsCanvasEmpty }, ref) 
         </div>
 
         <div className='flex gap-2 items-center'>
-          <Tooltip title="Color Picker" arrow>
+          <Tooltip message="Color Picker" >
             <input
               type="color"
               value={color}
@@ -221,7 +221,7 @@ const DrawingCanvas = forwardRef(({ onDrawingComplete, setIsCanvasEmpty }, ref) 
               className='w-10 h-10 bg-black'
             />
           </Tooltip>
-          <Tooltip title="Pen Size" arrow>
+          <Tooltip message="Pen Size" >
             <input
               type="range"
               min="1"
@@ -244,12 +244,12 @@ const DrawingCanvas = forwardRef(({ onDrawingComplete, setIsCanvasEmpty }, ref) 
           </div>
         </div>
         <div className='flex gap-2 items-center'>
-          <Tooltip title="Undo" arrow>
+          <Tooltip message="Undo" >
             <button onClick={undo} className="bg-gray-800 px-2 py-2 text-white rounded-xl mx-2">
               <FaUndo />
             </button>
           </Tooltip>
-          <Tooltip title="Redo" arrow>
+          <Tooltip message="Redo" >
             <button onClick={redo} className="bg-gray-800 px-2 py-2 text-white rounded-xl mx-2">
               <FaRedo />
             </button>

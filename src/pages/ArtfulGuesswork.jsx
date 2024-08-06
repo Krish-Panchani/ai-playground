@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect, useCallback } from "react";
 import DrawingCanvas from "../components/DrawingCanvas";
-import HowPlay from "../components/howPlay";
+import HowPlay from "../components/ui/howPlay";
 import Header from "../components/Header";
 import AIResponse from "../components/AIResponse";
 import UserInfo from "../components/UserInfo";
