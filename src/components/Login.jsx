@@ -6,7 +6,7 @@ import { doc, setDoc, getDoc } from 'firebase/firestore';
 import { firestore } from '../firebase'; // Make sure to import firestore
 import { FcGoogle } from "react-icons/fc";
 
-const Login = ({ setQuestion, setResponseText }) => {
+const Login = ({ setQuestion, setResponseText, isPage }) => {
   const auth = getAuth();
 
   const signInWithGoogle = async () => {
@@ -27,12 +27,17 @@ const Login = ({ setQuestion, setResponseText }) => {
           email: user.email,
           score: 0
         });
-        setQuestion(''); // Clear the question after sign in
-        setResponseText(''); // Clear the responseText after sign in
+
+        if (isPage === 'CreativeQuest') {
+          setQuestion(''); // Clear the question after sign in
+          setResponseText(''); // Clear the responseText after sign in
+        }
         console.log("User document created in Firestore:");
       } else {
-        setQuestion(''); // Clear the question after sign in
-        setResponseText(''); // Clear the responseText after
+        if (isPage) {
+          setQuestion(''); // Clear the question after sign in
+          setResponseText(''); // Clear the responseText after sign in
+        }
         console.log("User document already exists in Firestore");
       }
     } catch (error) {
