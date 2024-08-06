@@ -8,7 +8,7 @@ import { MdLeaderboard } from "react-icons/md";
 import { MdDraw } from "react-icons/md";
 
 
-const UserInfo = ({ user, ageGroup, setAgeGroup, skillLevel, setSkillLevel, signOut, ageGroups, skillLevels, setQuestion, setResponseText }) => {
+const UserInfo = ({ user, ageGroup, setAgeGroup, skillLevel, setSkillLevel, signOut, ageGroups, skillLevels, setQuestion, setResponseText, isPage}) => {
     const [isOpen, setIsOpen] = useState(false);
     return (
         <div className='flex items-center justify-between px-2 sm:px-8 my-6 gap-4'>
@@ -24,10 +24,15 @@ const UserInfo = ({ user, ageGroup, setAgeGroup, skillLevel, setSkillLevel, sign
 
                 </>
             )}
-  
+
+            <div className='flex items-center gap-2'>
+                {!user && 
+                <Login setQuestion={setQuestion} setResponseText={setResponseText} isPage={isPage} />
+                }
                 <button onClick={() => setIsOpen(true)}>
                     <HiMenuAlt3 className='text-white text-2xl sm:text-4xl' />
                 </button>
+            </div>
 
 
             <Drawer isOpen={isOpen} setIsOpen={setIsOpen}>
@@ -71,7 +76,7 @@ const UserInfo = ({ user, ageGroup, setAgeGroup, skillLevel, setSkillLevel, sign
                         </div>
                     </Link>
                 </div>
-                <div className='flex justify-between gap-8'>
+                <div className='flex justify-between gap-8 px-4 py-2'>
                     {user ?
                         <button
                             onClick={signOut}
@@ -81,7 +86,7 @@ const UserInfo = ({ user, ageGroup, setAgeGroup, skillLevel, setSkillLevel, sign
 
                         </button>
                         :
-                        <Login setQuestion={setQuestion} setResponseText={setResponseText} setAgeGroup={setAgeGroup} ageGroup={ageGroup} setSkillLevel={setSkillLevel} skillLevel={skillLevel} />
+                        <Login setQuestion={setQuestion} setResponseText={setResponseText} setAgeGroup={setAgeGroup} ageGroup={ageGroup} setSkillLevel={setSkillLevel} skillLevel={skillLevel} isPage={isPage} />
                     }
 
                 </div>
