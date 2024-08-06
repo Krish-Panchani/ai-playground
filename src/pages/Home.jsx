@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import Header from '../components/Header';
 import UserInfo from '../components/UserInfo';
 import { auth } from "../firebase";
-import useAuth from "../auth/useAuth";
+import useAuth from "../hooks/useAuth";
 import { motion } from 'framer-motion';
 import Footer from '../components/Footer';
 import useUserScore from '../hooks/useUserScore';
@@ -13,6 +13,7 @@ function Home() {
     const [skillLevel, setSkillLevel] = useState("Beginner");
     const score = useUserScore();
     const user = useAuth();
+    const isPage = "Home";
 
     const signOut = () => {
         auth.signOut().then(() => {
@@ -41,6 +42,7 @@ function Home() {
                 signOut={signOut}
                 ageGroups={ageGroups}
                 skillLevels={skillLevels}
+                isPage={isPage}
             />
              <div>
                     <h2 className="text-center text-xl sm:text-2xl my-4 text-white">
