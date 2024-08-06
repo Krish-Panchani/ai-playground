@@ -1,7 +1,7 @@
 import { ref, uploadBytesResumable } from 'firebase/storage';
 import { firebaseApp, storage, firestore } from '../firebase';
 import { getVertexAI, getGenerativeModel } from "firebase/vertexai-preview";
-import { doc, setDoc, getDoc } from 'firebase/firestore';
+import { doc, setDoc, getDoc, addDoc, collection } from 'firebase/firestore';
 
 export const handleDrawingComplete = (dataUrl, setFile) => {
     const byteString = atob(dataUrl.split(',')[1]);
@@ -81,6 +81,14 @@ export const handleSendPrompt = async (uniqueFileName, prompt, setResponseText, 
         const fullTextResponse = await result.response.text();
         const cleanedText = fullTextResponse.replace(/```json|```/g, '').trim();
 
+        let responseData;
+        try {
+            responseData = JSON.parse(cleanedText);
+        } catch (parseError) {
+            console.error('Error parsing JSON:', parseError);
+            throw new Error('Invalid JSON response');
+        }
+
         console.log('Response:', cleanedText);
         setResponseText(cleanedText);
         setLoadingResponse(false);
@@ -112,6 +120,22 @@ export const handleSendPrompt = async (uniqueFileName, prompt, setResponseText, 
         } else {
             // For guests, just update local state
             setScore(prevScore => prevScore + (points || 0));
+        }
+
+        const responseObj = {
+            email: user ? user.email : "guest",
+            title: responseData.title,
+            story: responseData.story,
+            file: uniqueFileName,
+            isCorrect: false,
+        };
+        try {
+            const responseCollectionRef = collection(firestore, "ArtfulStories");
+            await addDoc(responseCollectionRef, responseObj);
+            console.log("Response stored successfully");
+        } catch (error) {
+            console.error("Error storing response:", error);
+            alert("Error storing response: " + error.message);
         }
 
     } catch (error) {
