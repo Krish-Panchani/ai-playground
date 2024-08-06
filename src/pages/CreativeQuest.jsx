@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, useCallback } from "react";
+import React, { useState, useRef, useCallback } from "react";
 import DrawingCanvas from "../components/DrawingCanvas";
 import HowPlay from "../components/ui/howPlay";
 import Header from "../components/Header";
@@ -13,9 +13,11 @@ import {
   handleSendPrompt,
 } from "../helpers/handleUploadDrawing";
 import Question from "../components/ui/Question";
-import { auth, firestore } from "../firebase";
-import { doc, setDoc, getDoc } from "firebase/firestore";
+import { auth } from "../firebase";
 import useAuth from "../hooks/useAuth";
+import useAge from "../hooks/useAge";
+import useSkill from "../hooks/useSkill";
+import useUserScore from "../hooks/useUserScore";
 
 function CreativeQuest() {
   const [file, setFile] = useState(null);
@@ -25,19 +27,13 @@ function CreativeQuest() {
   const [loadingUpload, setLoadingUpload] = useState(false);
   const [loadingResponse, setLoadingResponse] = useState(false);
   const [loadingQuestion, setLoadingQuestion] = useState(false);
-  const [score, setScore] = useState();
   const [isCanvasEmpty, setIsCanvasEmpty] = useState(true);
+  
+  const [score, setScore] = useUserScore();
+  const { ageGroup, setAgeGroup, ageGroups } = useAge();
+  const { skillLevel, setSkillLevel, skillLevels } = useSkill();
   const isPage = "CreativeQuest";
-
-  const ageGroups = [
-    "Junior Artist (Age: 12 and below)",
-    "Teen Artist (Age: between 13-19)",
-    "Adult Artist (Age: 20 and above)",
-  ];
-  const skillLevels = ["Beginner", "Intermediate", "Advanced", "Expert"];
-
-  const [ageGroup, setAgeGroup] = useState(ageGroups[0]);
-  const [skillLevel, setSkillLevel] = useState(skillLevels[0]);
+  
   const canvasRef = useRef(null);
 
   const user = useAuth(); // This should work fine here
@@ -52,35 +48,6 @@ function CreativeQuest() {
         console.error("Error signing out: ", error);
       });
   };
-
-  useEffect(() => {
-    const fetchUserScore = async () => {
-      if (user) {
-        console.log("Fetching user score from Firestore: Playground");
-        const userDocRef = doc(firestore, "users", user.uid);
-        const docSnap = await getDoc(userDocRef);
-        if (docSnap.exists()) {
-          const data = docSnap.data();
-          setScore(data.score); // Set score from Firestore
-          console.log("User score - Playground:", data.score);
-        } else {
-          console.log("Creating new user document in Firestore: Playground");
-          // New user, create document with initial score of 0
-          await setDoc(userDocRef, {
-            displayName: user.displayName,
-            email: user.email,
-            score: 0,
-          });
-          setScore(0); // Set initial score for new users
-        }
-      } else {
-        console.log("User not signed in: Playground");
-        setScore(0); // Set score to 0 for guest user
-      }
-    };
-
-    fetchUserScore();
-  }, [user]);
 
   const handleAIResponse = useCallback((responseText) => {
     setResponseText(responseText);

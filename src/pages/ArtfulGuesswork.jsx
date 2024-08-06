@@ -1,14 +1,16 @@
-import React, { useState, useRef, useEffect, useCallback } from "react";
+import React, { useState, useRef, useCallback } from "react";
 import DrawingCanvas from "../components/DrawingCanvas";
 import HowPlay from "../components/ui/howPlay";
 import Header from "../components/Header";
 import AIResponse from "../components/AIResponse";
 import UserInfo from "../components/UserInfo";
 import { handleDrawingComplete, handleUpload, handleSendPrompt } from "../helpers/handleGuessDrawing";
-import { auth, firestore } from "../firebase";
-import { doc, setDoc, getDoc } from "firebase/firestore";
+import { auth } from "../firebase";
 import useAuth from "../hooks/useAuth";
 import Feedback from "../components/Feedback";
+import useUserScore from "../hooks/useUserScore";
+import useAge from "../hooks/useAge";
+import useSkill from "../hooks/useSkill";
 
 function ArtfulGuesswork() {
   const [file, setFile] = useState(null);
@@ -17,17 +19,15 @@ function ArtfulGuesswork() {
   const [question, setQuestion] = useState("");
   const [loadingUpload, setLoadingUpload] = useState(false);
   const [loadingResponse, setLoadingResponse] = useState(false);
-  const [score, setScore] = useState(0);
   const [isCanvasEmpty, setIsCanvasEmpty] = useState(true);
   const [isFeedback, setIsFeedback] = useState("");
   const [uniqueFileName, setUniqueFileName] = useState("");
   const isPage = "ArtfulGuesswork";
+  
+  const [score, setScore] = useUserScore();
+  const { ageGroup, setAgeGroup, ageGroups } = useAge();
+  const { skillLevel, setSkillLevel, skillLevels } = useSkill();
 
-  const ageGroups = ["Junior Artist (Age: 12 and below)", "Teen Artist (Age: between 13-19)", "Adult Artist (Age: 20 and above)"];
-  const skillLevels = ["Beginner", "Intermediate", "Advanced", "Expert"];
-
-  const [ageGroup, setAgeGroup] = useState(ageGroups[0]);
-  const [skillLevel, setSkillLevel] = useState(skillLevels[0]);
   const canvasRef = useRef(null);
 
   const user = useAuth();
@@ -40,33 +40,6 @@ function ArtfulGuesswork() {
     });
   }, []);
 
-  useEffect(() => {
-    const fetchUserScore = async () => {
-      if (user) {
-        console.log("Fetching user score from Firestore: Playground");
-        const userDocRef = doc(firestore, "users", user.uid);
-        const docSnap = await getDoc(userDocRef);
-        if (docSnap.exists()) {
-          const data = docSnap.data();
-          setScore(data.score);
-          console.log("User score - Playground:", data.score);
-        } else {
-          console.log("Creating new user document in Firestore: Playground");
-          await setDoc(userDocRef, {
-            displayName: user.displayName,
-            email: user.email,
-            score: 0,
-          });
-          setScore(0);
-        }
-      } else {
-        console.log("User not signed in: Playground");
-        setScore(0);
-      }
-    };
-
-    fetchUserScore();
-  }, [user]);
 
   const handleAIResponse = useCallback((responseText) => {
     setResponseText(responseText);
