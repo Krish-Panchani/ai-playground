@@ -12,6 +12,7 @@ import {
 import { auth, firestore } from "../firebase";
 import { doc, setDoc, getDoc } from "firebase/firestore";
 import useAuth from "../auth/useAuth";
+import Feedback from "../components/Feedback";
 
 function ArtfulGuesswork() {
   const [file, setFile] = useState(null);
@@ -22,6 +23,8 @@ function ArtfulGuesswork() {
   const [loadingResponse, setLoadingResponse] = useState(false);
   const [score, setScore] = useState();
   const [isCanvasEmpty, setIsCanvasEmpty] = useState(true);
+  const [isFeedback, setIsFeedback] = useState("");
+  const [uniqueFileName, setUniqueFileName] = useState("");
   const isPage = "ArtfulGuesswork";
 
   const ageGroups = [
@@ -81,95 +84,105 @@ function ArtfulGuesswork() {
     setResponseText(responseText);
   };
 
- return (
-        <div className="flex flex-col min-h-screen bg-black p-4">
-            <Header score={score} className="mb-4" />
-            <UserInfo
-                user={user}
-                ageGroup={ageGroup}
-                setAgeGroup={setAgeGroup}
-                skillLevel={skillLevel}
-                setSkillLevel={setSkillLevel}
-                signOut={signOut}
-                ageGroups={ageGroups}
-                skillLevels={skillLevels}
-                setQuestion={setQuestion}
-                setResponseText={setResponseText}
-            />
-            {!question && (
-                <div>
-                    <h2 className="text-center text-xl sm:text-2xl my-4 text-white">
-                        Welcome to{" "}
-                        <span className="font-bold bg-gradient-to-r from-red-500 to-orange-500 bg-clip-text text-transparent">
-                            Artful Guesswork
-                        </span>{" "}
-                        - See if AI can identify your creation
-                    </h2>
-                </div>
-            )}
-
-            <div className="flex flex-col items-center mb-6 space-y-4">
-                <AIResponse
-                    loadingResponse={loadingResponse}
-                    isCanvasEmpty={isCanvasEmpty}
-                    responseText={responseText}
-                    onResponseGenerated={handleAIResponse}
-                    className="w-full max-w-xl bg-white shadow-md rounded-lg p-4"
-                    isPage={isPage}
-                />
-
-                <div className="flex justify-between gap-4">
-                    <div className="flex">
-                        <HowPlay isPage={isPage} className="text-center text-sm text-gray-700" />
-                    </div>
-
-                    <div className="bg-background rounded-lg border border-orange-500 p-4 flex flex-col gap-4">
-                        <DrawingCanvas
-                            ref={canvasRef}
-                            onDrawingComplete={(dataUrl) =>
-                                handleDrawingComplete(dataUrl, setFile)
-                            }
-                            setIsCanvasEmpty={setIsCanvasEmpty}
-                        />
-
-                        <input type="text" name="AdditionalPrompt"
-                            placeholder="Any Additional Prompt or Instruction?"
-                            className="bg-black rounded-full px-6 py-3 text-white border-2 font-semibold transition-colors duration-300"
-                            onChange={(e) => setPrompt(e.target.value)}
-                        />
-                        <button
-                            onClick={() =>
-                                handleUpload(
-                                    file,
-                                    setLoadingUpload,
-                                    handleSendPrompt,
-                                    prompt,
-                                    setResponseText,
-                                    setLoadingResponse,
-                                    setScore,
-                                    user,
-                                    ageGroup,
-                                    skillLevel,
-                                    isPage
-                                )
-                            }
-                            className={`flex-1 px-6 py-3 text-white rounded-full font-semibold transition-colors duration-300 ${isCanvasEmpty || responseText
-                                ? "bg-gray-400 cursor-not-allowed"
-                                : "bg-gradient-to-r from-indigo-600 to-cyan-600"
-                                }`}
-                            disabled={isCanvasEmpty || responseText}
-                        >
-                            {loadingUpload ? "Uploading..." : "Submit"}
-                        </button>
-                    </div>
-                </div>
-            </div>
-            <div className="flex justify-center">
-
-            </div>
+  return (
+    <div className="flex flex-col min-h-screen bg-black p-4">
+      <Header score={score} className="mb-4" />
+      <UserInfo
+        user={user}
+        ageGroup={ageGroup}
+        setAgeGroup={setAgeGroup}
+        skillLevel={skillLevel}
+        setSkillLevel={setSkillLevel}
+        signOut={signOut}
+        ageGroups={ageGroups}
+        skillLevels={skillLevels}
+        setQuestion={setQuestion}
+        setResponseText={setResponseText}
+      />
+      {!question && (
+        <div>
+          <h2 className="text-center text-xl sm:text-2xl my-4 text-white">
+            Welcome to{" "}
+            <span className="font-bold bg-gradient-to-r from-red-500 to-orange-500 bg-clip-text text-transparent">
+              Artful Guesswork
+            </span>{" "}
+            - See if AI can identify your creation
+          </h2>
         </div>
+      )}
 
-    );
+      <div className="flex flex-col items-center mb-6 space-y-4">
+        {loadingResponse && <p>Loading AI response...</p>}
+        {responseText && (
+          <div className="flex items-center gap-2">
+          <AIResponse
+            responseText={responseText}
+            isPage={isPage}
+            onResponseGenerated={handleAIResponse}
+            className="w-full max-w-xl bg-white shadow-md rounded-lg p-4"
+          />
+          <Feedback 
+          setResponseText={setResponseText} 
+          canvasRef={canvasRef}
+          setIsFeedback={setIsFeedback}
+          file={file}
+          />
+          </div>
+        )}
+        <p className="text-white">{isFeedback}</p>
+
+        <div className="flex justify-between gap-4">
+          <div className="flex">
+            <HowPlay isPage={isPage} className="text-center text-sm text-gray-700" />
+          </div>
+
+          <div className="bg-background rounded-lg border border-orange-500 p-4 flex flex-col gap-4">
+            <DrawingCanvas
+              ref={canvasRef}
+              onDrawingComplete={(dataUrl) =>
+                handleDrawingComplete(dataUrl, setFile)
+              }
+              setIsCanvasEmpty={setIsCanvasEmpty}
+            />
+
+            <input type="text" name="AdditionalPrompt"
+              placeholder="Any Additional Prompt or Instruction?"
+              className="bg-black rounded-full px-6 py-3 text-white border-2 font-semibold transition-colors duration-300"
+              onChange={(e) => setPrompt(e.target.value)}
+            />
+            <button
+              onClick={() =>
+                handleUpload(
+                  file,
+                  setLoadingUpload,
+                  handleSendPrompt,
+                  prompt,
+                  setResponseText,
+                  setLoadingResponse,
+                  setScore,
+                  user,
+                  ageGroup,
+                  skillLevel,
+                  isPage
+                )
+              }
+              className={`flex-1 px-6 py-3 text-white rounded-full font-semibold transition-colors duration-300 ${isCanvasEmpty || responseText
+                ? "bg-gray-400 cursor-not-allowed"
+                : "bg-gradient-to-r from-indigo-600 to-cyan-600"
+                }`}
+              disabled={isCanvasEmpty || responseText}
+            >
+              {loadingUpload ? "Uploading..." : "Submit"}
+            </button>
+          </div>
+        </div>
+      </div>
+      <div className="flex justify-center">
+
+      </div>
+    </div>
+
+  );
 }
 
 export default ArtfulGuesswork;
