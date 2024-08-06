@@ -139,8 +139,6 @@ export const handleSendPrompt = async (uniqueFileName, prompt, setResponseText, 
             alert("Error storing response: " + error.message);
         }
 
-
-
     } catch (error) {
         console.error('Error getting response from cloud function:', error);
         alert('Error getting response from cloud function: ' + error.message);
