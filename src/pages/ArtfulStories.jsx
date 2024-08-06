@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, useCallback } from "react";
+import React, { useState, useRef, useCallback } from "react";
 import DrawingCanvas from "../components/DrawingCanvas";
 import HowPlay from "../components/howPlay";
 import Header from "../components/Header";
@@ -9,9 +9,9 @@ import {
     handleUpload,
     handleSendPrompt,
 } from "../helpers/handleStoryDrawing";
-import { auth, firestore } from "../firebase";
-import { doc, setDoc, getDoc } from "firebase/firestore";
+import { auth } from "../firebase";
 import useAuth from "../auth/useAuth";
+import useUserScore from "../hooks/useUserScore";
 
 function ArtfulStories() {
     const [file, setFile] = useState(null);
@@ -19,9 +19,25 @@ function ArtfulStories() {
     const [responseText, setResponseText] = useState("");
     const [loadingUpload, setLoadingUpload] = useState(false);
     const [loadingResponse, setLoadingResponse] = useState(false);
-    const [score, setScore] = useState();
     const [isCanvasEmpty, setIsCanvasEmpty] = useState(true);
-    const isPage = "ArtfulStories";
+    const [score, setScore] = useUserScore(); // Ensure this is an array with [score, setScore]
+    const canvasRef = useRef(null);
+    const user = useAuth();
+
+    const [ageGroup, setAgeGroup] = useState("Junior Artist (Age: 12 and below)");
+    const [skillLevel, setSkillLevel] = useState("Beginner");
+
+    const signOut = () => {
+        auth.signOut().then(() => {
+            console.log("User signed out successfully");
+        }).catch((error) => {
+            console.error("Error signing out: ", error);
+        });
+    };
+
+    const handleAIResponse = useCallback((responseText) => {
+        setResponseText(responseText);
+    }, []);
 
     const ageGroups = [
         "Junior Artist (Age: 12 and below)",
@@ -29,56 +45,7 @@ function ArtfulStories() {
         "Adult Artist (Age: 20 and above)",
     ];
     const skillLevels = ["Beginner", "Intermediate", "Advanced", "Expert"];
-
-    const [ageGroup, setAgeGroup] = useState(ageGroups[0]);
-    const [skillLevel, setSkillLevel] = useState(skillLevels[0]);
-    const canvasRef = useRef(null);
-
-    const user = useAuth(); // This should work fine here
-
-    const signOut = () => {
-        auth
-            .signOut()
-            .then(() => {
-                console.log("User signed out successfully");
-            })
-            .catch((error) => {
-                console.error("Error signing out: ", error);
-            });
-    };
-
-    useEffect(() => {
-        const fetchUserScore = async () => {
-            if (user) {
-                console.log("Fetching user score from Firestore: Playground");
-                const userDocRef = doc(firestore, "users", user.uid);
-                const docSnap = await getDoc(userDocRef);
-                if (docSnap.exists()) {
-                    const data = docSnap.data();
-                    setScore(data.score); // Set score from Firestore
-                    console.log("User score - Playground:", data.score);
-                } else {
-                    console.log("Creating new user document in Firestore: Playground");
-                    // New user, create document with initial score of 0
-                    await setDoc(userDocRef, {
-                        displayName: user.displayName,
-                        email: user.email,
-                        score: 0,
-                    });
-                    setScore(0); // Set initial score for new users
-                }
-            } else {
-                console.log("User not signed in: Playground");
-                setScore(0); // Set score to 0 for guest user
-            }
-        };
-
-        fetchUserScore();
-    }, [user]);
-
-    const handleAIResponse = useCallback((responseText) => {
-        setResponseText(responseText);
-    }, []);
+    const isPage = "ArtfulStories";
 
     return (
         <div className="flex flex-col min-h-screen bg-black p-4">
@@ -94,7 +61,6 @@ function ArtfulStories() {
                 skillLevels={skillLevels}
                 setResponseText={setResponseText}
             />
-            =
             <div>
                 <h2 className="text-center text-xl sm:text-2xl my-4 text-white">
                     Welcome to{" "}
@@ -120,12 +86,10 @@ function ArtfulStories() {
                 {responseText && (
                     <div className="flex flex-col items-center gap-4">
                         <h3 className="text-center text-lg text-white">
-                            Draw and Create New Story
-                            🎉
+                            Draw and Create New Story 🎉
                         </h3>
                     </div>
-                )
-                }
+                )}
 
                 <div className="flex justify-between gap-4">
                     <div className="flex">
@@ -141,7 +105,9 @@ function ArtfulStories() {
                             setIsCanvasEmpty={setIsCanvasEmpty}
                         />
 
-                        <input type="text" name="AdditionalPrompt"
+                        <input
+                            type="text"
+                            name="AdditionalPrompt"
                             placeholder="Any Additional Prompt or Instruction?"
                             className="bg-black rounded-full px-6 py-3 text-white border-2 font-semibold transition-colors duration-300"
                             onChange={(e) => setPrompt(e.target.value)}
@@ -173,11 +139,7 @@ function ArtfulStories() {
                     </div>
                 </div>
             </div>
-            <div className="flex justify-center">
-
-            </div>
         </div>
-
     );
 }
 

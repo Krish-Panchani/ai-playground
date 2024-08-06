@@ -1,16 +1,26 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { Link } from 'react-router-dom';
 import Header from '../components/Header';
 import UserInfo from '../components/UserInfo';
-import { auth, firestore } from "../firebase";
-import { doc, setDoc, getDoc } from "firebase/firestore";
+import { auth } from "../firebase";
 import useAuth from "../auth/useAuth";
 import { motion } from 'framer-motion';
 import Footer from '../components/Footer';
+import useUserScore from '../hooks/useUserScore';
 
 function Home() {
+    const [ageGroup, setAgeGroup] = useState("Junior Artist (Age: 12 and below)");
+    const [skillLevel, setSkillLevel] = useState("Beginner");
+    const score = useUserScore();
+    const user = useAuth();
 
-    const [score, setScore] = useState();
+    const signOut = () => {
+        auth.signOut().then(() => {
+            console.log("User signed out successfully");
+        }).catch((error) => {
+            console.error("Error signing out: ", error);
+        });
+    };
 
     const ageGroups = [
         "Junior Artist (Age: 12 and below)",
@@ -19,50 +29,6 @@ function Home() {
     ];
     const skillLevels = ["Beginner", "Intermediate", "Advanced", "Expert"];
 
-    const [ageGroup, setAgeGroup] = useState(ageGroups[0]);
-    const [skillLevel, setSkillLevel] = useState(skillLevels[0]);
-
-    const user = useAuth(); // This should work fine here
-
-    const signOut = () => {
-        auth
-            .signOut()
-            .then(() => {
-                console.log("User signed out successfully");
-            })
-            .catch((error) => {
-                console.error("Error signing out: ", error);
-            });
-    };
-
-    useEffect(() => {
-        const fetchUserScore = async () => {
-            if (user) {
-                console.log("Fetching user score from Firestore: Playground");
-                const userDocRef = doc(firestore, "users", user.uid);
-                const docSnap = await getDoc(userDocRef);
-                if (docSnap.exists()) {
-                    const data = docSnap.data();
-                    setScore(data.score); // Set score from Firestore
-                    console.log("User score - Playground:", data.score);
-                } else {
-                    console.log("Creating new user document in Firestore: Playground");
-                    // New user, create document with initial score of 0
-                    await setDoc(userDocRef, {
-                        displayName: user.displayName,
-                        email: user.email,
-                        score: 0,
-                    });
-                    setScore(0); // Set initial score for new users
-                }
-            } else {
-                console.log("User not signed in: Playground");
-                setScore(0); // Set score to 0 for guest user
-            }
-        };
-
-        fetchUserScore();
-    }, [user]);
     return (
         <div className="flex flex-col justify-between min-h-screen bg-black p-4">
             <Header score={score} className="mb-4" />
