@@ -1,7 +1,7 @@
 import { ref, uploadBytesResumable } from 'firebase/storage';
 import { firebaseApp, storage, firestore } from '../firebase';
 import { getVertexAI, getGenerativeModel } from "firebase/vertexai-preview";
-import { doc, setDoc, getDoc, addDoc, collection} from 'firebase/firestore';
+import { doc, setDoc, getDoc, addDoc, collection } from 'firebase/firestore';
 
 export const handleDrawingComplete = (dataUrl, setFile) => {
     const byteString = atob(dataUrl.split(',')[1]);
@@ -15,7 +15,7 @@ export const handleDrawingComplete = (dataUrl, setFile) => {
     setFile(new File([blob], 'drawing.png', { type: mimeString }));
 };
 
-export const handleUpload = async (file, setLoadingUpload, handleSendPrompt, prompt, setResponseText, setLoadingResponse, setScore, user) => {
+export const handleUpload = async (file, setUniqueFileName, setLoadingUpload, handleSendPrompt, prompt, setResponseText, setLoadingResponse, setScore, user) => {
     if (!file) {
         alert('Please complete a drawing to upload');
         return;
@@ -25,6 +25,7 @@ export const handleUpload = async (file, setLoadingUpload, handleSendPrompt, pro
 
     try {
         const uniqueFileName = `${Date.now()}_${file.name}`;
+        setUniqueFileName(uniqueFileName);
         const storageRef = ref(storage, uniqueFileName);
         const uploadTask = uploadBytesResumable(storageRef, file);
 
@@ -80,7 +81,7 @@ export const handleSendPrompt = async (uniqueFileName, prompt, setResponseText, 
         const result = await model.generateContent([combinedPrompt, imagePart]);
         const fullTextResponse = await result.response.text();
         const cleanedText = fullTextResponse.replace(/```json|```/g, '').trim();
-        console.log('Response:', cleanedText);
+
         let responseData;
         try {
             responseData = JSON.parse(cleanedText);
@@ -117,26 +118,26 @@ export const handleSendPrompt = async (uniqueFileName, prompt, setResponseText, 
             setScore(newScore);
 
             // Store response and user email in "ArtfullGuesswork" collection
-            
+
         } else {
             // For guests, just update local state
             setScore(prevScore => prevScore + (points || 0));
         }
         const responseObj = {
-                email: user ? user.email : "guest",
-                guess: responseData.guess,
-                file: uniqueFileName,
-                isCorrect: false,
-            };
+            email: user ? user.email : "guest",
+            guess: responseData.guess,
+            file: uniqueFileName,
+            isCorrect: false,
+        };
 
-            try {
-                const responseCollectionRef = collection(firestore, "ArtfulGuesswork");
-                await addDoc(responseCollectionRef, responseObj);
-                console.log("Response stored successfully");
-            } catch (error) {
-                console.error("Error storing response:", error);
-                alert("Error storing response: " + error.message);
-            }
+        try {
+            const responseCollectionRef = collection(firestore, "ArtfulGuesswork");
+            await addDoc(responseCollectionRef, responseObj);
+            console.log("Response stored successfully");
+        } catch (error) {
+            console.error("Error storing response:", error);
+            alert("Error storing response: " + error.message);
+        }
 
 
 
