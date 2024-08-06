@@ -157,6 +157,10 @@ function CreativeQuest() {
         )}
         {question && (
           <div className="flex flex-col items-center w-full space-y-4">
+          <div className="flex justify-between gap-4">
+          <div className="flex">
+            <HowPlay isPage={isPage} className="text-center text-sm text-gray-700" />
+          </div>
             <div className="bg-background rounded-lg border border-orange-500 p-4 flex flex-col gap-4">
 
 
@@ -192,6 +196,7 @@ function CreativeQuest() {
               >
                 {loadingUpload ? "Uploading..." : "Submit"}
               </button>
+            </div>
             </div>
           </div>
         )}
