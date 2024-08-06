@@ -10,7 +10,7 @@ import {
     handleSendPrompt,
 } from "../helpers/handleStoryDrawing";
 import { auth } from "../firebase";
-import useAuth from "../auth/useAuth";
+import useAuth from "../hooks/useAuth";
 import useUserScore from "../hooks/useUserScore";
 
 function ArtfulStories() {
