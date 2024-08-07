@@ -20,7 +20,7 @@ export default function Drawer({ children, isOpen, setIsOpen }) {
           (isOpen ? "w-4/5 " : "") // Add this line to set width to 80% in mobile mode
         }
       >
-        <article className="relative max-w-sm pb-10 flex flex-col space-y-6 h-full ">
+        <article className="relative max-w-sm pb-10 flex flex-col overflow-y-scroll overflow-x-hidden space-y-6 h-full ">
           <header className="p-4 font-bold text-lg flex justify-between items-center border-b-2 border-orange-500">
             <Link to="/">
               <div className='flex items-center gap-2 bg-gradient-to-r from-red-500 to-orange-500 bg-clip-text text-transparent  animate-gradient-animate'>
