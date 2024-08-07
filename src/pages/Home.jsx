@@ -2,7 +2,6 @@ import React from 'react'
 import { Link } from 'react-router-dom';
 import Header from '../components/Header';
 import UserInfo from '../components/UserInfo';
-import { auth } from "../firebase";
 import useAuth from "../hooks/useAuth";
 import { motion } from 'framer-motion';
 import Footer from '../components/Footer';
@@ -17,14 +16,6 @@ function Home() {
     const user = useAuth();
     const isPage = "Home";
 
-    const signOut = () => {
-        auth.signOut().then(() => {
-            console.log("User signed out successfully");
-        }).catch((error) => {
-            console.error("Error signing out: ", error);
-        });
-    };
-
     return (
         <div className="flex flex-col justify-between min-h-screen bg-black p-4">
             <Header score={score} className="mb-4" />
@@ -34,7 +25,6 @@ function Home() {
                 setAgeGroup={setAgeGroup}
                 skillLevel={skillLevel}
                 setSkillLevel={setSkillLevel}
-                signOut={signOut}
                 ageGroups={ageGroups}
                 skillLevels={skillLevels}
                 isPage={isPage}
@@ -50,7 +40,7 @@ function Home() {
             </div>
             <div>
                 <h3 className="text-center text-5xl sm:text-2xl my-4 text-white">
-                    <span className="font-bold bg-gradient-to-r from-red-500 to-orange-500 bg-clip-text text-transparent text-5xl">
+                    <span className="font-bold bg-gradient-to-r from-red-500 to-orange-500 bg-clip-text animate-gradient-animate text-transparent text-3xl sm:text-5xl">
                         GAME MODES
                     </span>
                 </h3>
