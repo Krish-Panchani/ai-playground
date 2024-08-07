@@ -68,6 +68,12 @@ const UserInfo = ({ user, ageGroup, setAgeGroup, skillLevel, setSkillLevel, ageG
                     <Link>
                         <div className='flex gap-2 items-center'>
                             <MdDraw className='text-2xl' />
+                            <span className='sm:text-xl font-semibold'>Art Gallery</span>
+                        </div>
+                    </Link>
+                    <Link>
+                        <div className='flex gap-2 items-center'>
+                            <MdDraw className='text-2xl' />
                             <span className='sm:text-xl font-semibold'>Your Arts</span>
                         </div>
                     </Link>
