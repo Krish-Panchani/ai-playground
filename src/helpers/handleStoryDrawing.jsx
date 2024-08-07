@@ -127,7 +127,6 @@ export const handleSendPrompt = async (uniqueFileName, prompt, setResponseText, 
             title: responseData.title,
             story: responseData.story,
             file: uniqueFileName,
-            isCorrect: false,
             timestamp: Timestamp.now(),
         };
         try {
