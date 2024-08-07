@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { Link } from 'react-router-dom';
 import Header from '../components/Header';
 import UserInfo from '../components/UserInfo';
@@ -7,10 +7,12 @@ import useAuth from "../hooks/useAuth";
 import { motion } from 'framer-motion';
 import Footer from '../components/Footer';
 import useUserScore from '../hooks/useUserScore';
+import useAge from '../hooks/useAge';
+import useSkill from '../hooks/useSkill';
 
 function Home() {
-    const [ageGroup, setAgeGroup] = useState("Junior Artist (Age: 12 and below)");
-    const [skillLevel, setSkillLevel] = useState("Beginner");
+    const { ageGroup, setAgeGroup, ageGroups } = useAge();
+    const { skillLevel, setSkillLevel, skillLevels } = useSkill();
     const score = useUserScore();
     const user = useAuth();
     const isPage = "Home";
@@ -22,13 +24,6 @@ function Home() {
             console.error("Error signing out: ", error);
         });
     };
-
-    const ageGroups = [
-        "Junior Artist (Age: 12 and below)",
-        "Teen Artist (Age: between 13-19)",
-        "Adult Artist (Age: 20 and above)",
-    ];
-    const skillLevels = ["Beginner", "Intermediate", "Advanced", "Expert"];
 
     return (
         <div className="flex flex-col justify-between min-h-screen bg-black p-4">
@@ -44,15 +39,22 @@ function Home() {
                 skillLevels={skillLevels}
                 isPage={isPage}
             />
-             <div>
-                    <h2 className="text-center text-xl sm:text-2xl my-4 text-white">
-                        Welcome to{" "}
-                        <span className="font-bold bg-gradient-to-r from-red-500 to-orange-500 bg-clip-text text-transparent">
-                            AI Playground
-                        </span>{" "}
-                        - Where Creativity meets Learning.
-                    </h2>
-                </div>
+            <div>
+                <h2 className="text-center text-xl sm:text-2xl my-4 text-white">
+                    Welcome to{" "}
+                    <span className="font-bold bg-gradient-to-r from-red-500 to-orange-500 bg-clip-text text-transparent">
+                        AI Playground
+                    </span>{" "}
+                    - Where Creativity meets Learning.
+                </h2>
+            </div>
+            <div>
+                <h3 className="text-center text-5xl sm:text-2xl my-4 text-white">
+                    <span className="font-bold bg-gradient-to-r from-red-500 to-orange-500 bg-clip-text text-transparent text-5xl">
+                        GAME MODES
+                    </span>
+                </h3>
+            </div>
             <div className="flex flex-col sm:flex-row justify-center items-center gap-16 py-12">
                 {/* <Link > */}
 
