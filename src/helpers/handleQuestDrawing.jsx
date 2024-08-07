@@ -1,7 +1,7 @@
 import { ref, uploadBytesResumable } from 'firebase/storage';
 import { firebaseApp, storage, firestore } from '../firebase';
 import { getVertexAI, getGenerativeModel } from "firebase/vertexai-preview";
-import { doc, setDoc, getDoc } from 'firebase/firestore';
+import { doc, setDoc, getDoc, addDoc, collection } from 'firebase/firestore';
 
 export const handleDrawingComplete = (dataUrl, setFile) => {
     const byteString = atob(dataUrl.split(',')[1]);
@@ -111,6 +111,22 @@ export const handleSendPrompt = async (uniqueFileName, prompt, setResponseText, 
         } else {
             // For guests, just update local state
             setScore(prevScore => prevScore + (responseData.points || 0));
+        }
+
+        const responseObj = {
+            email: user ? user.email : "guest",
+            question: prompt,
+            isCorrect: responseData.isCorrect,
+            reason: responseData.reason,
+            file: uniqueFileName,
+        };
+        try {
+            const responseCollectionRef = collection(firestore, "CreativeQuest");
+            await addDoc(responseCollectionRef, responseObj);
+            console.log("Response stored successfully");
+        } catch (error) {
+            console.error("Error storing response:", error);
+            alert("Error storing response: " + error.message);
         }
 
     } catch (error) {
