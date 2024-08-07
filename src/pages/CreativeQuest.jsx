@@ -60,9 +60,9 @@ function CreativeQuest() {
           <h2 className="text-center text-xl sm:text-2xl my-4 text-white">
             Welcome to{" "}
             <span className="font-bold bg-gradient-to-r from-red-500 to-orange-500 bg-clip-text text-transparent">
-              AI Playground
+              Creative Quest
             </span>{" "}
-            - Where Creativity Meets Learning
+            - Where Every Question Sparks a Masterpiece.
           </h2>
         </div>
       )}
