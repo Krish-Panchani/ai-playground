@@ -62,7 +62,7 @@ function Home() {
                             <h2 className="mb-6 block font-sans text-xl font-medium leading-[1.5] tracking-normal text-white antialiased">
                                 <span className='text-2xl font-bold drop-shadow-xl bg-gradient-to-r from-red-500 to-orange-500 bg-clip-text text-transparent  animate-gradient-animate group-hover:text-white transition ease-linear duration-300'>Creative Quest</span>
                             </h2>
-                            <p className='hidden group-hover:block bg-gradient-to-r from-red-500 to-orange-500 bg-clip-text text-transparent  animate-gradient-animate font-semibold'>Where Every Prompt Sparks a Masterpiece</p>
+                            <p className='hidden group-hover:block bg-gradient-to-r from-red-500 to-orange-500 bg-clip-text text-transparent  animate-gradient-animate font-semibold'>Where Every Question Sparks a Masterpiece</p>
                         </div>
                     </motion.div>
                 </Link>
