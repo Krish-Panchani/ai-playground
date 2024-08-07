@@ -11,7 +11,7 @@ import {
   handleDrawingComplete,
   handleUpload,
   handleSendPrompt,
-} from "../helpers/handleUploadDrawing";
+} from "../helpers/handleQuestDrawing";
 import Question from "../components/ui/Question";
 import useAuth from "../hooks/useAuth";
 import useAge from "../hooks/useAge";
@@ -27,12 +27,12 @@ function CreativeQuest() {
   const [loadingResponse, setLoadingResponse] = useState(false);
   const [loadingQuestion, setLoadingQuestion] = useState(false);
   const [isCanvasEmpty, setIsCanvasEmpty] = useState(true);
-  
+
   const [score, setScore] = useUserScore();
   const { ageGroup, setAgeGroup, ageGroups } = useAge();
   const { skillLevel, setSkillLevel, skillLevels } = useSkill();
   const isPage = "CreativeQuest";
-  
+
   const canvasRef = useRef(null);
 
   const user = useAuth(); // This should work fine here
@@ -83,7 +83,8 @@ function CreativeQuest() {
           question={question}
           responseText={responseText}
         />
-        {question && (
+
+        {question && !loadingQuestion && (
           <Question
             question={question}
             className="text-lg font-semibold text-gray-800"
@@ -95,16 +96,32 @@ function CreativeQuest() {
           </div>
         )}
         {loadingQuestion && (
-          <div className="h-1 w-60 mb-4 bg-gradient-to-r from-cyan-400 to-green-500 mx-auto rounded-full animate-gradient-animate z-50"></div>
+          <div className="flex flex-col gap-2">
+            <div className="h-2 w-72 bg-gradient-to-r from-red-500 via-amber-400 to-orange-500 mx-auto rounded-full animate-gradient-animate z-50"></div>
+          </div>
         )}
       </div>
+
       {!question && (
-        <div className="flex justify-center mt-6">
+        <div className="flex justify-center mt-6 w-full">
           <HowPlay isPage={isPage} className="text-center text-sm text-gray-700" />
         </div>
       )}
       <div className="flex flex-col items-center mb-6 space-y-4">
-        {loadingResponse && <p>Loading AI response...</p>}
+        {loadingResponse && (
+          <div className="flex items-center justify-center bg-black text-white">
+            <div className="mt-4 rounded-lg p-4">
+              <h3 className="bg-gradient-to-r from-blue-500 to-cyan-400 bg-clip-text text-xl font-bold text-transparent animate-gradient-animate">Gemini - <span className="text-md animate-pulse font-normal text-white">Analyzing your Drawing ...</span></h3>
+              <div className="mt-4 flex flex-col gap-2 rounded-lg border border-green-300 p-4 text-white">
+                <div className="col-span-2 h-2 animate-pulse rounded bg-slate-200"></div>
+
+                <div className="col-span-2 h-2 w-36 animate-pulse rounded bg-slate-200"></div>
+              </div>
+            </div>
+          </div>
+
+        )}
+
         {responseText && !isCanvasEmpty && (
           <AIResponse
             loadingResponse={loadingResponse}
@@ -115,12 +132,11 @@ function CreativeQuest() {
             className="w-full max-w-xl bg-white shadow-md rounded-lg p-4"
           />
         )}
+
         {question && (
           <div className="flex flex-col items-center w-full space-y-4">
-            <div className="flex  flex-col-reverse lg:flex-row justify-between gap-4">
-              <div className="flex justify-center">
-                <HowPlay isPage={isPage} className="text-center text-sm text-gray-700" />
-              </div>
+            <div className="flex  flex-col lg:flex-row justify-between gap-4">
+
               <div className="bg-background rounded-lg border border-orange-500 p-4 flex flex-col gap-4">
 
 
@@ -156,6 +172,9 @@ function CreativeQuest() {
                 >
                   {loadingUpload ? "Uploading..." : "Submit"}
                 </button>
+              </div>
+              <div className="flex justify-center">
+                <HowPlay isPage={isPage} className="text-center text-sm text-gray-700" />
               </div>
             </div>
           </div>
