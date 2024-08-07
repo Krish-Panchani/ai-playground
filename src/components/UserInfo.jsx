@@ -6,9 +6,9 @@ import { HiMenuAlt3 } from "react-icons/hi";
 import Drawer from './ui/Drawer';
 import { MdLeaderboard } from "react-icons/md";
 import { MdDraw } from "react-icons/md";
+import signOut from '../hooks/signOut';
 
-
-const UserInfo = ({ user, ageGroup, setAgeGroup, skillLevel, setSkillLevel, signOut, ageGroups, skillLevels, setQuestion, setResponseText, isPage}) => {
+const UserInfo = ({ user, ageGroup, setAgeGroup, skillLevel, setSkillLevel, ageGroups, skillLevels, setQuestion, setResponseText, isPage }) => {
     const [isOpen, setIsOpen] = useState(false);
     return (
         <div className='flex items-center justify-between px-2 sm:px-8 my-6 gap-4'>
@@ -21,7 +21,6 @@ const UserInfo = ({ user, ageGroup, setAgeGroup, skillLevel, setSkillLevel, sign
                     <h2 className='text-white text-md sm:text-xl'>
                         Hello Artist, <span className='font-bold bg-gradient-to-r from-indigo-600 to-cyan-600 bg-clip-text text-transparent'>Guest</span>
                     </h2>
-
                 </>
             )}
 
@@ -34,11 +33,9 @@ const UserInfo = ({ user, ageGroup, setAgeGroup, skillLevel, setSkillLevel, sign
                 </button>
             </div>
 
-
             <Drawer isOpen={isOpen} setIsOpen={setIsOpen}>
                 <div className='flex flex-col items-start justify-between px-2 gap-4'>
                     <div>
-                        {/* <label className='text-white px-2 font-semibold'>I'am</label> */}
                         <select
                             value={ageGroup}
                             onChange={(e) => setAgeGroup(e.target.value)}
@@ -50,7 +47,6 @@ const UserInfo = ({ user, ageGroup, setAgeGroup, skillLevel, setSkillLevel, sign
                         </select>
                     </div>
                     <div>
-                        {/* <label className='text-white px-2 font-semibold'>My Skill Level</label> */}
                         <select
                             value={skillLevel}
                             onChange={(e) => setSkillLevel(e.target.value)}
@@ -83,16 +79,12 @@ const UserInfo = ({ user, ageGroup, setAgeGroup, skillLevel, setSkillLevel, sign
                             className='flex items-center gap-2 px-4 py-2 bg-red-500 rounded-full text-white font-semibold'>
                             <MdLogout className='text-xl' />
                             <span>Sign Out</span>
-
                         </button>
                         :
                         <Login setQuestion={setQuestion} setResponseText={setResponseText} setAgeGroup={setAgeGroup} ageGroup={ageGroup} setSkillLevel={setSkillLevel} skillLevel={skillLevel} isPage={isPage} />
                     }
-
                 </div>
-
             </Drawer>
-
         </div>
     );
 };
