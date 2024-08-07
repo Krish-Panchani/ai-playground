@@ -4,6 +4,8 @@ import CreativeQuest from './pages/CreativeQuest';
 import ArtfulGuesswork from './pages/ArtfulGuesswork';
 import ArtfulStories from './pages/ArtfulStories';
 import Leaderboard from './pages/Leaderboard';
+import YourArt from './pages/YourArt';
+import ArtGallery from './pages/ArtGallery';
 import Home from './pages/Home';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
@@ -16,6 +18,8 @@ function App() {
         <Route path="ArtfulGuesswork" element={<ArtfulGuesswork />} />
         <Route path="ArtfulStories" element={<ArtfulStories />} />
         <Route path="Leaderboard" element={<Leaderboard />} />
+        <Route path="YourArt" element={<YourArt />} />
+        <Route path="ArtGallery" element={<ArtGallery />} />
 
       </Routes>
     </BrowserRouter>
