@@ -1,7 +1,7 @@
 import { ref, uploadBytesResumable } from 'firebase/storage';
 import { firebaseApp, storage, firestore } from '../firebase';
 import { getVertexAI, getGenerativeModel } from "firebase/vertexai-preview";
-import { doc, setDoc, getDoc, addDoc, collection } from 'firebase/firestore';
+import { doc, setDoc, getDoc, addDoc, collection, Timestamp } from 'firebase/firestore';
 
 export const handleDrawingComplete = (dataUrl, setFile) => {
     const byteString = atob(dataUrl.split(',')[1]);
@@ -119,6 +119,7 @@ export const handleSendPrompt = async (uniqueFileName, prompt, setResponseText, 
             isCorrect: responseData.isCorrect,
             reason: responseData.reason,
             file: uniqueFileName,
+            timestamp: Timestamp.now(),
         };
         try {
             const responseCollectionRef = collection(firestore, "CreativeQuest");
