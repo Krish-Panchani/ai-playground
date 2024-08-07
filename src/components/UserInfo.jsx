@@ -7,6 +7,7 @@ import Drawer from './ui/Drawer';
 import { MdLeaderboard } from "react-icons/md";
 import { MdDraw } from "react-icons/md";
 import signOut from '../hooks/signOut';
+import { HoverImageLinks } from './HoverImage';
 
 const UserInfo = ({ user, ageGroup, setAgeGroup, skillLevel, setSkillLevel, ageGroups, skillLevels, setQuestion, setResponseText, isPage }) => {
     const [isOpen, setIsOpen] = useState(false);
@@ -59,25 +60,20 @@ const UserInfo = ({ user, ageGroup, setAgeGroup, skillLevel, setSkillLevel, ageG
                     </div>
                 </div>
                 <div className='flex flex-col gap-6 p-4'>
-                    <Link>
+                    <Link to={"/Leaderboard"}>
                         <div className='flex gap-2 items-center'>
                             <MdLeaderboard className='text-xl' />
                             <span className='text-xl font-semibold'>Leaderboard</span>
                         </div>
                     </Link>
-                    <Link>
+                    <Link to={"/ArtGallery"}>
                         <div className='flex gap-2 items-center'>
                             <MdDraw className='text-2xl' />
-                            <span className='sm:text-xl font-semibold'>Art Gallery</span>
-                        </div>
-                    </Link>
-                    <Link>
-                        <div className='flex gap-2 items-center'>
-                            <MdDraw className='text-2xl' />
-                            <span className='sm:text-xl font-semibold'>Your Arts</span>
+                            <span className='text-xl font-semibold'>Art Gallery</span>
                         </div>
                     </Link>
                 </div>
+                <HoverImageLinks />
                 <div className='flex justify-between gap-8 px-4 py-2'>
                     {user ?
                         <button
