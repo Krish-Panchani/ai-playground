@@ -58,6 +58,14 @@ const Feedback = ({ setResponseText, canvasRef, setIsFeedback, uniqueFileName })
             console.error("Error updating document:", error);
             alert("Error updating document: " + error.message);
         }
+        setTimeout(() => {
+            setIsFeedback('');
+        }, 3000);
+        
+        setResponseText('');
+        if (canvasRef.current) {
+            canvasRef.current.clearCanvas();
+        }
     };
 
     return (
