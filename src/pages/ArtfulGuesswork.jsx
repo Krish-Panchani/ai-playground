@@ -1,12 +1,15 @@
 import React, { useState, useRef, useCallback } from "react";
-import DrawingCanvas from "../components/DrawingCanvas";
-import HowPlay from "../components/ui/howPlay";
+
 import Header from "../components/Header";
+import Footer from "../components/Footer";
+import DrawingCanvas from "../components/DrawingCanvas";
 import AIResponse from "../components/AIResponse";
 import UserInfo from "../components/UserInfo";
+import Feedback from "../components/Feedback";
+import HowPlay from "../components/ui/howPlay";
+
 import { handleDrawingComplete, handleUpload, handleSendPrompt } from "../helpers/handleGuessDrawing";
 import useAuth from "../hooks/useAuth";
-import Feedback from "../components/Feedback";
 import useUserScore from "../hooks/useUserScore";
 import useAge from "../hooks/useAge";
 import useSkill from "../hooks/useSkill";
@@ -22,7 +25,7 @@ function ArtfulGuesswork() {
   const [isFeedback, setIsFeedback] = useState("");
   const [uniqueFileName, setUniqueFileName] = useState("");
   const isPage = "ArtfulGuesswork";
-  
+
   const [score, setScore] = useUserScore();
   const { ageGroup, setAgeGroup, ageGroups } = useAge();
   const { skillLevel, setSkillLevel, skillLevels } = useSkill();
@@ -61,7 +64,18 @@ function ArtfulGuesswork() {
         </div>
       )}
       <div className="flex flex-col items-center mb-6 space-y-4">
-        {loadingResponse && <p>Loading AI response...</p>}
+        {loadingResponse && (
+          <div className="flex items-center justify-center bg-black text-white">
+            <div className="mt-4 rounded-lg p-4">
+              <h3 className="bg-gradient-to-r from-blue-500 to-cyan-400 bg-clip-text text-xl font-bold text-transparent animate-gradient-animate">Gemini - <span className="text-md animate-pulse font-normal text-white">Analyzing your Drawing ...</span></h3>
+              <div className="mt-4 flex flex-col gap-2 rounded-lg border border-green-300 p-4 text-white">
+                <div className="col-span-2 h-2 animate-pulse rounded bg-slate-200"></div>
+                <div className="col-span-2 h-2 w-36 animate-pulse rounded bg-slate-200"></div>
+              </div>
+            </div>
+          </div>
+        )}
+
         {responseText && (
           <div className="flex items-center gap-2">
             <AIResponse
@@ -70,19 +84,18 @@ function ArtfulGuesswork() {
               onResponseGenerated={handleAIResponse}
               className="w-full max-w-xl bg-white shadow-md rounded-lg p-4"
             />
-            <Feedback 
-              setResponseText={setResponseText} 
+            <Feedback
+              setResponseText={setResponseText}
               canvasRef={canvasRef}
               setIsFeedback={setIsFeedback}
               uniqueFileName={uniqueFileName}
             />
           </div>
         )}
+
         <p className="text-white">{isFeedback}</p>
-        <div className="flex  flex-col-reverse lg:flex-row justify-between gap-4">
-          <div className="flex justify-center">
-            <HowPlay isPage={isPage} className="text-center text-sm text-gray-700 " />
-          </div>
+
+        <div className="flex  flex-col lg:flex-row justify-between gap-4">
           <div className="bg-background rounded-lg border border-orange-500 p-4 flex flex-col gap-4">
             <DrawingCanvas
               ref={canvasRef}
@@ -119,8 +132,12 @@ function ArtfulGuesswork() {
               {loadingUpload ? "Uploading..." : "Submit"}
             </button>
           </div>
+          <div className="flex justify-center">
+            <HowPlay isPage={isPage} className="text-center text-sm text-gray-700 " />
+          </div>
         </div>
       </div>
+      <Footer />
     </div>
   );
 }
