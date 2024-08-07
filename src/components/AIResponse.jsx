@@ -1,5 +1,6 @@
 import React, { useCallback } from 'react';
 
+
 const AIResponse = React.memo(({ responseText, isPage }) => {
   const renderGuessResponse = useCallback((responseText) => {
     try {
@@ -7,7 +8,7 @@ const AIResponse = React.memo(({ responseText, isPage }) => {
       const response = JSON.parse(responseText);
       const { guess } = response;
       return (
-        <div className='mt-4 border border-green-300 p-4 rounded-lg text-white'>
+        <div className='mt-4 border border-orange-300 p-4 rounded-lg text-white'>
           <p>🤔 <span className='text-white font-bold'>{guess}</span></p>
         </div>
       );
@@ -22,9 +23,9 @@ const AIResponse = React.memo(({ responseText, isPage }) => {
       const response = JSON.parse(responseText);
       const { title, story } = response;
       return (
-        <div className='mt-4 border border-green-300 p-4 rounded-lg text-white'>
-          <h2>{title}</h2>
-          <p><span className='text-white font-bold'>{story}</span></p>
+        <div className='mt-4 border border-orange-300 p-4 rounded-lg text-white'>
+          <h2 className='text-xl px-2 py-2 font-bold bg-gradient-to-r from-red-500 to-orange-500 bg-clip-text text-transparent uppercase'>{title}</h2>
+          <p><span className='text-white font-semibold px-2 py-2 text-justify'>{story}</span></p>
         </div>
       );
     } catch (error) {
