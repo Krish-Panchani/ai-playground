@@ -3,6 +3,7 @@ import React from 'react';
 import CreativeQuest from './pages/CreativeQuest';
 import ArtfulGuesswork from './pages/ArtfulGuesswork';
 import ArtfulStories from './pages/ArtfulStories';
+import Leaderboard from './pages/Leaderboard';
 import Home from './pages/Home';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
@@ -14,6 +15,8 @@ function App() {
         <Route path="CreativeQuest" element={<CreativeQuest />} />
         <Route path="ArtfulGuesswork" element={<ArtfulGuesswork />} />
         <Route path="ArtfulStories" element={<ArtfulStories />} />
+        <Route path="Leaderboard" element={<Leaderboard />} />
+
       </Routes>
     </BrowserRouter>
 
