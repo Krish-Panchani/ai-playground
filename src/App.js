@@ -18,7 +18,6 @@ function App() {
         <Route path="ArtfulGuesswork" element={<ArtfulGuesswork />} />
         <Route path="ArtfulStories" element={<ArtfulStories />} />
         <Route path="Leaderboard" element={<Leaderboard />} />
-        <Route path="YourArt" element={<YourArt />} />
         <Route path="ArtGallery" element={<ArtGallery />} />
 
       </Routes>
