@@ -60,7 +60,7 @@ export const handleSendPrompt = async (uniqueFileName, prompt, setResponseText, 
         // Your existing code for generating response
         const vertexAI = getVertexAI(firebaseApp);
         const bucket_name = process.env.REACT_APP_FIREBASE_STORAGE_BUCKET;
-        const model = getGenerativeModel(vertexAI, { model: "gemini-1.5-flash" });
+        const model = getGenerativeModel(vertexAI, { model: "gemini-1.5-pro-001" });
         const combinedPrompt = `Generate a Creative short story based on the User's Drawing. ${prompt}. \n\n
         you can use markdown in story. \n\n
         Response format: JSON. {
