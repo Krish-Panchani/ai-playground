@@ -31,7 +31,8 @@ function Leaderboard() {
             // Check for the logged-in user's rank
             if (user) {
                 const userRankIndex = usersList.findIndex(u => u.email === user.email);
-                if (userRankIndex !== 1) {
+                console.log("User Rank Index:", userRankIndex); // Debugging
+                if (userRankIndex !== null) {
                     setUserRank(userRankIndex + 1);
                 } else {
                     setUserRank(null);
@@ -45,7 +46,7 @@ function Leaderboard() {
     }, [user]);
 
     // Find the user's complete data for display
-    const userRow = users.find(u => u.uid === user?.uid);
+    const userRow = users.find(u => u.email === user?.email);
 
     console.log("Logged-in User Data:", userRow); // Debugging
 
@@ -69,8 +70,8 @@ function Leaderboard() {
                 </div>
                 <LeaderboardTable users={users} />
                 {user &&  (
-                    <div className="mt-6 text-center text-lg text-white">
-                        <p>Your Rank: {userRank}</p>
+                    <div className="mt-6 text-lg text-white">
+                        <p className='text-center font-bold bg-gradient-to-r from-red-500 to-orange-500 bg-clip-text text-transparent'>Your Rank: <span className='text-white'>#{userRank}</span></p>
                         <div className="mt-4">
                             <table className="w-full caption-bottom text-sm">
                                 <thead>
@@ -82,9 +83,9 @@ function Leaderboard() {
                                 </thead>
                                 <tbody>
                                     <tr className="border-b border-orange-500 transition-colors hover:bg-muted/50">
-                                        <td className="p-4 align-middle font-medium">{userRank}</td>
-                                        <td className="p-4 align-middle">{user.displayName}</td>
-                                        {/* <td className="p-4 align-middle text-right">{userRow.score}</td> */}
+                                        <td className="p-4 align-left font-medium">{userRank}</td>
+                                        <td className="p-4 align-left">{user.displayName}</td>
+                                        <td className="p-4 align-right text-right">{score}</td>
                                     </tr>
                                 </tbody>
                             </table>
