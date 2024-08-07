@@ -9,7 +9,6 @@ import {
     handleUpload,
     handleSendPrompt,
 } from "../helpers/handleStoryDrawing";
-import { auth } from "../firebase";
 import useAuth from "../hooks/useAuth";
 import useUserScore from "../hooks/useUserScore";
 import useAge from "../hooks/useAge";
@@ -29,14 +28,6 @@ function ArtfulStories() {
     const { ageGroup, setAgeGroup, ageGroups } = useAge();
     const { skillLevel, setSkillLevel, skillLevels } = useSkill();
 
-    const signOut = () => {
-        auth.signOut().then(() => {
-            console.log("User signed out successfully");
-        }).catch((error) => {
-            console.error("Error signing out: ", error);
-        });
-    };
-
     const handleAIResponse = useCallback((responseText) => {
         setResponseText(responseText);
     }, []);
@@ -52,7 +43,6 @@ function ArtfulStories() {
                 setAgeGroup={setAgeGroup}
                 skillLevel={skillLevel}
                 setSkillLevel={setSkillLevel}
-                signOut={signOut}
                 ageGroups={ageGroups}
                 skillLevels={skillLevels}
                 setResponseText={setResponseText}

@@ -13,7 +13,6 @@ import {
   handleSendPrompt,
 } from "../helpers/handleUploadDrawing";
 import Question from "../components/ui/Question";
-import { auth } from "../firebase";
 import useAuth from "../hooks/useAuth";
 import useAge from "../hooks/useAge";
 import useSkill from "../hooks/useSkill";
@@ -38,17 +37,6 @@ function CreativeQuest() {
 
   const user = useAuth(); // This should work fine here
 
-  const signOut = () => {
-    auth
-      .signOut()
-      .then(() => {
-        console.log("User signed out successfully");
-      })
-      .catch((error) => {
-        console.error("Error signing out: ", error);
-      });
-  };
-
   const handleAIResponse = useCallback((responseText) => {
     setResponseText(responseText);
   }, []);
@@ -62,7 +50,6 @@ function CreativeQuest() {
         setAgeGroup={setAgeGroup}
         skillLevel={skillLevel}
         setSkillLevel={setSkillLevel}
-        signOut={signOut}
         ageGroups={ageGroups}
         skillLevels={skillLevels}
         setQuestion={setQuestion}

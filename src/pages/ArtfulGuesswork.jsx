@@ -5,7 +5,6 @@ import Header from "../components/Header";
 import AIResponse from "../components/AIResponse";
 import UserInfo from "../components/UserInfo";
 import { handleDrawingComplete, handleUpload, handleSendPrompt } from "../helpers/handleGuessDrawing";
-import { auth } from "../firebase";
 import useAuth from "../hooks/useAuth";
 import Feedback from "../components/Feedback";
 import useUserScore from "../hooks/useUserScore";
@@ -32,15 +31,6 @@ function ArtfulGuesswork() {
 
   const user = useAuth();
 
-  const signOut = useCallback(() => {
-    auth.signOut().then(() => {
-      console.log("User signed out successfully");
-    }).catch((error) => {
-      console.error("Error signing out: ", error);
-    });
-  }, []);
-
-
   const handleAIResponse = useCallback((responseText) => {
     setResponseText(responseText);
   }, []);
@@ -54,7 +44,6 @@ function ArtfulGuesswork() {
         setAgeGroup={setAgeGroup}
         skillLevel={skillLevel}
         setSkillLevel={setSkillLevel}
-        signOut={signOut}
         ageGroups={ageGroups}
         skillLevels={skillLevels}
         setQuestion={setQuestion}
