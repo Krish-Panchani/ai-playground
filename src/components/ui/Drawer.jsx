@@ -7,7 +7,7 @@ export default function Drawer({ children, isOpen, setIsOpen }) {
   return (
     <main
       className={
-        "fixed overflow-hidden z-10 backdrop-blur-sm inset-0 transform ease-in-out " +
+        "fixed overflow-hidden z-50 backdrop-blur-sm inset-0 transform ease-in-out " +
         (isOpen
           ? "transition-opacity opacity-100 duration-200 translate-x-0 "
           : "transition-all delay-200 opacity-0 -translate-x-full ")
