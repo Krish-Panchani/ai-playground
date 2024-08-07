@@ -19,7 +19,7 @@ const LeaderboardTable = ({ users }) => {
       <div className="relative w-full overflow-auto">
         <table className="w-full caption-bottom text-sm">
           <thead >
-            <tr className="border-b font-bold text-md sm:text-xl transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
+            <tr className="border-b-2 font-bold text-md sm:text-xl transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
               <th className="h-12 px-4 text-left align-middle text-muted-foreground bg-gradient-to-r from-red-500 to-orange-500 bg-clip-text text-transparent">
                 Rank
               </th>
