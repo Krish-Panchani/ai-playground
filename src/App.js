@@ -14,7 +14,7 @@ import useUserScore from "./hooks/useUserScore";
 
 
 function App() {
-  const score = useUserScore();
+  const { score } = useUserScore();
 
   return (
     <BrowserRouter>
