@@ -36,8 +36,9 @@ const ArtGalleryContent = React.memo(({ activeTab, creativeQuestData, artfulGues
             {activeTab === "ArtfulGuesswork" && (
                 <div className="text-white grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-8">
                     {artfulGuessworkData.map((item) => (
-                        <div key={item.file} className="flex flex-col gap-2 border-2 border-orange-500 rounded-2xl p-4">
-                            <p className="line-clamp-1 px-2">{item.guess}</p>
+                        <div key={item.file} className="flex flex-col gap-2 text-xl border-2 border-orange-500 rounded-2xl p-4">
+                            <p className="line-clamp-1 px-2 text-center"><span className='font-semibold text-cyan-500'>Gemini Guess: </span>"{item.guess}"</p>
+                            <img className="w-full rounded-2xl px-2 h-auto" src={`https://firebasestorage.googleapis.com/v0/b/ai-playground-89b62.appspot.com/o/${item.file}?alt=media`} alt={`${item.guess}`} />
                         </div>
                     ))}
                 </div>
@@ -47,13 +48,13 @@ const ArtGalleryContent = React.memo(({ activeTab, creativeQuestData, artfulGues
                 <div className="text-white grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-8">
                     {artfulStoriesData.map((item) => (
                         <div key={item.file} className="flex flex-col gap-2 border-2 border-orange-500 rounded-2xl p-4">
-                            <p className="text-md font-semibold text-cyan-500 px-2">
+                            <div className="text-xl font-semibold text-cyan-500 px-2 uppercase py-2">
                                 <ReactMarkdown remarkPlugins={[remarkGfm]}>{item.title}</ReactMarkdown>
-                            </p>
-                            <p className="line-clamp-3 px-2">
-                                <ReactMarkdown remarkPlugins={[remarkGfm]}>{item.story}</ReactMarkdown>
-                            </p>
+                            </div>
                             <img className="w-full rounded-2xl px-2 h-auto" src={`https://firebasestorage.googleapis.com/v0/b/ai-playground-89b62.appspot.com/o/${item.file}?alt=media`} alt={`${item.title}`} />
+                            <div className="line-clamp-3 px-2">
+                                <ReactMarkdown remarkPlugins={[remarkGfm]}>{item.story}</ReactMarkdown>
+                            </div>
                             <button 
                                 onClick={() => openDrawer(item)}
                                 className="mt-2 rounded-2xl bg-gradient-to-r from-cyan-500 to-blue-500 text-white font-semibold px-4 py-2"
