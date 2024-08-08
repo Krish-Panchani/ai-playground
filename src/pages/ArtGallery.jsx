@@ -2,16 +2,11 @@ import React, { useState, useEffect } from "react";
 import { getDocs, collection } from 'firebase/firestore';
 import { firestore } from '../firebase';
 import UserInfo from '../components/UserInfo';
-import useAuth from "../hooks/useAuth";
-import useAge from '../hooks/useAge';
-import useSkill from '../hooks/useSkill';
 import SlideTabs from '../components/ui/SlideTabs';
 import ArtGalleryContent from '../components/ui/ArtGalleryContent';
 
 function ArtGallery() {
-    const { ageGroup, setAgeGroup, ageGroups } = useAge();
-    const { skillLevel, setSkillLevel, skillLevels } = useSkill();
-    const user = useAuth();
+
     const [activeTab, setActiveTab] = useState("CreativeQuest");
     const [creativeQuestData, setCreativeQuestData] = useState([]);
     const [artfulGuessworkData, setArtfulGuessworkData] = useState([]);
@@ -57,18 +52,10 @@ function ArtGallery() {
 
     return (
         <div className="flex flex-col min-h-screen bg-black p-4">
-            <UserInfo
-                user={user}
-                ageGroup={ageGroup}
-                setAgeGroup={setAgeGroup}
-                skillLevel={skillLevel}
-                setSkillLevel={setSkillLevel}
-                ageGroups={ageGroups}
-                skillLevels={skillLevels}
-                isPage="ArtGallery"
-            />
+            <UserInfo isPage="ArtGallery" />
+
             <div className="flex">
-            <SlideTabs activeTab={activeTab} onTabClick={handleTabClick} />
+                <SlideTabs activeTab={activeTab} onTabClick={handleTabClick} />
             </div>
             <ArtGalleryContent
                 activeTab={activeTab}

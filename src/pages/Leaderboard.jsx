@@ -9,14 +9,10 @@ import { getDocs, query, collection, orderBy, limit } from 'firebase/firestore';
 
 import useAuth from "../hooks/useAuth";
 import useUserScore from '../hooks/useUserScore';
-import useSkill from '../hooks/useSkill';
-import useAge from '../hooks/useAge';
 
 function Leaderboard() {
     const [users, setUsers] = useState([]);
     const [userRank, setUserRank] = useState(null);
-    const { ageGroup, setAgeGroup, ageGroups } = useAge();
-    const { skillLevel, setSkillLevel, skillLevels } = useSkill();
     const score = useUserScore();
     const user = useAuth();
     const isPage = "Leaderboard";
@@ -53,23 +49,14 @@ function Leaderboard() {
 
     return (
         <div className="flex flex-col min-h-screen bg-black p-4">
-            <UserInfo
-                user={user}
-                ageGroup={ageGroup}
-                setAgeGroup={setAgeGroup}
-                skillLevel={skillLevel}
-                setSkillLevel={setSkillLevel}
-                ageGroups={ageGroups}
-                skillLevels={skillLevels}
-                isPage={isPage}
-            />
+            <UserInfo isPage={isPage} />
             <div className="w-full max-w-4xl text-white mx-auto p-2 md:p-10 h-screen">
                 <div className="flex items-center gap-2 justify-center mb-6">
                     <MdOutlineLeaderboard className='text-3xl' />
                     <h1 className="text-2xl text-center font-bold bg-gradient-to-r from-red-500 to-orange-500 bg-clip-text text-transparent animate-gradient-animate">Leaderboard</h1>
                 </div>
                 <LeaderboardTable users={users} />
-                {user &&  (
+                {user && (
                     <div className="mt-6 text-lg text-white">
                         <p className='text-center font-bold bg-gradient-to-r from-red-500 to-orange-500 bg-clip-text text-transparent'>Your Rank: <span className='text-white'>#{userRank}</span></p>
                         <div className="mt-4">

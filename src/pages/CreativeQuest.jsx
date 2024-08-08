@@ -15,44 +15,35 @@ import useAuth from "../hooks/useAuth";
 import useAge from "../hooks/useAge";
 import useSkill from "../hooks/useSkill";
 import useUserScore from "../hooks/useUserScore";
+import useQuestion from "../hooks/useQuestion";
 
 function CreativeQuest() {
   const [file, setFile] = useState(null);
   const [prompt, setPrompt] = useState("");
   const [responseText, setResponseText] = useState("");
-  const [question, setQuestion] = useState("");
   const [loadingUpload, setLoadingUpload] = useState(false);
   const [loadingResponse, setLoadingResponse] = useState(false);
   const [loadingQuestion, setLoadingQuestion] = useState(false);
   const [isCanvasEmpty, setIsCanvasEmpty] = useState(true);
-
+  
+  const { question, setQuestion } = useQuestion();
   const { setScore } = useUserScore();
-
-  const { ageGroup, setAgeGroup, ageGroups } = useAge();
-  const { skillLevel, setSkillLevel, skillLevels } = useSkill();
-  const isPage = "CreativeQuest";
-
+  const { ageGroup } = useAge();
+  const { skillLevel } = useSkill();
+  const user = useAuth();
   const canvasRef = useRef(null);
 
-  const user = useAuth(); // This should work fine here
+  const isPage = "CreativeQuest";
+
+
 
   const handleAIResponse = useCallback((responseText) => {
     setResponseText(responseText);
   }, []);
 
   return (
-    <div className="flex flex-col gap-12 bg-black p-4">
-      <UserInfo
-        user={user}
-        ageGroup={ageGroup}
-        setAgeGroup={setAgeGroup}
-        skillLevel={skillLevel}
-        setSkillLevel={setSkillLevel}
-        ageGroups={ageGroups}
-        skillLevels={skillLevels}
-        setQuestion={setQuestion}
-        setResponseText={setResponseText}
-      />
+    <div className="flex flex-col gap-8 bg-black p-4">
+      <UserInfo setResponseText={setResponseText} isPage={isPage} />
       {!question && (
         <div>
           <h2 className="text-center text-xl sm:text-2xl my-4 text-white">
@@ -156,10 +147,7 @@ function CreativeQuest() {
                       setResponseText,
                       setLoadingResponse,
                       setScore,
-                      user,
-                      ageGroup,
-                      skillLevel,
-                      isPage
+                      user
                     )
                   }
                   className={`flex-1 px-6 py-3 text-white rounded-full font-semibold transition-colors duration-300 ${isCanvasEmpty || responseText

@@ -13,8 +13,6 @@ import {
 
 import useAuth from "../hooks/useAuth";
 import useUserScore from "../hooks/useUserScore";
-import useAge from "../hooks/useAge";
-import useSkill from "../hooks/useSkill";
 import CreateNewStory from "../components/CreateNewStory";
 
 function ArtfulStories() {
@@ -29,9 +27,6 @@ function ArtfulStories() {
 
     const { setScore } = useUserScore();
 
-    const { ageGroup, setAgeGroup, ageGroups } = useAge();
-    const { skillLevel, setSkillLevel, skillLevels } = useSkill();
-
     const handleAIResponse = useCallback((responseText) => {
         setResponseText(responseText);
     }, []);
@@ -40,16 +35,8 @@ function ArtfulStories() {
 
     return (
         <div className="flex flex-col gap-12 bg-black p-4">
-            <UserInfo
-                user={user}
-                ageGroup={ageGroup}
-                setAgeGroup={setAgeGroup}
-                skillLevel={skillLevel}
-                setSkillLevel={setSkillLevel}
-                ageGroups={ageGroups}
-                skillLevels={skillLevels}
-                setResponseText={setResponseText}
-            />
+            <UserInfo setResponseText={setResponseText} isPage={isPage} />
+
             <div>
                 <h2 className="text-center text-xl sm:text-2xl my-4 text-white">
                     Welcome to{" "}
@@ -118,10 +105,7 @@ function ArtfulStories() {
                                     setResponseText,
                                     setLoadingResponse,
                                     setScore,
-                                    user,
-                                    ageGroup,
-                                    skillLevel,
-                                    isPage
+                                    user
                                 )
                             }
                             className={`flex-1 px-6 py-3 text-white rounded-full font-semibold transition-colors duration-300 ${isCanvasEmpty || responseText

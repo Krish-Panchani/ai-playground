@@ -9,14 +9,11 @@ import HowPlay from "../components/ui/howPlay";
 import { handleDrawingComplete, handleUpload, handleSendPrompt } from "../helpers/handleGuessDrawing";
 import useAuth from "../hooks/useAuth";
 import useUserScore from "../hooks/useUserScore";
-import useAge from "../hooks/useAge";
-import useSkill from "../hooks/useSkill";
 
 function ArtfulGuesswork() {
   const [file, setFile] = useState(null);
   const [prompt, setPrompt] = useState("");
   const [responseText, setResponseText] = useState("");
-  const [question, setQuestion] = useState("");
   const [loadingUpload, setLoadingUpload] = useState(false);
   const [loadingResponse, setLoadingResponse] = useState(false);
   const [isCanvasEmpty, setIsCanvasEmpty] = useState(true);
@@ -25,13 +22,10 @@ function ArtfulGuesswork() {
   const isPage = "ArtfulGuesswork";
 
   const { setScore } = useUserScore();
-
-  const { ageGroup, setAgeGroup, ageGroups } = useAge();
-  const { skillLevel, setSkillLevel, skillLevels } = useSkill();
+  const user = useAuth();
 
   const canvasRef = useRef(null);
 
-  const user = useAuth();
 
   const handleAIResponse = useCallback((responseText) => {
     setResponseText(responseText);
@@ -39,18 +33,9 @@ function ArtfulGuesswork() {
 
   return (
     <div className="flex flex-col gap-12 bg-black p-4">
-      <UserInfo
-        user={user}
-        ageGroup={ageGroup}
-        setAgeGroup={setAgeGroup}
-        skillLevel={skillLevel}
-        setSkillLevel={setSkillLevel}
-        ageGroups={ageGroups}
-        skillLevels={skillLevels}
-        setQuestion={setQuestion}
-        setResponseText={setResponseText}
-      />
-      {!question && (
+      <UserInfo setResponseText={setResponseText} isPage={isPage} />
+
+      {!responseText && (
         <div>
           <h2 className="text-center text-xl sm:text-2xl my-4 text-white">
             Welcome to{" "}
@@ -119,9 +104,6 @@ function ArtfulGuesswork() {
                   setLoadingResponse,
                   setScore,
                   user,
-                  ageGroup,
-                  skillLevel,
-                  isPage
                 )
               }
               className={`flex-1 px-6 py-3 text-white rounded-full font-semibold transition-colors duration-300 ${isCanvasEmpty || responseText ? "bg-gray-400 cursor-not-allowed" : "bg-gradient-to-r from-indigo-600 to-cyan-600"}`}
