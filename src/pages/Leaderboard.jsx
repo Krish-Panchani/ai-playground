@@ -1,15 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import Header from '../components/Header';
-import UserInfo from '../components/UserInfo';
-import useAuth from "../hooks/useAuth";
-import Footer from '../components/Footer';
-import useUserScore from '../hooks/useUserScore';
-import useAge from '../hooks/useAge';
-import useSkill from '../hooks/useSkill';
-import { getDocs, query, collection, orderBy, limit } from 'firebase/firestore';
-import { firestore } from '../firebase';
-import LeaderboardTable from '../components/ui/LeaderboardTable';
 import { MdOutlineLeaderboard } from "react-icons/md";
+
+import UserInfo from '../components/UserInfo';
+import LeaderboardTable from '../components/ui/LeaderboardTable';
+
+import { firestore } from '../firebase';
+import { getDocs, query, collection, orderBy, limit } from 'firebase/firestore';
+
+import useAuth from "../hooks/useAuth";
+import useUserScore from '../hooks/useUserScore';
+import useSkill from '../hooks/useSkill';
+import useAge from '../hooks/useAge';
 
 function Leaderboard() {
     const [users, setUsers] = useState([]);
@@ -52,7 +53,6 @@ function Leaderboard() {
 
     return (
         <div className="flex flex-col min-h-screen bg-black p-4">
-            <Header score={score} className="mb-4" />
             <UserInfo
                 user={user}
                 ageGroup={ageGroup}
@@ -93,7 +93,6 @@ function Leaderboard() {
                     </div>
                 )}
             </div>
-            <Footer />
         </div>
     );
 }

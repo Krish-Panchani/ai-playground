@@ -1,7 +1,5 @@
 import React, { useState, useRef, useCallback } from "react";
 
-import Header from "../components/Header";
-import Footer from "../components/Footer";
 import DrawingCanvas from "../components/DrawingCanvas";
 import AIResponse from "../components/AIResponse";
 import UserInfo from "../components/UserInfo";
@@ -26,7 +24,7 @@ function ArtfulGuesswork() {
   const [uniqueFileName, setUniqueFileName] = useState("");
   const isPage = "ArtfulGuesswork";
 
-  const [score, setScore] = useUserScore();
+  const [setScore] = useUserScore();
   const { ageGroup, setAgeGroup, ageGroups } = useAge();
   const { skillLevel, setSkillLevel, skillLevels } = useSkill();
 
@@ -40,7 +38,6 @@ function ArtfulGuesswork() {
 
   return (
     <div className="flex flex-col min-h-screen bg-black p-4">
-      <Header score={score} className="mb-4" />
       <UserInfo
         user={user}
         ageGroup={ageGroup}
@@ -137,7 +134,6 @@ function ArtfulGuesswork() {
           </div>
         </div>
       </div>
-      <Footer />
     </div>
   );
 }

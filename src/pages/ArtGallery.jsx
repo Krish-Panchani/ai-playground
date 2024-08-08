@@ -2,11 +2,9 @@
 
 import React, { useRef, useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import Header from '../components/Header';
 import UserInfo from '../components/UserInfo';
 import useAuth from "../hooks/useAuth";
 import Footer from '../components/Footer';
-import useUserScore from '../hooks/useUserScore';
 import useAge from '../hooks/useAge';
 import useSkill from '../hooks/useSkill';
 import { getDocs, collection } from 'firebase/firestore';
@@ -17,13 +15,11 @@ import remarkGfm from 'remark-gfm';
 function ArtGallery() {
     const { ageGroup, setAgeGroup, ageGroups } = useAge();
     const { skillLevel, setSkillLevel, skillLevels } = useSkill();
-    const score = useUserScore();
     const user = useAuth();
     const isPage = "ArtGallery";
     const [activeTab, setActiveTab] = useState("CreativeQuest");
     const [creativeQuestData, setCreativeQuestData] = useState([]);
     const [artfulGuessworkData, setArtfulGuessworkData] = useState([]);
-    // const [artfulStoriesData, setArtfulStoriesData] = useState([]);
 
     useEffect(() => {
         const fetchCreativeQuestData = async () => {
@@ -55,7 +51,6 @@ function ArtGallery() {
 
     return (
         <div className="flex flex-col min-h-screen bg-black p-4">
-            <Header score={score} className="mb-4" />
             <UserInfo
                 user={user}
                 ageGroup={ageGroup}

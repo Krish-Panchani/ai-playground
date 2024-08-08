@@ -1,11 +1,9 @@
 import React, { useState, useRef, useCallback } from "react";
 import DrawingCanvas from "../components/DrawingCanvas";
 import HowPlay from "../components/ui/howPlay";
-import Header from "../components/Header";
 import AIResponse from "../components/AIResponse";
 import GenerateQuestionButton from "../components/GenerateQuestionButton";
 import UserInfo from "../components/UserInfo";
-import Footer from "../components/Footer";
 import { handleGenerateQuestion } from "../helpers/genQues";
 import {
   handleDrawingComplete,
@@ -28,7 +26,7 @@ function CreativeQuest() {
   const [loadingQuestion, setLoadingQuestion] = useState(false);
   const [isCanvasEmpty, setIsCanvasEmpty] = useState(true);
 
-  const [score, setScore] = useUserScore();
+  const [setScore] = useUserScore();
   const { ageGroup, setAgeGroup, ageGroups } = useAge();
   const { skillLevel, setSkillLevel, skillLevels } = useSkill();
   const isPage = "CreativeQuest";
@@ -43,7 +41,6 @@ function CreativeQuest() {
 
   return (
     <div className="flex flex-col min-h-screen bg-black p-4">
-      <Header score={score} className="mb-4" />
       <UserInfo
         user={user}
         ageGroup={ageGroup}
@@ -185,7 +182,6 @@ function CreativeQuest() {
           <HowPlay className="text-center text-sm text-gray-700" />
         </div>
       )}
-      <Footer />
     </div>
   );
 }

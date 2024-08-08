@@ -1,7 +1,5 @@
 import React, { useState, useRef, useCallback } from "react";
 
-import Footer from "../components/Footer";
-import Header from "../components/Header";
 import DrawingCanvas from "../components/DrawingCanvas";
 import AIResponse from "../components/AIResponse";
 import UserInfo from "../components/UserInfo";
@@ -29,7 +27,7 @@ function ArtfulStories() {
     const canvasRef = useRef(null);
     const user = useAuth();
 
-    const [score, setScore] = useUserScore();
+    const [setScore] = useUserScore();
     const { ageGroup, setAgeGroup, ageGroups } = useAge();
     const { skillLevel, setSkillLevel, skillLevels } = useSkill();
 
@@ -41,7 +39,6 @@ function ArtfulStories() {
 
     return (
         <div className="flex flex-col min-h-screen bg-black p-4">
-            <Header score={score} className="mb-4" />
             <UserInfo
                 user={user}
                 ageGroup={ageGroup}
@@ -140,7 +137,6 @@ function ArtfulStories() {
                     </div>
                 </div>
             </div>
-            <Footer />
         </div>
     );
 }

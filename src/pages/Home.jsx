@@ -1,24 +1,21 @@
 import React from 'react'
 import { Link } from 'react-router-dom';
-import Header from '../components/Header';
+
 import UserInfo from '../components/UserInfo';
-import useAuth from "../hooks/useAuth";
 import { motion } from 'framer-motion';
-import Footer from '../components/Footer';
-import useUserScore from '../hooks/useUserScore';
+
+import useAuth from "../hooks/useAuth";
 import useAge from '../hooks/useAge';
 import useSkill from '../hooks/useSkill';
 
 function Home() {
     const { ageGroup, setAgeGroup, ageGroups } = useAge();
     const { skillLevel, setSkillLevel, skillLevels } = useSkill();
-    const score = useUserScore();
     const user = useAuth();
     const isPage = "Home";
 
     return (
-        <div className="flex flex-col justify-between min-h-screen bg-black p-4">
-            <Header score={score} className="mb-4" />
+        <div className="flex flex-col gap-14 bg-black p-4">
             <UserInfo
                 user={user}
                 ageGroup={ageGroup}
@@ -103,7 +100,6 @@ function Home() {
                     </motion.div>
                 </Link>
             </div>
-            <Footer />
         </div>
     )
 }
