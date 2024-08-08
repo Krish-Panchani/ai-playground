@@ -69,11 +69,9 @@ const UserInfo = ({ setResponseText, isPage }) => {
                 </div>
                 <HoverImageLinks />
                 <div className='flex justify-between gap-8 px-4 py-2'>
-                    {user ?
+                    {user && (
                         <SignOut />
-                        :
-                        <Login setResponseText={setResponseText} isPage={isPage} />
-                    }
+                    )}
                 </div>
             </Drawer>
         </div>
