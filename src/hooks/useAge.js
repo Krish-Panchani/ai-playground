@@ -2,9 +2,10 @@ import { useState } from 'react';
 
 const useAge = () => {
     const ageGroups = [
-        "Junior Artist (Age: 12 and below)",
-        "Teen Artist (Age: between 13-19)",
-        "Adult Artist (Age: 20 and above)"
+        "Kid Artist (Age: 6 or below)",
+        "Junior Artist (Age: 7y to 12y)",
+        "Teen Artist (Age: 13y to 19y)",
+        "Adult Artist (Age: 20y or above)",
     ];
     const [ageGroup, setAgeGroup] = useState(ageGroups[0]);
 
