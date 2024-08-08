@@ -60,7 +60,7 @@ export const handleSendPrompt = async (uniqueFileName, prompt, setResponseText, 
         // Your existing code for generating response
         const vertexAI = getVertexAI(firebaseApp);
         const bucket_name = process.env.REACT_APP_FIREBASE_STORAGE_BUCKET;
-        const model = getGenerativeModel(vertexAI, { model: "gemini-1.5-pro-001" });
+        const model = getGenerativeModel(vertexAI, { model: "gemini-1.5-flash-001" });
         const combinedPrompt = `"Statement: ${prompt}".\n\n
         Compare the statement with Image and check if statement object is present in the image or not if present then return isCorrect:true else return isCorrect:false in JSON format. also give reason why it is correct or not and give point between 1 to 10 according to how drawing match with statement, give 1 point if isCorrect is false.\n\n
         json format: {isCorrect: boolean, reason: string, points: number}`;

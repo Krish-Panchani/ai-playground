@@ -61,7 +61,7 @@ export const handleSendPrompt = async (uniqueFileName, prompt, setResponseText, 
         // Your existing code for generating response
         const vertexAI = getVertexAI(firebaseApp);
         const bucket_name = process.env.REACT_APP_FIREBASE_STORAGE_BUCKET;
-        const model = getGenerativeModel(vertexAI, { model: "gemini-1.5-pro-001" });
+        const model = getGenerativeModel(vertexAI, { model: "gemini-1.5-flash-001" });
         const combinedPrompt = `Guess what user drawn in given Drawing. ${prompt}.
         your Response should in JSON format { guess: string }. \n\n
         For example: {
