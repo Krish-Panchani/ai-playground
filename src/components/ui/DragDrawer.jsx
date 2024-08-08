@@ -36,7 +36,7 @@ export const DragDrawer = ({ open, setOpen, children }) => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           onClick={handleClose}
-          className="fixed inset-0 z-50 bg-neutral-950/70 backdrop-blur-sm"
+          className="fixed inset-0 z-50 bg-neutral-950/60 backdrop-blur-sm"
         >
           <motion.div
             id="drawer"
@@ -47,7 +47,7 @@ export const DragDrawer = ({ open, setOpen, children }) => {
             transition={{
               ease: "easeInOut",
             }}
-            className="absolute bottom-0 h-[75vh] w-full overflow-hidden rounded-t-3xl bg-neutral-900 border-t border-orange-500"
+            className="absolute bottom-0 h-[75vh] w-full overflow-hidden rounded-t-3xl bg-black border-t border-orange-500"
             style={{ y }}
             drag="y"
             dragControls={controls}
@@ -66,7 +66,7 @@ export const DragDrawer = ({ open, setOpen, children }) => {
               bottom: 0.5,
             }}
           >
-            <div className="absolute left-0 right-0 top-0 z-10 flex justify-center bg-neutral-900 p-4">
+            <div className="absolute left-0 right-0 top-0 z-10 flex justify-center bg-black p-4">
               <button
                 onPointerDown={(e) => {
                   controls.start(e);
