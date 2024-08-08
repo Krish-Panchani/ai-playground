@@ -1,16 +1,25 @@
 import React, { useState } from 'react';
 import Login from './Login';
 import { Link } from 'react-router-dom';
-import { MdLogout } from "react-icons/md";
+
 import { HiMenuAlt3 } from "react-icons/hi";
 import Drawer from './ui/Drawer';
 import { MdLeaderboard } from "react-icons/md";
 import { MdDraw } from "react-icons/md";
-import signOut from '../hooks/signOut';
 import { HoverImageLinks } from './HoverImage';
+import useAge from '../hooks/useAge';
+import useSkill from '../hooks/useSkill';
+import useAuth  from '../hooks/useAuth';
+import useQuestion from '../hooks/useQuestion';
+import SignOut from './SignOut';
 
-const UserInfo = ({ user, ageGroup, setAgeGroup, skillLevel, setSkillLevel, ageGroups, skillLevels, setQuestion, setResponseText, isPage }) => {
+const UserInfo = ({ setResponseText, isPage }) => {
     const [isOpen, setIsOpen] = useState(false);
+    const { ageGroup, setAgeGroup, ageGroups } = useAge();
+    const { skillLevel, setSkillLevel, skillLevels } = useSkill();
+    const { setQuestion } = useQuestion();
+    const user = useAuth();
+
     return (
         <div className='flex items-center justify-between px-2 sm:px-8 my-6 gap-4'>
             {user ? (
@@ -76,14 +85,9 @@ const UserInfo = ({ user, ageGroup, setAgeGroup, skillLevel, setSkillLevel, ageG
                 <HoverImageLinks />
                 <div className='flex justify-between gap-8 px-4 py-2'>
                     {user ?
-                        <button
-                            onClick={signOut}
-                            className='flex items-center gap-2 px-4 py-2 bg-red-500 rounded-full text-white font-semibold'>
-                            <MdLogout className='text-xl' />
-                            <span>Sign Out</span>
-                        </button>
+                        <SignOut />
                         :
-                        <Login setQuestion={setQuestion} setResponseText={setResponseText} setAgeGroup={setAgeGroup} ageGroup={ageGroup} setSkillLevel={setSkillLevel} skillLevel={skillLevel} isPage={isPage} />
+                        <Login setResponseText={setResponseText} isPage={isPage} />
                     }
                 </div>
             </Drawer>
