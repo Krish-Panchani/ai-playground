@@ -56,7 +56,7 @@ const Login = ({ setResponseText, isPage }) => {
     <div>
       <button onClick={signInWithGoogle} className='flex items-center gap-2 bg-gradient-to-r from-indigo-500 to-cyan-500  font-semibold px-4 py-2 rounded-full  border-2 border-white text-white'>
         <FcGoogle className='text-2xl bg-white rounded-full px-1 py-1' />
-        <span className='font-semibold'>
+        <span className='text-xs sm:text-base font-semibold'>
           Sign in with Google</span>
       </button>
     </div>
