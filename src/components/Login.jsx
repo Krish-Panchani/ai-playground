@@ -5,8 +5,14 @@ import { getAuth, GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
 import { doc, setDoc, getDoc } from 'firebase/firestore';
 import { firestore } from '../firebase'; // Make sure to import firestore
 import { FcGoogle } from "react-icons/fc";
+import { useNavigate } from 'react-router-dom';
 
-const Login = ({ setQuestion, setResponseText, isPage }) => {
+import useQuestion from '../hooks/useQuestion';
+
+const Login = ({ setResponseText, isPage }) => {
+
+  const { setQuestion } = useQuestion();
+  const navigate = useNavigate();
   const auth = getAuth();
 
   const signInWithGoogle = async () => {
@@ -40,6 +46,7 @@ const Login = ({ setQuestion, setResponseText, isPage }) => {
         }
         console.log("User document already exists in Firestore");
       }
+      navigate('/'); // Redirect to home page after sign in
     } catch (error) {
       console.error("Error during sign in:", error);
     }
@@ -47,11 +54,11 @@ const Login = ({ setQuestion, setResponseText, isPage }) => {
 
   return (
     <div>
-      <button onClick={signInWithGoogle} className='flex items-center gap-2 text-white font-semibold px-4 py-2 rounded-full  border-2 border-cyan-600'>
-        <FcGoogle className='text-2xl' />
-      <span className='font-semibold'>
-        Sign in with Google</span>
-        </button>
+      <button onClick={signInWithGoogle} className='flex items-center gap-2 bg-gradient-to-r from-indigo-500 to-cyan-500  font-semibold px-4 py-2 rounded-full  border-2 border-white text-white'>
+        <FcGoogle className='text-2xl bg-white rounded-full px-1 py-1' />
+        <span className='font-semibold'>
+          Sign in with Google</span>
+      </button>
     </div>
   );
 };
