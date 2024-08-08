@@ -27,7 +27,8 @@ function ArtfulStories() {
     const canvasRef = useRef(null);
     const user = useAuth();
 
-    const [setScore] = useUserScore();
+    const { setScore } = useUserScore();
+
     const { ageGroup, setAgeGroup, ageGroups } = useAge();
     const { skillLevel, setSkillLevel, skillLevels } = useSkill();
 
@@ -38,7 +39,7 @@ function ArtfulStories() {
     const isPage = "ArtfulStories";
 
     return (
-        <div className="flex flex-col min-h-screen bg-black p-4">
+        <div className="flex flex-col gap-12 bg-black p-4">
             <UserInfo
                 user={user}
                 ageGroup={ageGroup}

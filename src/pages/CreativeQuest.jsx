@@ -26,7 +26,8 @@ function CreativeQuest() {
   const [loadingQuestion, setLoadingQuestion] = useState(false);
   const [isCanvasEmpty, setIsCanvasEmpty] = useState(true);
 
-  const [setScore] = useUserScore();
+  const { setScore } = useUserScore();
+
   const { ageGroup, setAgeGroup, ageGroups } = useAge();
   const { skillLevel, setSkillLevel, skillLevels } = useSkill();
   const isPage = "CreativeQuest";
@@ -40,7 +41,7 @@ function CreativeQuest() {
   }, []);
 
   return (
-    <div className="flex flex-col min-h-screen bg-black p-4">
+    <div className="flex flex-col gap-12 bg-black p-4">
       <UserInfo
         user={user}
         ageGroup={ageGroup}
