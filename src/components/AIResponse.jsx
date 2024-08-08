@@ -25,7 +25,7 @@ const AIResponse = React.memo(({ responseText, isPage }) => {
       return (
         <div className='mt-4 border border-orange-300 p-4 rounded-lg text-white'>
           <h2 className='text-xl px-2 py-2 font-bold bg-gradient-to-r from-red-500 to-orange-500 bg-clip-text text-transparent uppercase'>{title}</h2>
-          <p><span className='text-white font-semibold px-2 py-2 text-justify'>{story}</span></p>
+          <p><span className='text-white font-semibold px-2 py-2 text-justify whitespace-pre-line'>{story}</span></p>
         </div>
       );
     } catch (error) {
