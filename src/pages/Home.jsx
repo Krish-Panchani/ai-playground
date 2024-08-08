@@ -8,6 +8,31 @@ import { motion } from 'framer-motion';
 function Home() {
     const isPage = "Home";
 
+    const revealVariants = {
+        hidden: { y: 50, opacity: 0 },
+        visible: {
+            y: 0,
+            opacity: 1,
+            transition: {
+                type: "spring",
+                stiffness: 100,
+                damping: 20,
+                delay: 0.2,
+            },
+        },
+    };
+
+    const hoverVariants = {
+        hover: {
+            scale: 1.05,
+            rotate: 2,
+            transition: {
+                type: "spring",
+                stiffness: 300,
+            },
+        },
+    };
+
     const links = [
         {
             to: "/CreativeQuest",
@@ -63,12 +88,22 @@ function Home() {
                     - Where Creativity meets Learning.
                 </h2>
             </div>
-            <div>
-                <h3 className="text-center text-5xl sm:text-2xl my-4 text-white">
-                    <span className="font-bold bg-gradient-to-r from-red-500 to-orange-500 bg-clip-text animate-gradient-animate text-transparent text-3xl sm:text-5xl">
-                        GAME MODES
-                    </span>
-                </h3>
+            <div className='overflow-hidden'>
+            <motion.h3
+                className="text-center text-5xl sm:text-2xl my-4 text-white"
+                variants={revealVariants}
+                initial="hidden"
+                animate="visible"
+                whileHover="hover"
+            >
+                <motion.span
+                    className="font-bold bg-gradient-to-r from-red-500 to-orange-500 bg-clip-text animate-gradient-animate text-transparent text-3xl sm:text-5xl"
+                    variants={hoverVariants}
+                    whileHover={{ scale: 1.1, rotate: 3 }}
+                >
+                    GAME MODES
+                </motion.span>
+            </motion.h3>
             </div>
 
             <div className="flex flex-col sm:flex-row justify-center items-center gap-16 py-12">
