@@ -23,11 +23,12 @@ const ArtGalleryContent = React.memo(({ activeTab, creativeQuestData, artfulGues
                 <div className="text-white grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-8">
                     {creativeQuestData.map((item) => (
                         <div key={item.file} className="flex flex-col gap-2 border-2 border-orange-500 rounded-2xl p-4">
+                            {item.isCorrect === true ? (<p className="px-2 text-green-500 font-semibold">Correct</p>) : (<p className="px-2 text-red-500 font-semibold">Incorrect!</p>)}
                             <p className="px-2 text-md font-semibold text-cyan-500">
-                                <ReactMarkdown remarkPlugins={[remarkGfm]}>{item.question}</ReactMarkdown>
+                                Question: <span className='text-white'>{item.question}</span>
                             </p>
-                            <p className="line-clamp-1 px-2">{item.reason}</p>
                             <img className="w-full rounded-2xl px-2 h-auto" src={`https://firebasestorage.googleapis.com/v0/b/ai-playground-89b62.appspot.com/o/${item.file}?alt=media`} alt={`${item.question}`} />
+                            <p className="line-clamp-1 px-2">{item.reason}</p>
                         </div>
                     ))}
                 </div>
@@ -55,7 +56,7 @@ const ArtGalleryContent = React.memo(({ activeTab, creativeQuestData, artfulGues
                             <div className="line-clamp-3 px-2">
                                 <ReactMarkdown remarkPlugins={[remarkGfm]}>{item.story}</ReactMarkdown>
                             </div>
-                            <button 
+                            <button
                                 onClick={() => openDrawer(item)}
                                 className="mt-2 rounded-2xl bg-gradient-to-r from-cyan-500 to-blue-500 text-white font-semibold px-4 py-2"
                             >
@@ -68,14 +69,14 @@ const ArtGalleryContent = React.memo(({ activeTab, creativeQuestData, artfulGues
 
             {drawerOpen && selectedStory && (
                 <DragDrawer open={drawerOpen} setOpen={closeDrawer}>
-                <div className="mx-auto max-w-2xl space-y-4 text-neutral-400">
-                    <h2 className="text-2xl font-bold mb-4 bg-gradient-to-r from-red-500 to-orange-500 bg-clip-text text-transparent uppercase">
-                        {selectedStory.title}
-                    </h2>
-                    <img className="w-full rounded-2xl mb-4" src={`https://firebasestorage.googleapis.com/v0/b/ai-playground-89b62.appspot.com/o/${selectedStory.file}?alt=media`} alt={`${selectedStory.title}`} />
-                    <div className='text-justify'>
-                        <ReactMarkdown remarkPlugins={[remarkGfm]}>{selectedStory.story}</ReactMarkdown>
-                    </div>
+                    <div className="mx-auto max-w-2xl space-y-4 text-neutral-400">
+                        <h2 className="text-2xl font-bold mb-4 bg-gradient-to-r from-red-500 to-orange-500 bg-clip-text text-transparent uppercase">
+                            {selectedStory.title}
+                        </h2>
+                        <img className="w-full rounded-2xl mb-4" src={`https://firebasestorage.googleapis.com/v0/b/ai-playground-89b62.appspot.com/o/${selectedStory.file}?alt=media`} alt={`${selectedStory.title}`} />
+                        <div className='text-justify'>
+                            <ReactMarkdown remarkPlugins={[remarkGfm]}>{selectedStory.story}</ReactMarkdown>
+                        </div>
                     </div>
                 </DragDrawer>
             )}
