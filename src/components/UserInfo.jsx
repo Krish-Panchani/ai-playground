@@ -1,17 +1,16 @@
 import React, { useState } from 'react';
-import Login from './Login';
-import { Link } from 'react-router-dom';
-
 import { HiMenuAlt3 } from "react-icons/hi";
+
+import Login from './Login';
+import SignOut from './SignOut';
+
 import Drawer from './ui/Drawer';
-import { MdLeaderboard } from "react-icons/md";
-import { MdDraw } from "react-icons/md";
 import { HoverImageLinks } from './HoverImage';
+
 import useAge from '../hooks/useAge';
 import useSkill from '../hooks/useSkill';
 import useAuth  from '../hooks/useAuth';
 import useQuestion from '../hooks/useQuestion';
-import SignOut from './SignOut';
 
 const UserInfo = ({ setResponseText, isPage }) => {
     const [isOpen, setIsOpen] = useState(false);
@@ -67,20 +66,6 @@ const UserInfo = ({ setResponseText, isPage }) => {
                             ))}
                         </select>
                     </div>
-                </div>
-                <div className='flex flex-col gap-6 p-4'>
-                    <Link to={"/Leaderboard"}>
-                        <div className='flex gap-2 items-center'>
-                            <MdLeaderboard className='text-xl' />
-                            <span className='text-xl font-semibold'>Leaderboard</span>
-                        </div>
-                    </Link>
-                    <Link to={"/ArtGallery"}>
-                        <div className='flex gap-2 items-center'>
-                            <MdDraw className='text-2xl' />
-                            <span className='text-xl font-semibold'>Art Gallery</span>
-                        </div>
-                    </Link>
                 </div>
                 <HoverImageLinks />
                 <div className='flex justify-between gap-8 px-4 py-2'>

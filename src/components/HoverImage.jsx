@@ -7,6 +7,18 @@ export const HoverImageLinks = () => {
     <section className="bg-neutral-950 p-4 m-2 md:p-8 rounded-2xl">
       <div className="mx-auto max-w-5xl">
         <Navigations
+          heading="Leaderboard"
+          subheading="See where you stand among the best"
+          imgSrc="https://res.cloudinary.com/divve6wtz/image/upload/v1723112423/Leaderboard_t3ryew.png"
+          href="/Leaderboard"
+        />
+        <Navigations
+          heading="Art Gallery"
+          subheading="Where every creation is a masterpiece"
+          imgSrc="https://res.cloudinary.com/divve6wtz/image/upload/v1723112425/ArtGallery_nsvwqg.png"
+          href="/ArtGallery"
+        />
+        <Navigations
           heading="Creative Quest"
           subheading="Where Every Question Sparks a Masterpiece"
           imgSrc="https://res.cloudinary.com/divve6wtz/image/upload/v1722853988/CreativeQuest-removebg-preview_qrlbc3.png"
