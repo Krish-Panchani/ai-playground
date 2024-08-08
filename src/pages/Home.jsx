@@ -4,28 +4,13 @@ import { Link } from 'react-router-dom';
 import UserInfo from '../components/UserInfo';
 import { motion } from 'framer-motion';
 
-import useAuth from "../hooks/useAuth";
-import useAge from '../hooks/useAge';
-import useSkill from '../hooks/useSkill';
 
 function Home() {
-    const { ageGroup, setAgeGroup, ageGroups } = useAge();
-    const { skillLevel, setSkillLevel, skillLevels } = useSkill();
-    const user = useAuth();
     const isPage = "Home";
 
     return (
-        <div className="flex flex-col gap-14 bg-black p-4">
-            <UserInfo
-                user={user}
-                ageGroup={ageGroup}
-                setAgeGroup={setAgeGroup}
-                skillLevel={skillLevel}
-                setSkillLevel={setSkillLevel}
-                ageGroups={ageGroups}
-                skillLevels={skillLevels}
-                isPage={isPage}
-            />
+        <div className="flex flex-col gap-4 bg-black p-4">
+            <UserInfo isPage={isPage} />
             <div>
                 <h2 className="text-center text-xl sm:text-2xl my-4 text-white">
                     Welcome to{" "}
