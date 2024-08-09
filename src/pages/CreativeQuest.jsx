@@ -14,7 +14,7 @@ import Question from "../components/ui/Question";
 import useAuth from "../hooks/useAuth";
 import useAge from "../hooks/useAge";
 import useSkill from "../hooks/useSkill";
-import useUserScore from "../hooks/useUserScore";
+import { useUserScore } from "../hooks/UserScoreContext";
 import useQuestion from "../hooks/useQuestion";
 
 function CreativeQuest() {

@@ -115,13 +115,13 @@ export const handleSendPrompt = async (uniqueFileName, prompt, setResponseText, 
             await setDoc(userDocRef, { score: newScore }, { merge: true });
 
             // Update local state
-            setScore(newScore);
+            await setScore(newScore);
 
             // Store response and user email in "ArtfullGuesswork" collection
 
         } else {
             // For guests, just update local state
-            setScore(prevScore => prevScore + (points || 0));
+            await  setScore(prevScore => prevScore + (points || 0));
         }
         const responseObj = {
             email: user ? user.email : "guest",

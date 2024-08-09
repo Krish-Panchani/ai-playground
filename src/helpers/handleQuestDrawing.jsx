@@ -107,10 +107,10 @@ export const handleSendPrompt = async (uniqueFileName, prompt, setResponseText, 
             await setDoc(userDocRef, { score: newScore }, { merge: true });
 
             // Update local state
-            setScore(newScore);
+            await setScore(newScore);
         } else {
             // For guests, just update local state
-            setScore(prevScore => prevScore + (responseData.points || 0));
+            await setScore(prevScore => prevScore + (responseData.points || 0));
         }
 
         const responseObj = {

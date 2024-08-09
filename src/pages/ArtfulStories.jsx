@@ -12,7 +12,7 @@ import {
 } from "../helpers/handleStoryDrawing";
 
 import useAuth from "../hooks/useAuth";
-import useUserScore from "../hooks/useUserScore";
+import { useUserScore } from "../hooks/UserScoreContext";
 import CreateNewStory from "../components/CreateNewStory";
 
 function ArtfulStories() {

@@ -8,7 +8,7 @@ import HowPlay from "../components/ui/howPlay";
 
 import { handleDrawingComplete, handleUpload, handleSendPrompt } from "../helpers/handleGuessDrawing";
 import useAuth from "../hooks/useAuth";
-import useUserScore from "../hooks/useUserScore";
+import { useUserScore } from "../hooks/UserScoreContext";
 
 function ArtfulGuesswork() {
   const [file, setFile] = useState(null);

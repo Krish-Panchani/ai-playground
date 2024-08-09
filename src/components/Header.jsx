@@ -3,8 +3,8 @@ import Score from './ui/Score';
 import { Link } from 'react-router-dom';
 import { CgGames } from "react-icons/cg";
 
-const Header = ({ score }) => {
-  
+const Header = () => {
+
 
   return (
     <>
@@ -16,9 +16,9 @@ const Header = ({ score }) => {
           </div>
         </Link>
         <div className="flex flex-col sm:flex-row items-center gap-4">
-          <Score score={score} />
+          <Score />
         </div>
-        
+
       </header>
     </>
   );

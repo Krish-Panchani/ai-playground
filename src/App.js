@@ -10,16 +10,14 @@ import Home from './pages/Home';
 
 import Header from './components/Header';
 import Footer from './components/Footer';
-import useUserScore from "./hooks/useUserScore";
-
+import { UserScoreProvider } from './hooks/UserScoreContext';
 
 function App() {
-  const { score } = useUserScore();
-
   return (
-    <BrowserRouter>
-      <div className="flex flex-col min-h-screen bg-black p-4">
-        <Header score={score} className="mb-4" />
+    <UserScoreProvider>
+      <BrowserRouter>
+        <div className="flex flex-col min-h-screen bg-black p-4">
+          <Header className="mb-4" />
           <Routes>
             <Route index element={<Home />} />
             <Route path="CreativeQuest" element={<CreativeQuest />} />
@@ -27,13 +25,11 @@ function App() {
             <Route path="ArtfulStories" element={<ArtfulStories />} />
             <Route path="Leaderboard" element={<Leaderboard />} />
             <Route path="ArtGallery" element={<ArtGallery />} />
-
           </Routes>
-        <Footer />
-      </div>
-    </BrowserRouter>
-
-
+          <Footer />
+        </div>
+      </BrowserRouter>
+    </UserScoreProvider>
   );
 }
 
