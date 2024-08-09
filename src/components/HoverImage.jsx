@@ -93,7 +93,7 @@ const Navigations = ({ heading, imgSrc, subheading, href }) => {
             staggerChildren: 0.075,
             delayChildren: 0.25,
           }}
-          className="relative z-10 block text-xl font-bold text-neutral-500 transition-colors duration-500 group-hover:text-white md:text-3xl"
+          className="relative z-10 block text-xl font-bold text-neutral-500 transition-colors duration-500 group-hover:text-white md:text-3xl whitespace-nowrap"
         >
           {heading.split("").map((l, i) => (
             <motion.span
