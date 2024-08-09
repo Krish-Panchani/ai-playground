@@ -7,12 +7,12 @@ import { firestore } from '../firebase';
 import { getDocs, query, collection, orderBy, limit } from 'firebase/firestore';
 
 import useAuth from "../hooks/useAuth";
-import useUserScore from '../hooks/useUserScore';
+import { useUserScore } from "../hooks/UserScoreContext";
 
 function Leaderboard() {
     const [users, setUsers] = useState([]);
     const [userRank, setUserRank] = useState(null);
-    const score = useUserScore();
+    const { score } = useUserScore();
     const user = useAuth();
     const isPage = "Leaderboard";
 
