@@ -25,8 +25,8 @@ function ArtGallery() {
                 ]);
 
                 const fetchedCreativeQuestData = creativeQuestSnapshot.docs
-                    .map((doc) => doc.data())
-                    .filter((data) => data.isCorrect === true);
+                    .map((doc) => doc.data());
+                    // .filter((data) => data.isCorrect === true);
                 const fetchedArtfulGuessworkData = artfulGuessworkSnapshot.docs.map((doc) => doc.data());
                 const fetchedArtfulStoriesData = artfulStoriesSnapshot.docs.map((doc) => doc.data());
 
