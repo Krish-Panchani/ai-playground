@@ -2,12 +2,11 @@
 
 AI Playground is a web application built with React that allows users to engage in fun and interactive drawing activities. Users receive drawing prompts from an AI, draw the prompted object, and get their drawings evaluated for accuracy. The app provides various tools to assist users in creating their artwork.
 
-## Features
+## Core Gameplay & Features
 
-1. **Generate Drawing Queue**: Users can click on the "Generate Queue" button to receive a drawing prompt from the AI.
-2. **Drawing Tools**: The drawing board comes with adjustable brush size, a color picker, an eraser, and undo/redo tools.
-3. **Submit Drawing**: Users can submit their drawing for AI evaluation.
-4. **AI Evaluation**: The AI analyzes the drawing and assigns a score between 1 to 10 based on accuracy.
+1. **Creative Quest:**: Gemini generates drawing prompts, and users compete to create the most accurate and imaginative artwork.
+2. **Artful Guess**: Users draw freely, and Gemini attempts to identify the drawing, providing a unique interactive learning experience.
+3. **Artful Stories**: Gemini transforms user-created artwork into captivating narratives, stimulating imagination and storytelling abilities.
 
 ## Installation Guide
 
