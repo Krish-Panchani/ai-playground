@@ -22,12 +22,12 @@ function Leaderboard() {
             const querySnapshot = await getDocs(q);
             const usersList = querySnapshot.docs.map(doc => doc.data());
 
-            console.log("Fetched Users List:", usersList); // Debugging
+            // console.log("Fetched Users List:", usersList); // Debugging
 
             // Check for the logged-in user's rank
             if (user) {
                 const userRankIndex = usersList.findIndex(u => u.email === user.email);
-                console.log("User Rank Index:", userRankIndex); // Debugging
+                // console.log("User Rank Index:", userRankIndex); // Debugging
                 if (userRankIndex !== null) {
                     setUserRank(userRankIndex + 1);
                 } else {
@@ -44,7 +44,7 @@ function Leaderboard() {
     // Find the user's complete data for display
     const userRow = users.find(u => u.email === user?.email);
 
-    console.log("Logged-in User Data:", userRow); // Debugging
+    // console.log("Logged-in User Data:", userRow); // Debugging
 
     return (
         <div className="flex flex-col min-h-screen bg-black p-4">

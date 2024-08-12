@@ -4,7 +4,7 @@ import React, { useCallback } from 'react';
 const AIResponse = React.memo(({ responseText, isPage }) => {
   const renderGuessResponse = useCallback((responseText) => {
     try {
-      console.log(responseText);
+      // console.log(responseText); // Debugging
       const response = JSON.parse(responseText);
       const { guess } = response;
       return (

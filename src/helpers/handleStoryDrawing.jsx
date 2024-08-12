@@ -90,12 +90,12 @@ export const handleSendPrompt = async (uniqueFileName, prompt, setResponseText, 
             throw new Error('Invalid JSON response');
         }
 
-        console.log('Response:', cleanedText);
+        // console.log('Response:', cleanedText); //Debugging
         setResponseText(cleanedText);
         setLoadingResponse(false);
 
         const points = Math.floor(Math.random() * 6) + 1;
-        console.log('Points:', points);
+        // console.log('Points:', points);
 
         setResponseText(cleanedText);
         setLoadingResponse(false);

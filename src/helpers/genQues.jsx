@@ -54,13 +54,13 @@ export const handleGenerateQuestion = async (setLoadingQuestion, setQuestion, se
         // Choose a random prompt from the templates
         const prompt = randomPromptTemplates[Math.floor(Math.random() * randomPromptTemplates.length)];
 
-        console.log(prompt);
+        // console.log(prompt); // Debugging
 
         const result = await model.generateContent(prompt);
         const fullTextResponse = await result.response.text();
         const cleanedText = fullTextResponse.replace(/```json|```/g, '').trim();
 
-        console.log(cleanedText);
+        // console.log(cleanedText); // Debugging
 
         let responseData;
         try {

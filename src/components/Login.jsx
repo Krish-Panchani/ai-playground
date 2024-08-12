@@ -38,7 +38,7 @@ const Login = ({ setResponseText, isPage }) => {
           setQuestion(''); // Clear the question after sign in
           setResponseText(''); // Clear the responseText after sign in
         }
-        console.log("User document created in Firestore:");
+        console.log("User document created in Firestore");
       } else {
         if (isPage) {
           setQuestion(''); // Clear the question after sign in
