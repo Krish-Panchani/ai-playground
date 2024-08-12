@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { getDocs, collection } from 'firebase/firestore';
+import { getDocs, collection, query, orderBy } from 'firebase/firestore';
 import { firestore } from '../firebase';
 import UserInfo from '../components/UserInfo';
 import SlideTabs from '../components/ui/SlideTabs';
@@ -18,10 +18,15 @@ function ArtGallery() {
         const fetchData = async () => {
             try {
                 setLoading(true);
+
+                const creativeQuestQuery = query(collection(firestore, "CreativeQuest"), orderBy("timestamp", "desc"));
+                const artfulGuessworkQuery = query(collection(firestore, "ArtfulGuesswork"), orderBy("timestamp", "desc"));
+                const artfulStoriesQuery = query(collection(firestore, "ArtfulStories"), orderBy("timestamp", "desc"));
+
                 const [creativeQuestSnapshot, artfulGuessworkSnapshot, artfulStoriesSnapshot] = await Promise.all([
-                    getDocs(collection(firestore, "CreativeQuest")),
-                    getDocs(collection(firestore, "ArtfulGuesswork")),
-                    getDocs(collection(firestore, "ArtfulStories")),
+                    getDocs(creativeQuestQuery),
+                    getDocs(artfulGuessworkQuery),
+                    getDocs(artfulStoriesQuery),
                 ]);
 
                 const fetchedCreativeQuestData = creativeQuestSnapshot.docs.map((doc) => doc.data());
@@ -45,7 +50,7 @@ function ArtGallery() {
         setActiveTab(tab);
     };
 
-    if (loading) return <SkeletonLoader />;  // Display the skeleton loader when loading
+    if (loading) return <SkeletonLoader />;
     if (error) return <div className="text-red-500">Error: {error}</div>;
 
     return (
