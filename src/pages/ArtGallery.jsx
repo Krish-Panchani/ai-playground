@@ -4,9 +4,9 @@ import { firestore } from '../firebase';
 import UserInfo from '../components/UserInfo';
 import SlideTabs from '../components/ui/SlideTabs';
 import ArtGalleryContent from '../components/ui/ArtGalleryContent';
+import SkeletonLoader from '../components/ui/SkeletonLoader';
 
 function ArtGallery() {
-
     const [activeTab, setActiveTab] = useState("CreativeQuest");
     const [creativeQuestData, setCreativeQuestData] = useState([]);
     const [artfulGuessworkData, setArtfulGuessworkData] = useState([]);
@@ -24,9 +24,7 @@ function ArtGallery() {
                     getDocs(collection(firestore, "ArtfulStories")),
                 ]);
 
-                const fetchedCreativeQuestData = creativeQuestSnapshot.docs
-                    .map((doc) => doc.data());
-                    // .filter((data) => data.isCorrect === true);
+                const fetchedCreativeQuestData = creativeQuestSnapshot.docs.map((doc) => doc.data());
                 const fetchedArtfulGuessworkData = artfulGuessworkSnapshot.docs.map((doc) => doc.data());
                 const fetchedArtfulStoriesData = artfulStoriesSnapshot.docs.map((doc) => doc.data());
 
@@ -47,13 +45,12 @@ function ArtGallery() {
         setActiveTab(tab);
     };
 
-    if (loading) return <div className="text-white">Loading...</div>;
+    if (loading) return <SkeletonLoader />;  // Display the skeleton loader when loading
     if (error) return <div className="text-red-500">Error: {error}</div>;
 
     return (
         <div className="flex flex-col min-h-screen bg-black p-4">
             <UserInfo isPage="ArtGallery" />
-
             <div className="flex">
                 <SlideTabs activeTab={activeTab} onTabClick={handleTabClick} />
             </div>
