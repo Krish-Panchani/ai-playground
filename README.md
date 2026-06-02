@@ -24,12 +24,17 @@ To set up and run the AI Playground web app locally, follow these steps:
     npm install
     ```
 
-3. **Start the Development Server**:
+3. **Create your environment file**:
     ```sh
-    npm start
+    cp .env-example .env
     ```
 
-    The app will be available at `http://localhost:3000`.
+4. **Start the Development Server**:
+    ```sh
+    npm run dev
+    ```
+
+    The app will be available at `http://localhost:5173`.
 
 ## Build Guide
 
@@ -40,16 +45,15 @@ To create a production-ready build of the AI Playground app, follow these steps:
     npm run build
     ```
 
-    This will create an optimized build in the `build` directory.
+    This will create an optimized build in the `dist` directory.
 
 2. **Serve the Build**:
     You can serve the build with any static site server or deploy it to your preferred hosting service. For example, using `serve`:
     ```sh
-    npm install -g serve
-    serve -s build
+    npm run preview
     ```
 
-    The app will be available at `http://localhost:5000`.
+    The app will be available at `http://localhost:4173`.
 
 ## Contributing
 

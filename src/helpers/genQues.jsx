@@ -1,6 +1,6 @@
 import { firebaseApp } from "../firebase";
-import { getVertexAI, getGenerativeModel } from "firebase/vertexai-preview";
-const vertexAI = getVertexAI(firebaseApp);
+import { getAI, getGenerativeModel } from "firebase/ai";
+const vertexAI = getAI(firebaseApp);
 
 // Configure the model with increased temperature for randomness
 const model = getGenerativeModel(vertexAI, { 

@@ -1,6 +1,6 @@
 import { ref, uploadBytesResumable } from 'firebase/storage';
 import { firebaseApp, storage, firestore } from '../firebase';
-import { getVertexAI, getGenerativeModel } from "firebase/vertexai-preview";
+import { getAI, getGenerativeModel } from "firebase/ai";
 import { doc, setDoc, getDoc, addDoc, collection, Timestamp } from 'firebase/firestore';
 
 export const handleDrawingComplete = (dataUrl, setFile) => {
@@ -58,8 +58,8 @@ export const handleSendPrompt = async (uniqueFileName, prompt, setResponseText, 
 
     try {
         // Your existing code for generating response
-        const vertexAI = getVertexAI(firebaseApp);
-        const bucket_name = process.env.REACT_APP_FIREBASE_STORAGE_BUCKET;
+        const vertexAI = getAI(firebaseApp);
+        const bucket_name = import.meta.env.VITE_FIREBASE_STORAGE_BUCKET;
         const model = getGenerativeModel(vertexAI, { model: "gemini-1.5-flash-001" });
         const combinedPrompt = `Generate a Creative short story based on the User's Drawing. ${prompt}. \n\n
         Use markdowns and newlines in story key. \n\n
