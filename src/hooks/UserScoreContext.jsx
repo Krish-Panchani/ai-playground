@@ -1,45 +1,37 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
-import { doc, setDoc, getDoc } from "firebase/firestore";
-import { firestore } from "../firebase";
-import useAuth from './useAuth';
+import React, { createContext, useContext, useState, useEffect } from "react";
+
+import { useAuthContext } from "../context/AuthContext";
 
 const UserScoreContext = createContext();
 
 export const UserScoreProvider = ({ children }) => {
-    const [score, setScore] = useState(0);
-    const user = useAuth();
+  const [score, setScore] = useState(0);
+  const { user } = useAuthContext();
 
-    useEffect(() => {
-        const fetchUserScore = async () => {
-            if (user) {
-                const userDocRef = doc(firestore, "users", user.uid);
-                const docSnap = await getDoc(userDocRef);
-                if (docSnap.exists()) {
-                    const data = docSnap.data();
-                    setScore(data.score || 0);
-                } else {
-                    await setDoc(userDocRef, {
-                        displayName: user.displayName,
-                        email: user.email,
-                        score: 0,
-                    });
-                    setScore(0);
-                }
-            } else {
-                setScore(0);
-            }
-        };
+  useEffect(() => {
+    const storedScore = window.localStorage.getItem("ai-playground-score");
+    if (storedScore !== null) {
+      setScore(Number(storedScore));
+    }
+  }, []);
 
-        fetchUserScore();
-    }, [user]);
+  useEffect(() => {
+    window.localStorage.setItem("ai-playground-score", String(score));
+  }, [score]);
 
-    return (
-        <UserScoreContext.Provider value={{ score, setScore }}>
-            {children}
-        </UserScoreContext.Provider>
-    );
+  useEffect(() => {
+    if (user && typeof user.xp === "number") {
+      setScore(user.xp);
+    }
+  }, [user]);
+
+  return (
+    <UserScoreContext.Provider value={{ score, setScore }}>
+      {children}
+    </UserScoreContext.Provider>
+  );
 };
 
 export const useUserScore = () => {
-    return useContext(UserScoreContext);
+  return useContext(UserScoreContext);
 };

@@ -1,6 +1,23 @@
 @import "tailwindcss";
 @config "../tailwind.config.js";
 
+:root {
+  --app-bg: #000000;
+  --app-accent-1: #ef4444;
+  --app-accent-2: #f97316;
+  --app-panel-border: #f97316;
+}
+
+@keyframes game-loader-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.game-loader-spin {
+  animation: game-loader-spin 0.75s linear infinite;
+}
+
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
@@ -8,6 +25,8 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background: var(--app-bg);
+  color: white;
 }
 
 code {

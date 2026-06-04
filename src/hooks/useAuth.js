@@ -1,24 +1,21 @@
-// src/useAuth.js
-
-import { useEffect, useState } from 'react';
-import { auth } from '../firebase';
+import { useAuthContext } from "../context/AuthContext";
 
 const useAuth = () => {
-  const [user, setUser] = useState(null);
+  const { user, loading, isAuthenticated } = useAuthContext();
+  if (loading) {
+    return null;
+  }
+  if (!isAuthenticated || !user) {
+    return null;
+  }
 
-  useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged((user) => {
-      if (user) {
-        setUser(user);
-      } else {
-        setUser(null);
-      }
-    });
-
-    return () => unsubscribe();
-  }, []);
-
-  return user;
+  return {
+    uid: user.id,
+    displayName: user.displayName,
+    email: user.email,
+    xp: user.xp,
+    level: user.level,
+  };
 };
 
 export default useAuth;

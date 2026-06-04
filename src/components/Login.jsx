@@ -1,65 +1,60 @@
-// src/components/Login.jsx
+import React from "react";
+import { GoogleLogin } from "@react-oauth/google";
+import { useNavigate } from "react-router-dom";
 
-import React from 'react';
-import { getAuth, GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
-import { doc, setDoc, getDoc } from 'firebase/firestore';
-import { firestore } from '../firebase'; // Make sure to import firestore
-import { FcGoogle } from "react-icons/fc";
-import { useNavigate } from 'react-router-dom';
-
-import useQuestion from '../hooks/useQuestion';
+import { useAuthContext } from "../context/AuthContext";
+import { api } from "../lib/api";
+import { showError, showSuccess } from "../lib/toast";
+import useQuestion from "../hooks/useQuestion";
 
 const Login = ({ setResponseText, isPage }) => {
-
   const { setQuestion } = useQuestion();
   const navigate = useNavigate();
-  const auth = getAuth();
+  const { login } = useAuthContext();
 
-  const signInWithGoogle = async () => {
-    const provider = new GoogleAuthProvider();
-    try {
-      const result = await signInWithPopup(auth, provider);
-      const user = result.user;
-
-      // Create or update user document in Firestore
-      const userDocRef = doc(firestore, 'users', user.uid);
-      const docSnap = await getDoc(userDocRef);
-
-      if (!docSnap.exists()) {
-        console.log("Creating new user document in Firestore");
-        // New user, create document with initial score of 0
-        await setDoc(userDocRef, {
-          displayName: user.displayName,
-          email: user.email,
-          score: 0
-        });
-
-        if (isPage === 'CreativeQuest') {
-          setQuestion(''); // Clear the question after sign in
-          setResponseText(''); // Clear the responseText after sign in
-        }
-        console.log("User document created in Firestore");
-      } else {
-        if (isPage) {
-          setQuestion(''); // Clear the question after sign in
-          setResponseText(''); // Clear the responseText after sign in
-        }
-        console.log("User document already exists in Firestore");
-      }
-      navigate('/'); // Redirect to home page after sign in
-    } catch (error) {
-      console.error("Error during sign in:", error);
+  const clearPageState = () => {
+    if (isPage) {
+      setQuestion("");
+      setResponseText?.("");
     }
   };
 
+  const handleGoogleSuccess = async (credentialResponse) => {
+    try {
+      const idToken = credentialResponse?.credential;
+      if (!idToken) {
+        throw new Error("Google did not return a credential");
+      }
+
+      const response = await api.loginWithGoogle(idToken);
+      login(response.data);
+      clearPageState();
+      showSuccess(`Welcome back, ${response.data?.user?.displayName || "Artist"}!`);
+      navigate("/");
+    } catch (error) {
+      console.error("Error during sign in:", error);
+      showError(error, "Sign in failed. Please try again.");
+    }
+  };
+
+  if (!import.meta.env.VITE_GOOGLE_CLIENT_ID) {
+    return (
+      <p className="text-xs text-red-400 max-w-[12rem]">
+        Set VITE_GOOGLE_CLIENT_ID in .env to enable sign-in.
+      </p>
+    );
+  }
+
   return (
-    <div>
-      <button onClick={signInWithGoogle} className='flex items-center gap-2 bg-gradient-to-r from-indigo-500 to-cyan-500  font-semibold px-4 py-2 rounded-full text-white'>
-        <FcGoogle className='text-2xl bg-white rounded-full px-1 py-1' />
-        <span className='text-xs sm:text-base font-semibold'>
-          Sign in with Google</span>
-      </button>
-    </div>
+    <GoogleLogin
+      onSuccess={handleGoogleSuccess}
+      onError={() => showError(null, "Google sign-in was cancelled. Please try again.")}
+      useOneTap={false}
+      theme="filled_blue"
+      shape="pill"
+      text="signin_with"
+      size="medium"
+    />
   );
 };
 

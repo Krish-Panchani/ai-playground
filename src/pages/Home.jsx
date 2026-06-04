@@ -52,6 +52,18 @@ function Home() {
             title: "Artful Stories",
             description: "Where every stroke conjures a magical tale"
         },
+        {
+            to: "/Profile",
+            bgImage: "https://res.cloudinary.com/divve6wtz/image/upload/v1723112423/Leaderboard_t3ryew.png",
+            title: "My Profile",
+            description: "XP, progress, history, and stats"
+        },
+        {
+            to: "/AdventureLog",
+            bgImage: "https://res.cloudinary.com/divve6wtz/image/upload/v1722853988/CreativeQuest-removebg-preview_qrlbc3.png",
+            title: "Adventure Log",
+            description: "Track completed missions and XP"
+        },
     ];
 
     const LinkCard = ({ to, bgImage, title, description }) => (
@@ -87,6 +99,9 @@ function Home() {
                     </span>{" "}
                     - Where Creativity meets Learning.
                 </h2>
+                <p className="text-center text-cyan-300 font-semibold text-sm sm:text-base">
+                    Sign in with Google to play all game modes and save your XP.
+                </p>
             </div>
             <div className='overflow-hidden'>
             <motion.h3

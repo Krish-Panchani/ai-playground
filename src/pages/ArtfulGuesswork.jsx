@@ -2,13 +2,14 @@ import React, { useState, useRef, useCallback } from "react";
 
 import DrawingCanvas from "../components/DrawingCanvas";
 import AIResponse from "../components/AIResponse";
+import SignInToPlay from "../components/auth/SignInToPlay";
 import UserInfo from "../components/UserInfo";
 import Feedback from "../components/Feedback";
 import HowPlay from "../components/ui/howPlay";
 
 import { handleDrawingComplete, handleUpload, handleSendPrompt } from "../helpers/handleGuessDrawing";
-import useAuth from "../hooks/useAuth";
 import { useUserScore } from "../hooks/UserScoreContext";
+import { APP_THEME } from "../theme/theme";
 
 function ArtfulGuesswork() {
   const [file, setFile] = useState(null);
@@ -18,11 +19,10 @@ function ArtfulGuesswork() {
   const [loadingResponse, setLoadingResponse] = useState(false);
   const [isCanvasEmpty, setIsCanvasEmpty] = useState(true);
   const [isFeedback, setIsFeedback] = useState("");
-  const [uniqueFileName, setUniqueFileName] = useState("");
+  const [drawingId, setDrawingId] = useState("");
   const isPage = "ArtfulGuesswork";
 
   const { setScore } = useUserScore();
-  const user = useAuth();
 
   const canvasRef = useRef(null);
 
@@ -32,14 +32,15 @@ function ArtfulGuesswork() {
   }, []);
 
   return (
-    <div className="flex flex-col gap-12 bg-black p-4">
+    <SignInToPlay subtitle="Sign in to challenge the AI with your drawings and earn XP.">
+    <div className={`flex flex-col gap-12 ${APP_THEME.page} p-4`}>
       <UserInfo setResponseText={setResponseText} isPage={isPage} />
 
       {!responseText && (
         <div>
           <h2 className="text-center text-xl sm:text-2xl my-4 text-white">
             Welcome to{" "}
-            <span className="font-bold bg-gradient-to-r from-red-500 to-orange-500 bg-clip-text text-transparent">
+            <span className={`font-bold ${APP_THEME.heroGradient}`}>
               Artful Guesswork
             </span>{" "}
             - See if AI can identify your creation
@@ -48,9 +49,9 @@ function ArtfulGuesswork() {
       )}
       <div className="flex flex-col items-center mb-6 space-y-4">
         {loadingResponse && (
-          <div className="flex items-center justify-center bg-black text-white">
+          <div className={`flex items-center justify-center ${APP_THEME.page} ${APP_THEME.panelText}`}>
             <div className="mt-4 rounded-lg p-4">
-              <h3 className="bg-gradient-to-r from-blue-500 to-cyan-400 bg-clip-text text-xl font-bold text-transparent animate-gradient-animate">Gemini - <span className="text-md animate-pulse font-normal text-white">Analyzing your Drawing ...</span></h3>
+              <h3 className={`${APP_THEME.loadingGradient} text-xl font-bold`}>Gemini - <span className="text-md animate-pulse font-normal text-white">Analyzing your Drawing ...</span></h3>
               <div className="mt-4 flex flex-col gap-2 rounded-lg border border-green-300 p-4 text-white">
                 <div className="col-span-2 h-2 animate-pulse rounded bg-slate-200"></div>
                 <div className="col-span-2 h-2 w-36 animate-pulse rounded bg-slate-200"></div>
@@ -65,13 +66,13 @@ function ArtfulGuesswork() {
               responseText={responseText}
               isPage={isPage}
               onResponseGenerated={handleAIResponse}
-              className="w-full max-w-xl bg-white shadow-md rounded-lg p-4"
+              className="w-full max-w-xl rounded-lg border border-orange-500/50 bg-slate-950 p-4 shadow-lg"
             />
             <Feedback
               setResponseText={setResponseText}
               canvasRef={canvasRef}
               setIsFeedback={setIsFeedback}
-              uniqueFileName={uniqueFileName}
+              drawingId={drawingId}
             />
           </div>
         )}
@@ -79,7 +80,7 @@ function ArtfulGuesswork() {
         <p className="text-white">{isFeedback}</p>
 
         <div className="flex  flex-col lg:flex-row justify-between gap-4">
-          <div className="bg-background rounded-lg border border-orange-500 p-4 flex flex-col gap-4">
+          <div className={`${APP_THEME.card} flex flex-col gap-4`}>
             <DrawingCanvas
               ref={canvasRef}
               onDrawingComplete={(dataUrl) => handleDrawingComplete(dataUrl, setFile)}
@@ -96,28 +97,28 @@ function ArtfulGuesswork() {
               onClick={() =>
                 handleUpload(
                   file,
-                  setUniqueFileName,
                   setLoadingUpload,
                   handleSendPrompt,
                   prompt,
                   setResponseText,
                   setLoadingResponse,
                   setScore,
-                  user,
+                  setDrawingId
                 )
               }
-              className={`flex-1 px-6 py-3 text-white rounded-full font-semibold transition-colors duration-300 ${isCanvasEmpty || responseText ? "bg-gray-400 cursor-not-allowed" : "bg-gradient-to-r from-indigo-600 to-cyan-600"}`}
+              className={`flex-1 px-6 py-3 ${isCanvasEmpty || responseText ? APP_THEME.disabledButton : APP_THEME.primaryButton}`}
               disabled={isCanvasEmpty || responseText}
             >
               {loadingUpload ? "Uploading..." : "Submit"}
             </button>
           </div>
           <div className="flex justify-center">
-            <HowPlay isPage={isPage} className="text-center text-sm text-gray-700 " />
+            <HowPlay isPage={isPage} className="text-center text-sm text-slate-300" />
           </div>
         </div>
       </div>
     </div>
+    </SignInToPlay>
   );
 }
 

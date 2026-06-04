@@ -3,8 +3,11 @@
 .env
 test_components
 /cloud-functions/test-function
+firebase-service-account.json
+
 # dependencies
 /node_modules
+**/node_modules
 /.pnp
 .pnp.js
 

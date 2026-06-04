@@ -1,147 +1,100 @@
-import { ref, uploadBytesResumable } from 'firebase/storage';
-import { firebaseApp, storage, firestore } from '../firebase';
-import { getAI, getGenerativeModel } from "firebase/ai";
-import { doc, setDoc, getDoc, addDoc, collection, Timestamp } from 'firebase/firestore';
+import { api } from "../lib/api";
+import { showError, showSuccess } from "../lib/toast";
+import { useGameStore } from "../store/useGameStore";
 
 export const handleDrawingComplete = (dataUrl, setFile) => {
-    const byteString = atob(dataUrl.split(',')[1]);
-    const mimeString = dataUrl.split(',')[0].split(':')[1].split(';')[0];
-    const buffer = new ArrayBuffer(byteString.length);
-    const data = new Uint8Array(buffer);
-    for (let i = 0; i < byteString.length; i++) {
-        data[i] = byteString.charCodeAt(i);
-    }
-    const blob = new Blob([buffer], { type: mimeString });
-    setFile(new File([blob], 'drawing.png', { type: mimeString }));
+  const byteString = atob(dataUrl.split(",")[1]);
+  const mimeString = dataUrl.split(",")[0].split(":")[1].split(";")[0];
+  const buffer = new ArrayBuffer(byteString.length);
+  const data = new Uint8Array(buffer);
+  for (let index = 0; index < byteString.length; index += 1) {
+    data[index] = byteString.charCodeAt(index);
+  }
+  const blob = new Blob([buffer], { type: mimeString });
+  setFile(new File([blob], "drawing.png", { type: mimeString }));
 };
 
-export const handleUpload = async (file, setLoadingUpload, handleSendPrompt, prompt, setResponseText, setLoadingResponse, setScore, user) => {
-    if (!file) {
-        alert('Please complete a drawing to upload');
-        return;
-    }
+export const handleUpload = async (
+  file,
+  setLoadingUpload,
+  handleSendPrompt,
+  prompt,
+  setResponseText,
+  setLoadingResponse,
+  setScore,
+  user
+) => {
+  if (!file) {
+    showError(null, "Please draw something before submitting.");
+    return;
+  }
 
-    setLoadingUpload(true);
-
-    try {
-        const uniqueFileName = `${Date.now()}_${file.name}`;
-        const storageRef = ref(storage, uniqueFileName);
-        const uploadTask = uploadBytesResumable(storageRef, file);
-
-        uploadTask.on('state_changed',
-            (snapshot) => {
-                // Progress function
-                const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                console.log(`Upload is ${progress}% done`);
-            },
-            (error) => {
-                // Handle unsuccessful uploads
-                console.error('Error uploading file:', error);
-                alert('Error uploading file: ' + error.message);
-                setLoadingUpload(false);
-            },
-            async () => {
-                alert('Drawing uploaded to AI - Successfully');
-                await handleSendPrompt(uniqueFileName, prompt, setResponseText, setLoadingResponse, setScore, user);
-                setLoadingUpload(false);
-            }
-        );
-    } catch (error) {
-        console.error('Error uploading file:', error);
-        alert('Error uploading file: ' + error.message);
-        setLoadingUpload(false);
-    }
+  setLoadingUpload(true);
+  try {
+    await handleSendPrompt(file, prompt, setResponseText, setLoadingResponse, setScore, user);
+  } finally {
+    setLoadingUpload(false);
+  }
 };
 
-export const handleSendPrompt = async (uniqueFileName, prompt, setResponseText, setLoadingResponse, setScore, user) => {
-    setLoadingResponse(true);
+export const handleSendPrompt = async (
+  file,
+  prompt,
+  setResponseText,
+  setLoadingResponse,
+  setScore
+) => {
+  setLoadingResponse(true);
+  try {
+    const imageDataUrl = await fileToDataUrl(file);
+    const storyId = useGameStore.getState().storyId;
+    const response = await api.submitStoryChapter({
+      imageDataUrl,
+      additionalPrompt: prompt,
+      storyId: storyId || undefined,
+    });
 
-    try {
-        // Your existing code for generating response
-        const vertexAI = getAI(firebaseApp);
-        const bucket_name = import.meta.env.VITE_FIREBASE_STORAGE_BUCKET;
-        const model = getGenerativeModel(vertexAI, { model: "gemini-1.5-flash-001" });
-        const combinedPrompt = `Generate a Creative short story based on the User's Drawing. ${prompt}. \n\n
-        Use markdowns and newlines in story key. \n\n
-        Response format: JSON. {
-        title: "Title of the story",
-        story: "Full story text"
-        }`;
-
-        const imageUri = `gs://${bucket_name}/${uniqueFileName}`;
-        const mimeType = 'image/png';
-
-        const imagePart = {
-            fileData: {
-                fileUri: imageUri,
-                mimeType: mimeType,
-            },
-        };
-
-        const result = await model.generateContent([combinedPrompt, imagePart]);
-        const fullTextResponse = await result.response.text();
-        const cleanedText = fullTextResponse.replace(/```json|```/g, '').trim();
-
-        let responseData;
-        try {
-            responseData = JSON.parse(cleanedText);
-        } catch (parseError) {
-            console.error('Error parsing JSON:', parseError);
-            throw new Error('Invalid JSON response');
-        }
-
-        // console.log('Response:', cleanedText); //Debugging
-        setResponseText(cleanedText);
-        setLoadingResponse(false);
-
-        const points = Math.floor(Math.random() * 6) + 1;
-        // console.log('Points:', points);
-
-        setResponseText(cleanedText);
-        setLoadingResponse(false);
-
-        if (user) {
-            // Fetch current user score
-            const userDocRef = doc(firestore, 'users', user.uid);
-            const userDoc = await getDoc(userDocRef);
-
-            let currentScore = 0;
-            if (userDoc.exists()) {
-                currentScore = userDoc.data().score || 0;
-            }
-
-            // Calculate new score
-            const newScore = currentScore + (points || 0);
-            console.log('New score:', newScore);
-            // Update Firestore with new score
-            await setDoc(userDocRef, { score: newScore }, { merge: true });
-
-            // Update local state
-            await setScore(newScore);
-        } else {
-            // For guests, just update local state
-            await setScore(prevScore => prevScore + (points || 0));
-        }
-
-        const responseObj = {
-            email: user ? user.email : "guest",
-            title: responseData.title,
-            story: responseData.story,
-            file: uniqueFileName,
-            timestamp: Timestamp.now(),
-        };
-        try {
-            const responseCollectionRef = collection(firestore, "ArtfulStories");
-            await addDoc(responseCollectionRef, responseObj);
-            console.log("Response stored successfully");
-        } catch (error) {
-            console.error("Error storing response:", error);
-            alert("Error storing response: " + error.message);
-        }
-
-    } catch (error) {
-        console.error('Error getting response from cloud function:', error);
-        alert('Error getting response from cloud function: ' + error.message);
-        setLoadingResponse(false);
+    const payload = response.data;
+    if (payload.storyId) {
+      useGameStore.getState().setStoryId(payload.storyId);
     }
+
+    setResponseText(
+      JSON.stringify(
+        {
+          title: payload.aiResult.title,
+          story: payload.aiResult.chapter,
+          nextMission: payload.aiResult.nextMission,
+          chapterCount: payload.chapterCount,
+          isCompleted: payload.isCompleted,
+        },
+        null,
+        2
+      )
+    );
+    if (response.data?.profile?.xp !== undefined) {
+      setScore(response.data.profile.xp);
+    } else {
+      await setScore((previous) => previous + (response.data?.xpEarned || 15));
+    }
+
+    if (payload.isCompleted) {
+      showSuccess("Story complete! What an adventure.");
+    } else {
+      showSuccess(`Chapter ${payload.chapterCount} added to your story!`);
+    }
+  } catch (error) {
+    console.error("Error getting response from backend:", error);
+    showError(error, "Could not create the next story chapter. Please try again.");
+  } finally {
+    setLoadingResponse(false);
+  }
 };
+
+const fileToDataUrl = (file) =>
+  new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });

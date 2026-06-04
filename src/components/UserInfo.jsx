@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { HiMenuAlt3 } from "react-icons/hi";
 
 import Login from './Login';
@@ -23,14 +24,18 @@ const UserInfo = ({ setResponseText, isPage }) => {
         <div className='flex items-center justify-between px-2 sm:px-8 my-6 gap-4'>
             {user ? (
                 <h2 className='text-white text-md sm:text-xl mr-4'>
-                    Hello Artist, <span className='font-bold bg-gradient-to-r from-indigo-400 to-cyan-400 bg-clip-text text-transparent'>{user.displayName}</span>
+                    Hello Artist,{' '}
+                    <Link
+                        to="/Profile"
+                        className='font-bold bg-gradient-to-r from-indigo-400 to-cyan-400 bg-clip-text text-transparent hover:underline'
+                    >
+                        {user.displayName}
+                    </Link>
                 </h2>
             ) : (
-                <>
-                    <h2 className='text-white text-md sm:text-xl'>
-                        Hello Artist, <span className='font-bold bg-gradient-to-r from-indigo-600 to-cyan-600 bg-clip-text text-transparent'>Guest</span>
-                    </h2>
-                </>
+                <h2 className='text-white text-md sm:text-xl'>
+                    <span className='font-bold bg-gradient-to-r from-indigo-600 to-cyan-600 bg-clip-text text-transparent'>Sign in to play</span>
+                </h2>
             )}
 
             <div className='flex items-center gap-2'>

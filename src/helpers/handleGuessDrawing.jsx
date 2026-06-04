@@ -1,148 +1,104 @@
-import { ref, uploadBytesResumable } from 'firebase/storage';
-import { firebaseApp, storage, firestore } from '../firebase';
-import { getAI, getGenerativeModel } from "firebase/ai";
-import { doc, setDoc, getDoc, addDoc, collection, Timestamp } from 'firebase/firestore';
+import { api } from "../lib/api";
+import { showError, showSuccess } from "../lib/toast";
 
 export const handleDrawingComplete = (dataUrl, setFile) => {
-    const byteString = atob(dataUrl.split(',')[1]);
-    const mimeString = dataUrl.split(',')[0].split(':')[1].split(';')[0];
-    const buffer = new ArrayBuffer(byteString.length);
-    const data = new Uint8Array(buffer);
-    for (let i = 0; i < byteString.length; i++) {
-        data[i] = byteString.charCodeAt(i);
-    }
-    const blob = new Blob([buffer], { type: mimeString });
-    setFile(new File([blob], 'drawing.png', { type: mimeString }));
+  const byteString = atob(dataUrl.split(",")[1]);
+  const mimeString = dataUrl.split(",")[0].split(":")[1].split(";")[0];
+  const buffer = new ArrayBuffer(byteString.length);
+  const data = new Uint8Array(buffer);
+  for (let index = 0; index < byteString.length; index += 1) {
+    data[index] = byteString.charCodeAt(index);
+  }
+  const blob = new Blob([buffer], { type: mimeString });
+  setFile(new File([blob], "drawing.png", { type: mimeString }));
 };
 
-export const handleUpload = async (file, setUniqueFileName, setLoadingUpload, handleSendPrompt, prompt, setResponseText, setLoadingResponse, setScore, user) => {
-    if (!file) {
-        alert('Please complete a drawing to upload');
-        return;
-    }
+export const handleUpload = async (
+  file,
+  setLoadingUpload,
+  handleSendPrompt,
+  prompt,
+  setResponseText,
+  setLoadingResponse,
+  setScore,
+  setDrawingId
+) => {
+  if (!file) {
+    showError(null, "Please draw something before submitting.");
+    return;
+  }
 
-    setLoadingUpload(true);
-
-    try {
-        const uniqueFileName = `${Date.now()}_${file.name}`;
-        setUniqueFileName(uniqueFileName);
-        const storageRef = ref(storage, uniqueFileName);
-        const uploadTask = uploadBytesResumable(storageRef, file);
-
-        uploadTask.on('state_changed',
-            (snapshot) => {
-                // Progress function
-                const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                console.log(`Upload is ${progress}% done`);
-            },
-            (error) => {
-                // Handle unsuccessful uploads
-                console.error('Error uploading file:', error);
-                alert('Error uploading file: ' + error.message);
-                setLoadingUpload(false);
-            },
-            async () => {
-                alert('Drawing uploaded to AI - Successfully');
-                await handleSendPrompt(uniqueFileName, prompt, setResponseText, setLoadingResponse, setScore, user);
-                setLoadingUpload(false);
-            }
-        );
-    } catch (error) {
-        console.error('Error uploading file:', error);
-        alert('Error uploading file: ' + error.message);
-        setLoadingUpload(false);
-    }
+  setLoadingUpload(true);
+  try {
+    await handleSendPrompt(
+      file,
+      prompt,
+      setResponseText,
+      setLoadingResponse,
+      setScore,
+      setDrawingId
+    );
+  } finally {
+    setLoadingUpload(false);
+  }
 };
 
-export const handleSendPrompt = async (uniqueFileName, prompt, setResponseText, setLoadingResponse, setScore, user) => {
-    setLoadingResponse(true);
+export const handleSendPrompt = async (
+  file,
+  prompt,
+  setResponseText,
+  setLoadingResponse,
+  setScore,
+  setDrawingId
+) => {
+  setLoadingResponse(true);
 
-    try {
-        // Your existing code for generating response
-        const vertexAI = getAI(firebaseApp);
-        const bucket_name = import.meta.env.VITE_FIREBASE_STORAGE_BUCKET;
-        const model = getGenerativeModel(vertexAI, { model: "gemini-1.5-flash-001" });
-        const combinedPrompt = `Guess what user drawn in given Drawing. ${prompt}.
-        your Response should in JSON format { guess: string }. \n\n
-        For example: {
-        guess: "It's a cat"
-        }`;
+  try {
+    const imageDataUrl = await fileToDataUrl(file);
+    const response = await api.submitGuesswork({
+      imageDataUrl,
+      additionalPrompt: prompt,
+    });
 
-        const imageUri = `gs://${bucket_name}/${uniqueFileName}`;
-        const mimeType = 'image/png';
-
-        const imagePart = {
-            fileData: {
-                fileUri: imageUri,
-                mimeType: mimeType,
-            },
-        };
-
-        const result = await model.generateContent([combinedPrompt, imagePart]);
-        const fullTextResponse = await result.response.text();
-        const cleanedText = fullTextResponse.replace(/```json|```/g, '').trim();
-
-        let responseData;
-        try {
-            responseData = JSON.parse(cleanedText);
-        } catch (parseError) {
-            console.error('Error parsing JSON:', parseError);
-            throw new Error('Invalid JSON response');
-        }
-        setResponseText(cleanedText);
-        setLoadingResponse(false);
-
-        const points = Math.floor(Math.random() * 6) + 1;
-        // console.log('Points:', points);
-
-        setResponseText(cleanedText);
-        setLoadingResponse(false);
-
-        if (user) {
-            // Fetch current user score
-            const userDocRef = doc(firestore, 'users', user.uid);
-            const userDoc = await getDoc(userDocRef);
-
-            let currentScore = 0;
-            if (userDoc.exists()) {
-                currentScore = userDoc.data().score || 0;
-            }
-
-            // Calculate new score
-            const newScore = currentScore + (points || 0);
-            console.log('New score:', newScore);
-            // Update Firestore with new score
-            await setDoc(userDocRef, { score: newScore }, { merge: true });
-
-            // Update local state
-            await setScore(newScore);
-
-            // Store response and user email in "ArtfullGuesswork" collection
-
-        } else {
-            // For guests, just update local state
-            await  setScore(prevScore => prevScore + (points || 0));
-        }
-        const responseObj = {
-            email: user ? user.email : "guest",
-            guess: responseData.guess,
-            file: uniqueFileName,
-            isCorrect: false,
-            timestamp: Timestamp.now(),
-        };
-
-        try {
-            const responseCollectionRef = collection(firestore, "ArtfulGuesswork");
-            await addDoc(responseCollectionRef, responseObj);
-            console.log("Response stored successfully");
-        } catch (error) {
-            console.error("Error storing response:", error);
-            alert("Error storing response: " + error.message);
-        }
-
-    } catch (error) {
-        console.error('Error getting response from cloud function:', error);
-        alert('Error getting response from cloud function: ' + error.message);
-        setLoadingResponse(false);
+    const payload = response.data?.aiResult || {};
+    if (setDrawingId && response.data?.drawingId) {
+      setDrawingId(String(response.data.drawingId));
     }
+    setResponseText(
+      JSON.stringify(
+        {
+          guess: payload.guess,
+          confidence: payload.confidence,
+          feedback: payload.feedback,
+        },
+        null,
+        2
+      )
+    );
+    if (response.data?.profile?.xp !== undefined) {
+      setScore(response.data.profile.xp);
+    } else {
+      setScore((previous) => previous + (response.data?.xpEarned || 8));
+    }
+
+    const busyHint = payload?.feedback?.toLowerCase().includes("busy");
+    if (busyHint) {
+      showSuccess("Guess received! AI is busy — this is a practice result.");
+    } else {
+      showSuccess("Guess received! Tell us if the AI was right.");
+    }
+  } catch (error) {
+    console.error("Error getting response from backend:", error);
+    showError(error, "Could not analyze your drawing. Please try again.");
+  } finally {
+    setLoadingResponse(false);
+  }
 };
+
+const fileToDataUrl = (file) =>
+  new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });

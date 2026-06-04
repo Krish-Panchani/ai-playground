@@ -37,23 +37,17 @@ const AIResponse = React.memo(({ responseText, isPage }) => {
   const renderQueResponse = useCallback((responseText) => {
     try {
       const response = JSON.parse(responseText);
-      const { isCorrect, reason, points } = response;
-
-      if (isCorrect) {
-        return (
-          <div className='mt-4 border border-green-300 p-4 rounded-lg text-white'>
-            <p><span className='text-green-600 font-bold'>Correct!</span> {reason}</p>
-            <p>Points: +{points}</p>
-          </div>
-        );
-      } else {
-        return (
-          <div className='mt-4 border border-red-300 p-4 rounded-lg text-white'>
-            <p><span className='text-red-600 font-bold'>Incorrect!</span> {reason}</p>
-            <p>Points: {points}</p>
-          </div>
-        );
-      }
+      const { accuracy, creativity, effort, feedback, finalScore, xpEarned } = response;
+      return (
+        <div className='mt-4 border border-green-300 p-4 rounded-lg text-white'>
+          <p>Accuracy: <span className='font-bold text-cyan-300'>{accuracy}</span></p>
+          <p>Creativity: <span className='font-bold text-cyan-300'>{creativity}</span></p>
+          <p>Effort: <span className='font-bold text-cyan-300'>{effort}</span></p>
+          <p>Final Score: <span className='font-bold text-green-300'>{finalScore}</span></p>
+          <p>XP Earned: <span className='font-bold text-orange-300'>+{xpEarned}</span></p>
+          <p className='mt-2'>{feedback}</p>
+        </div>
+      );
     } catch (error) {
       console.error('Error parsing response:', error);
       return <p>Invalid response format</p>;
@@ -61,9 +55,11 @@ const AIResponse = React.memo(({ responseText, isPage }) => {
   }, []);
 
   return (
-    <div className='flex justify-center items-center text-white'>
-      <div className='mt-4 p-4 rounded-lg'>
-        <h3 className='text-xl font-bold bg-gradient-to-r from-blue-500 to-cyan-400 bg-clip-text text-transparent'>Gemini - Response</h3>
+    <div className="flex justify-center items-center text-white">
+      <div className="w-full rounded-xl">
+        <h3 className="text-xl font-bold bg-gradient-to-r from-blue-500 to-cyan-400 bg-clip-text text-transparent">
+          Mission Results
+        </h3>
         {isPage === 'CreativeQuest' && renderQueResponse(responseText)}
         {isPage === 'ArtfulStories' && renderStoryResponse(responseText)}
         {isPage === 'ArtfulGuesswork' && renderGuessResponse(responseText)}
