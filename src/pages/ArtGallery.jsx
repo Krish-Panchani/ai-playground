@@ -44,7 +44,7 @@ function ArtGallery() {
   if (error) return <div className="text-red-500">Error: {error}</div>;
 
   return (
-    <div className="flex flex-col min-h-screen bg-black p-4">
+    <div className="flex flex-col flex-1 w-full">
       <UserInfo isPage="ArtGallery" />
       <div className="flex">
         <SlideTabs activeTab={activeTab} onTabClick={handleTabClick} />

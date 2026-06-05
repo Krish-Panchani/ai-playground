@@ -36,11 +36,11 @@ function Leaderboard() {
   }, [user]);
 
   return (
-    <div className="flex flex-col min-h-screen bg-black p-4">
+    <div className="flex flex-col flex-1 w-full">
       <UserInfo isPage={isPage} />
-      <div className="w-full max-w-4xl text-white mx-auto p-2 md:p-10 h-screen">
-        <div className="flex flex-col items-center gap-4 justify-center mb-6">
-          <h1 className="text-5xl text-center font-bold bg-gradient-to-r from-red-500 to-orange-500 bg-clip-text text-transparent animate-gradient-animate">
+      <div className="mx-auto w-full max-w-4xl flex-1 p-2 pb-8 text-white md:p-10">
+        <div className="mb-6 flex flex-col items-center justify-center gap-4">
+          <h1 className="text-center text-3xl font-bold sm:text-4xl lg:text-5xl bg-gradient-to-r from-red-500 to-orange-500 bg-clip-text text-transparent animate-gradient-animate">
             Leaderboard
           </h1>
           <p>See where you stand among the best.</p>
