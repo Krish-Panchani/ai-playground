@@ -83,6 +83,56 @@ Backend runs at `http://localhost:8080` with health check at `/health`.
 - `POST /api/v1/ai/stories/chapter`
 - `GET /api/v1/leaderboard`
 
+## Deploy to Vercel (whole monorepo)
+
+Yes — you can host **frontend + backend in one Vercel project** from this repo. The layout is a lightweight monorepo (`/` = Vite client, `/server` = Express API).
+
+### How it works
+
+| Part | Vercel target |
+|------|----------------|
+| React app | Static build from `dist/` (Vite) |
+| Express API | Serverless function at `api/index.mjs` |
+| Routes | `/api/*` and `/health` → API; everything else → SPA |
+
+Local dev is unchanged: `npm run dev` + `npm run server:dev`.
+
+### Deploy steps
+
+1. Push the repo to GitHub and import it in [Vercel](https://vercel.com).
+2. Leave **Root Directory** as `.` (repo root).
+3. Vercel reads `vercel.json` — install, build, and rewrites are already configured.
+4. Add **Environment Variables** in the Vercel project (Production + Preview):
+
+| Variable | Required | Notes |
+|----------|----------|-------|
+| `MONGODB_URI` | Yes | MongoDB Atlas connection string |
+| `MONGODB_DB_NAME` | No | Default `ai_playground` |
+| `GOOGLE_CLIENT_ID` | Yes | Same OAuth Web client ID as frontend |
+| `JWT_SECRET` | Yes | Long random secret |
+| `GEMINI_API_KEY` | No | Mock AI works without it |
+| `VITE_GOOGLE_CLIENT_ID` | Yes | Same as `GOOGLE_CLIENT_ID` |
+| `VITE_API_BASE_URL` | No | Leave **empty** for same-origin `/api` |
+| `CLIENT_ORIGIN` | No | Auto-set from `VERCEL_URL` if omitted |
+| `NODE_ENV` | No | Set `production` in Production |
+
+5. In **Google Cloud Console**, add your Vercel URL to OAuth **Authorized JavaScript origins** (e.g. `https://your-app.vercel.app`).
+6. Deploy. Test `https://your-app.vercel.app/health` and sign-in.
+
+### Limits and caveats
+
+- **AI routes** call Gemini and may take 10–30s. Hobby plan functions timeout at **10s**; Pro allows up to **60s** (`maxDuration` in `vercel.json`). Upgrade or move AI-heavy workloads to Railway/Render if you hit timeouts.
+- **MongoDB Atlas** must allow Vercel IPs (use `0.0.0.0/0` or Atlas Serverless).
+- `socket.io` is listed in server deps but **not used** — safe to ignore on Vercel.
+- For a **separate API-only** Vercel project, point root to `server/` and use only the `api/` handler pattern (frontend would set `VITE_API_BASE_URL`).
+
+### CLI deploy
+
+```bash
+npm i -g vercel
+vercel
+```
+
 ## Environment Notes
 
 Backend (`server/.env`):

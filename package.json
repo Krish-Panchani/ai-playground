@@ -9,7 +9,8 @@
     "preview": "vite preview",
     "client:dev": "vite",
     "server:dev": "npm --prefix server run dev",
-    "server:start": "npm --prefix server run start"
+    "server:start": "npm --prefix server run start",
+    "vercel-build": "npm run build"
   },
   "dependencies": {
     "@react-oauth/google": "^0.12.2",

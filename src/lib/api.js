@@ -1,6 +1,15 @@
 import { formatFriendlyError } from "./formatError.js";
 
-const BASE_URL = import.meta.env.VITE_API_BASE_URL || "";
+const resolveBaseUrl = () => {
+  const configured = import.meta.env.VITE_API_BASE_URL || "";
+  // Guard against local .env values baked into a production Vercel build.
+  if (import.meta.env.PROD && configured.includes("localhost")) {
+    return "";
+  }
+  return configured;
+};
+
+const BASE_URL = resolveBaseUrl();
 const AUTH_TOKEN_KEY = "ai-playground-auth-token";
 
 export class ApiError extends Error {
