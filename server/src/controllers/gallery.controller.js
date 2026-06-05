@@ -54,7 +54,12 @@ export const getGallery = async (_req, res) => {
       id: story._id,
       file: drawing ? String(drawing._id) : String(story._id),
       title: story.title || lastChapter?.title || "Untitled Adventure",
-      story: lastChapter?.chapter || "",
+      story:
+        story.isCompleted && story.fullStory
+          ? story.fullStory
+          : lastChapter?.chapter || "",
+      isCompleted: Boolean(story.isCompleted),
+      chapterCount: story.chapters?.length || 0,
       imageUrl: drawing?.imageDataUrl || null,
     };
   });

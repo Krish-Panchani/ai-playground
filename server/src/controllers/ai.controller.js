@@ -12,6 +12,8 @@ import {
 import { geminiService } from "../services/gemini.service.js";
 import { computeCreativeQuestScore, levelFromXp } from "../services/progression.service.js";
 import { getOrCreateUserFromRequest } from "../utils/get-or-create-user.js";
+import { STORY_MAX_CHAPTERS } from "../constants/story.js";
+import { buildStoryContext } from "../utils/story-context.js";
 
 export const submitCreativeQuest = async (req, res) => {
   const payload = creativeQuestSubmissionSchema.parse(req.body);
@@ -131,7 +133,33 @@ export const generateStoryChapter = async (req, res) => {
   const payload = storyChapterSchema.parse(req.body);
   const user = await getOrCreateUserFromRequest(req.user);
 
-  const aiResult = await geminiService.generateStoryChapter(payload);
+  let story = null;
+  if (payload.storyId && mongoose.isValidObjectId(payload.storyId)) {
+    story = await StoryModel.findById(payload.storyId);
+    if (!story) {
+      return res.status(404).json({ ok: false, message: "Story not found" });
+    }
+    if (user?._id && story.userId && !story.userId.equals(user._id)) {
+      return res.status(403).json({ ok: false, message: "You do not have access to this story" });
+    }
+    if (story.isCompleted) {
+      return res.status(400).json({
+        ok: false,
+        message: "This story is complete. Start a new story to keep drawing.",
+      });
+    }
+  }
+
+  const chapterNumber = (story?.chapters?.length || 0) + 1;
+  const isFinalChapter = chapterNumber >= STORY_MAX_CHAPTERS;
+  const currentStory = buildStoryContext(story?.chapters) || payload.currentStory || "";
+
+  const aiResult = await geminiService.generateStoryChapter({
+    ...payload,
+    currentStory,
+    chapterNumber,
+    isFinalChapter,
+  });
 
   const drawing = await DrawingModel.create({
     userId: user?._id || undefined,
@@ -141,11 +169,6 @@ export const generateStoryChapter = async (req, res) => {
     aiResult,
     xpEarned: 15,
   });
-
-  let story;
-  if (payload.storyId && mongoose.isValidObjectId(payload.storyId)) {
-    story = await StoryModel.findById(payload.storyId);
-  }
 
   if (!story) {
     story = await StoryModel.create({
@@ -162,8 +185,14 @@ export const generateStoryChapter = async (req, res) => {
     drawingId: drawing._id,
   });
 
-  if (story.chapters.length >= 10) {
+  if (story.chapters.length >= STORY_MAX_CHAPTERS) {
     story.isCompleted = true;
+    const complete = await geminiService.generateCompleteStory({
+      title: story.title,
+      chapters: story.chapters,
+    });
+    story.fullStory = complete.fullStory;
+    story.conclusion = complete.conclusion;
   }
 
   await story.save();
@@ -182,7 +211,17 @@ export const generateStoryChapter = async (req, res) => {
       storyId: story._id,
       isCompleted: story.isCompleted,
       chapterCount: story.chapters.length,
+      maxChapters: STORY_MAX_CHAPTERS,
       aiResult,
+      fullStory: story.fullStory || null,
+      conclusion: story.conclusion || null,
+      chapters: story.isCompleted
+        ? story.chapters.map((chapter, index) => ({
+            chapterNumber: index + 1,
+            title: chapter.title,
+            chapter: chapter.chapter,
+          }))
+        : null,
       xpEarned: 15,
       profile,
     },

@@ -16,6 +16,8 @@ const storySchema = new mongoose.Schema(
     title: { type: String, default: "Untitled Adventure" },
     chapters: { type: [chapterSchema], default: [] },
     isCompleted: { type: Boolean, default: false },
+    fullStory: { type: String, default: "" },
+    conclusion: { type: String, default: "" },
   },
   { timestamps: true }
 );

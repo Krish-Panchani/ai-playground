@@ -64,9 +64,13 @@ export const handleSendPrompt = async (
         {
           title: payload.aiResult.title,
           story: payload.aiResult.chapter,
-          nextMission: payload.aiResult.nextMission,
+          nextMission: payload.aiResult.nextMission || "",
           chapterCount: payload.chapterCount,
+          maxChapters: payload.maxChapters,
           isCompleted: payload.isCompleted,
+          fullStory: payload.fullStory || "",
+          conclusion: payload.conclusion || "",
+          chapters: payload.chapters || null,
         },
         null,
         2

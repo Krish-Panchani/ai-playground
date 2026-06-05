@@ -1,11 +1,16 @@
 import React from 'react'
 
-const CreateNewStory = ({ setResponseText, canvasRef }) => {
+import { showSuccess } from '../lib/toast';
+import { useGameStore } from '../store/useGameStore';
+
+const CreateNewStory = ({ onStartNew, canvasRef }) => {
     const handleNewBoard = () => {
-        setResponseText('');
+        useGameStore.getState().resetStory();
+        onStartNew?.();
         if (canvasRef.current) {
             canvasRef.current.clearCanvas();
         }
+        showSuccess('Fresh canvas — your next drawing starts a new story.');
     };
     return (
         <div>

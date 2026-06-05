@@ -3,6 +3,8 @@ import { GoogleGenAI } from "@google/genai";
 import { env } from "../config/env.js";
 import { pickFallbackMission } from "../data/mission-fallbacks.js";
 import { normalizeMissionTimer } from "../utils/mission-timer.js";
+import { STORY_MAX_CHAPTERS } from "../constants/story.js";
+import { buildStoryContext } from "../utils/story-context.js";
 import { isGeminiRetryableError, withGeminiRetry } from "../utils/gemini-retry.js";
 
 const getImagePartFromDataUrl = (imageDataUrl) => {
@@ -210,16 +212,32 @@ Output only JSON.`;
     };
   }
 
-  async generateStoryChapter({ imageDataUrl, currentStory = "", additionalPrompt = "" }) {
+  async generateStoryChapter({
+    imageDataUrl,
+    currentStory = "",
+    additionalPrompt = "",
+    chapterNumber = 1,
+    isFinalChapter = false,
+  }) {
     if (!this.client) {
-      return this.mockStoryChapter();
+      return this.mockStoryChapter({ chapterNumber, isFinalChapter });
     }
 
     const image = getImagePartFromDataUrl(imageDataUrl);
+    const hasPriorChapters = Boolean(currentStory?.trim());
+    const narrativeContext = hasPriorChapters
+      ? `Story so far:\n${currentStory}\n\nContinue this narrative with chapter ${chapterNumber} of ${STORY_MAX_CHAPTERS} based on the drawing.`
+      : `This is chapter 1 of ${STORY_MAX_CHAPTERS} — the opening chapter of a brand-new adventure based on the drawing.`;
+
+    const finaleInstruction = isFinalChapter
+      ? `This is the FINAL chapter (${STORY_MAX_CHAPTERS} of ${STORY_MAX_CHAPTERS}). Bring the adventure to a satisfying, emotional close. Set "nextMission" to an empty string.`
+      : `Include "nextMission" — a short, fun drawing prompt for what the player should draw in the next chapter.`;
+
     const prompt = `You are a family-friendly adventure storyteller.
-Current story context: "${currentStory}".
+${narrativeContext}
 Additional user instruction: "${additionalPrompt}".
-From the image, create the next chapter. Return strict JSON:
+${finaleInstruction}
+Return strict JSON:
 {
   "title": string,
   "chapter": string (max 150 words),
@@ -235,17 +253,63 @@ Output only JSON.`;
     } catch (error) {
       if (isGeminiRetryableError(error)) {
         console.warn("Gemini story busy — using fallback chapter.", error?.message);
-        return this.mockStoryChapter();
+        return this.mockStoryChapter({ chapterNumber, isFinalChapter });
       }
       throw error;
     }
   }
 
-  mockStoryChapter() {
+  async generateCompleteStory({ title, chapters = [] }) {
+    const chapterText = buildStoryContext(chapters);
+
+    if (!this.client) {
+      return this.mockCompleteStory(chapters);
+    }
+
+    const prompt = `You are a children's story editor. The player illustrated an adventure across ${chapters.length} chapters.
+
+Story title: "${title}"
+
+Chapter text:
+${chapterText}
+
+Rewrite this into one cohesive, family-friendly story that reads smoothly from start to finish.
+Return strict JSON:
+{
+  "fullStory": string (max 700 words, flowing narrative),
+  "conclusion": string (2-3 sentences, warm closing line for the reader)
+}
+Output only JSON.`;
+
+    try {
+      return await this.generateJson({
+        model: env.GEMINI_STORY_MODEL,
+        contents: [{ text: prompt }],
+      });
+    } catch (error) {
+      if (isGeminiRetryableError(error)) {
+        console.warn("Gemini complete-story busy — using stitched fallback.", error?.message);
+        return this.mockCompleteStory(chapters);
+      }
+      throw error;
+    }
+  }
+
+  mockStoryChapter({ chapterNumber = 1, isFinalChapter = false } = {}) {
     return {
-      title: "The Next Adventure",
-      chapter: "A new scene opens as your character steps into unknown lands.",
-      nextMission: "Draw a glowing cave entrance.",
+      title: isFinalChapter ? "The Grand Finale" : `Chapter ${chapterNumber}`,
+      chapter: isFinalChapter
+        ? "With one last brave step, our hero finds home again — changed by the journey, smiling at the stars."
+        : "A new scene opens as your character steps into unknown lands.",
+      nextMission: isFinalChapter ? "" : "Draw a glowing cave entrance.",
+    };
+  }
+
+  mockCompleteStory(chapters = []) {
+    const fullStory = chapters.map((chapter) => chapter.chapter).join("\n\n");
+    return {
+      fullStory: fullStory || "A magical adventure unfolds across every drawing you made.",
+      conclusion: "And so the adventure came to an end — until the next blank canvas calls.",
     };
   }
 }
